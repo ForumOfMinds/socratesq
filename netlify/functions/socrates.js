@@ -195,6 +195,7 @@ exports.handler = async (event) => {
 
     if (!res.ok) {
       const detail = await res.text();
+      console.error('ANTHROPIC ERROR status=' + res.status + ' detail=' + detail);
       return { statusCode: 502, body: JSON.stringify({ error: 'Upstream error', detail }) };
     }
 
@@ -211,6 +212,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ text: text || '…' })
     };
   } catch (e) {
+    console.error('FUNCTION CRASH: ' + (e && e.message ? e.message : e));
     return { statusCode: 500, body: JSON.stringify({ error: 'Could not reach Socrates.' }) };
   }
 };
