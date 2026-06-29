@@ -31,6 +31,7 @@
   }
   .wrap { max-width: 720px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 0 18px; }
 
+  /* ---- Auth (the threshold) ---- */
   .authwrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; }
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
@@ -52,10 +53,12 @@
   .authmsg.err { color: #d98c6a; }
   .authdisc { font-size: 11px; color: var(--dim); letter-spacing: .03em; margin-top: 30px; max-width: 340px; line-height: 1.5; }
 
+  /* ---- Account bar ---- */
   .acct { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 12px 4px 0; font-size: 12px; color: var(--dim); }
   .acct button { background: transparent; border: none; color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 12px; cursor: pointer; text-decoration: underline; }
   .acct button:hover { color: var(--gold); }
 
+  /* ---- Dialogue (unchanged) ---- */
   header { padding: 22px 4px 14px; text-align: center; border-bottom: 1px solid var(--surface-edge); }
   .mark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .mark span { color: var(--gold); }
@@ -100,6 +103,7 @@
 <body>
 <div class="wrap">
 
+  <!-- ===== The threshold (shown when signed out) ===== -->
   <div id="auth" class="authwrap">
     <div class="seal"><span class="q">Q</span></div>
     <div class="authmark">Socrates<span>Q</span></div>
@@ -118,6 +122,7 @@
     <div class="authdisc">A philosophical reconstruction, not the historical figure — and not advice.</div>
   </div>
 
+  <!-- ===== The dialogue (shown when signed in) ===== -->
   <div id="app" style="display:none; flex:1; flex-direction:column;">
     <div class="acct"><span id="acctEmail"></span><button id="signout">Sign out</button></div>
     <header>
@@ -145,6 +150,7 @@
 </div>
 
 <script>
+/* ---------- Supabase (accounts) ---------- */
 const SUPABASE_URL = 'https://lhreleeqqchskicxgocc.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_YAP8hFOl12L2VilYMm9yQA_yDTMs0sH';
 const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
@@ -199,6 +205,7 @@ async function doAuth() {
     } else {
       const { error } = await sb.auth.signInWithPassword({ email, password: pw });
       if (error) throw error;
+      /* success -> onAuthStateChange reveals the app */
     }
   } catch (e) {
     setMsg(friendly(e), true);
@@ -208,8 +215,9 @@ async function doAuth() {
 }
 
 async function signOut() {
+  resetConversation();
+  started = false;
   if (sb) await sb.auth.signOut();
-  convo = []; closed = false;
 }
 
 function reflect(session) {
@@ -236,6 +244,7 @@ if (sb) {
   setMsg('Could not reach the sign-in service. Reload and try again.', true);
 }
 
+/* ---------- The dialogue ---------- */
 const API = '/api/socrates';
 const GREETING = "Welcome. I am Socrates — an AI reconstruction inspired by the dialogues of Plato, Xenophon, and other sources. I make no claim to be the man himself. My purpose is to help you examine your own thinking, by asking. So — where shall we begin?";
 const ARC_TICKS = 8;
@@ -319,10 +328,17 @@ async function send() {
   }
 }
 
+function resetConversation() {
+  convo = []; closed = false;
+  errEl.style.display = 'none';
+  arcLabel.style.color = '';
+  arcLabel.textContent = 'a dialogue finds its rest in seven or eight turns';
+  render();
+}
+
 function renew() {
-  convo = []; closed = false; errEl.style.display = 'none';
-  arcLabel.style.color = ''; arcLabel.textContent = 'a dialogue finds its rest in seven or eight turns';
-  render(); inputEl.focus();
+  resetConversation();
+  inputEl.focus();
 }
 
 sendEl.addEventListener('click', send);
