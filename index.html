@@ -90,6 +90,7 @@
   textarea { flex: 1; resize: none; background: var(--ink-2); border: 1px solid var(--surface-edge); color: var(--parchment); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5; padding: 11px 14px; border-radius: 12px; max-height: 140px; outline: none; transition: border-color .2s ease; }
   textarea:focus { border-color: var(--gold); }
   textarea::placeholder { color: var(--dim); }
+  textarea:disabled { opacity: .45; cursor: default; }
   button.send { background: var(--gold); color: #20180a; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; padding: 11px 18px; border-radius: 12px; cursor: pointer; transition: background .2s ease, opacity .2s ease; white-space: nowrap; }
   button.send:hover { background: var(--gold-soft); }
   button.send:disabled { opacity: .4; cursor: default; }
@@ -294,12 +295,16 @@ function render() {
   }
   streamEl.scrollTop = streamEl.scrollHeight;
   updateArc();
-  renewEl.style.display = (closed || userTurns() >= ARC_TICKS) ? 'block' : 'none';
+  const done = closed || userTurns() >= ARC_TICKS;
+  renewEl.style.display = done ? 'block' : 'none';
+  inputEl.disabled = done;
+  inputEl.placeholder = done ? 'This inquiry has come to rest — begin a new one below.' : 'Put your question to Socrates…';
+  sendEl.disabled = done || busy;
 }
 
 async function send() {
   const text = inputEl.value.trim();
-  if (!text || busy) return;
+  if (!text || busy || closed) return;
   errEl.style.display = 'none';
   convo.push({ role: 'user', text });
   inputEl.value = ''; inputEl.style.height = 'auto';
