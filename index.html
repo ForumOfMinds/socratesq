@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ask Socrates</title>
+<title>SocratesQ</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap');
 
@@ -29,7 +30,33 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 720px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 0 18px; }
-  header { padding: 30px 4px 14px; text-align: center; border-bottom: 1px solid var(--surface-edge); }
+
+  .authwrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; }
+  .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
+  .authmark { font-family: 'EB Garamond', serif; font-size: 26px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
+  .authmark span { color: var(--gold); }
+  .thresh { font-family: 'EB Garamond', serif; font-size: 26px; color: var(--parchment); margin: 16px 0 12px; }
+  .threshsub { font-size: 13.5px; color: var(--parchment-dim); line-height: 1.65; max-width: 340px; margin: 0 auto 26px; }
+  .authcard { width: 100%; max-width: 330px; display: flex; flex-direction: column; gap: 10px; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 4px; }
+  .tabs button { flex: 1; background: transparent; border: 1px solid var(--surface-edge); color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 13px; padding: 8px; border-radius: 10px; cursor: pointer; transition: border-color .2s ease, color .2s ease; }
+  .tabs button.active { border-color: var(--gold); color: var(--gold); }
+  .authcard input { background: var(--ink-2); border: 1px solid var(--surface-edge); color: var(--parchment); font-family: 'Inter', sans-serif; font-size: 15px; padding: 11px 14px; border-radius: 12px; outline: none; transition: border-color .2s ease; }
+  .authcard input:focus { border-color: var(--gold); }
+  .authcard input::placeholder { color: var(--dim); }
+  .authsubmit { background: var(--gold); color: #20180a; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 12px; cursor: pointer; transition: background .2s ease; margin-top: 4px; }
+  .authsubmit:hover { background: var(--gold-soft); }
+  .authsubmit:disabled { opacity: .5; cursor: default; }
+  .authmsg { font-size: 13px; color: var(--parchment-dim); font-family: 'Inter', sans-serif; min-height: 18px; line-height: 1.5; margin-top: 2px; }
+  .authmsg.err { color: #d98c6a; }
+  .authdisc { font-size: 11px; color: var(--dim); letter-spacing: .03em; margin-top: 30px; max-width: 340px; line-height: 1.5; }
+
+  .acct { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 12px 4px 0; font-size: 12px; color: var(--dim); }
+  .acct button { background: transparent; border: none; color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 12px; cursor: pointer; text-decoration: underline; }
+  .acct button:hover { color: var(--gold); }
+
+  header { padding: 22px 4px 14px; text-align: center; border-bottom: 1px solid var(--surface-edge); }
   .mark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .mark span { color: var(--gold); }
   .sub { font-family: 'EB Garamond', serif; font-style: italic; color: var(--parchment-dim); font-size: 15px; margin-top: 4px; }
@@ -72,29 +99,143 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div class="mark">Ask <span>Socrates</span></div>
-    <div class="sub">an inquiry, not an answer</div>
-    <div class="disclaimer">An AI reconstruction inspired by Plato and Xenophon — not the historical Socrates.</div>
-  </header>
 
-  <div class="arc" id="arc"></div>
-  <div class="arc-label" id="arcLabel">a dialogue finds its rest in seven or eight turns</div>
-
-  <div class="stream" id="stream"></div>
-  <div class="err" id="err" style="display:none"></div>
-
-  <div class="renew" id="renew" style="display:none">
-    <button id="renewBtn">Begin a new inquiry</button>
+  <div id="auth" class="authwrap">
+    <div class="seal"><span class="q">Q</span></div>
+    <div class="authmark">Socrates<span>Q</span></div>
+    <div class="thresh">What would Socrates say?</div>
+    <div class="threshsub">Put a question to an AI reconstruction of Socrates — and be answered the way he answered: with more questions.</div>
+    <div class="authcard">
+      <div class="tabs">
+        <button id="tabIn" class="active">Sign in</button>
+        <button id="tabUp">Create account</button>
+      </div>
+      <input id="email" type="email" autocomplete="email" placeholder="you@example.com" />
+      <input id="pw" type="password" autocomplete="current-password" placeholder="password" />
+      <button id="authBtn" class="authsubmit">Sign in</button>
+      <div id="authMsg" class="authmsg"></div>
+    </div>
+    <div class="authdisc">A philosophical reconstruction, not the historical figure — and not advice.</div>
   </div>
 
-  <div class="composer">
-    <textarea id="input" rows="1" placeholder="Offer a thought, a claim, or a question…"></textarea>
-    <button class="send" id="send">Send</button>
+  <div id="app" style="display:none; flex:1; flex-direction:column;">
+    <div class="acct"><span id="acctEmail"></span><button id="signout">Sign out</button></div>
+    <header>
+      <div class="mark">Socrates<span>Q</span></div>
+      <div class="sub">an inquiry, not an answer</div>
+      <div class="disclaimer">A philosophical reconstruction, not the historical figure — and not advice.</div>
+    </header>
+
+    <div class="arc" id="arc"></div>
+    <div class="arc-label" id="arcLabel">a dialogue finds its rest in seven or eight turns</div>
+
+    <div class="stream" id="stream"></div>
+    <div class="err" id="err" style="display:none"></div>
+
+    <div class="renew" id="renew" style="display:none">
+      <button id="renewBtn">Begin a new inquiry</button>
+    </div>
+
+    <div class="composer">
+      <textarea id="input" rows="1" placeholder="Put your question to Socrates…"></textarea>
+      <button class="send" id="send">Send</button>
+    </div>
   </div>
+
 </div>
 
 <script>
+const SUPABASE_URL = 'https://lhreleeqqchskicxgocc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_YAP8hFOl12L2VilYMm9yQA_yDTMs0sH';
+const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+const authEl = document.getElementById('auth');
+const appEl = document.getElementById('app');
+const emailEl = document.getElementById('email');
+const pwEl = document.getElementById('pw');
+const authBtn = document.getElementById('authBtn');
+const authMsg = document.getElementById('authMsg');
+const tabIn = document.getElementById('tabIn');
+const tabUp = document.getElementById('tabUp');
+const acctEmail = document.getElementById('acctEmail');
+const signoutBtn = document.getElementById('signout');
+
+let mode = 'signin';
+
+function setMode(m) {
+  mode = m;
+  tabIn.classList.toggle('active', m === 'signin');
+  tabUp.classList.toggle('active', m === 'signup');
+  authBtn.textContent = (m === 'signup') ? 'Create account' : 'Sign in';
+  pwEl.setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
+  setMsg('');
+}
+function setMsg(text, isErr) {
+  authMsg.textContent = text || '';
+  authMsg.classList.toggle('err', !!isErr);
+}
+function friendly(e) {
+  const m = (e && e.message) ? e.message : '';
+  if (/email not confirmed|confirm/i.test(m)) return 'Please confirm your email first — check your inbox for the link.';
+  if (/invalid login/i.test(m)) return 'That email and password don\u2019t match. Try again.';
+  if (/already registered|already been registered/i.test(m)) return 'That email already has an account — try signing in.';
+  if (/password should be at least/i.test(m)) return 'Choose a password of at least 6 characters.';
+  return m || 'Something went wrong. Please try again.';
+}
+
+async function doAuth() {
+  if (!sb) { setMsg('Could not reach the sign-in service. Reload and try again.', true); return; }
+  const email = emailEl.value.trim();
+  const pw = pwEl.value;
+  if (!email || !pw) { setMsg('Enter your email and a password.', true); return; }
+  authBtn.disabled = true;
+  setMsg(mode === 'signup' ? 'Creating your account\u2026' : 'Signing you in\u2026');
+  try {
+    if (mode === 'signup') {
+      const { error } = await sb.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin } });
+      if (error) throw error;
+      setMsg('Check your email to confirm your account, then sign in.');
+      setMode('signin');
+    } else {
+      const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+      if (error) throw error;
+    }
+  } catch (e) {
+    setMsg(friendly(e), true);
+  } finally {
+    authBtn.disabled = false;
+  }
+}
+
+async function signOut() {
+  if (sb) await sb.auth.signOut();
+  convo = []; closed = false;
+}
+
+function reflect(session) {
+  const signedIn = !!(session && session.user);
+  authEl.style.display = signedIn ? 'none' : 'flex';
+  appEl.style.display = signedIn ? 'flex' : 'none';
+  if (signedIn) {
+    acctEmail.textContent = session.user.email || '';
+    if (!started) { startApp(); started = true; }
+  }
+}
+
+tabIn.addEventListener('click', () => setMode('signin'));
+tabUp.addEventListener('click', () => setMode('signup'));
+authBtn.addEventListener('click', doAuth);
+pwEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doAuth(); } });
+emailEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); pwEl.focus(); } });
+signoutBtn.addEventListener('click', signOut);
+
+if (sb) {
+  sb.auth.onAuthStateChange((_event, session) => reflect(session));
+  (async () => { const { data } = await sb.auth.getSession(); reflect(data.session); })();
+} else {
+  setMsg('Could not reach the sign-in service. Reload and try again.', true);
+}
+
 const API = '/api/socrates';
 const GREETING = "Welcome. I am Socrates — an AI reconstruction inspired by the dialogues of Plato, Xenophon, and other sources. I make no claim to be the man himself. My purpose is to help you examine your own thinking, by asking. So — where shall we begin?";
 const ARC_TICKS = 8;
@@ -102,6 +243,7 @@ const ARC_TICKS = 8;
 let convo = [];
 let busy = false;
 let closed = false;
+let started = false;
 
 const streamEl = document.getElementById('stream');
 const inputEl = document.getElementById('input');
@@ -166,7 +308,7 @@ async function send() {
     });
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    convo.push({ role: 'assistant', text: (data.text || '…') });
+    convo.push({ role: 'assistant', text: (data.text || '\u2026') });
     if (n >= 7) closed = true;
   } catch (e) {
     convo.pop();
@@ -188,7 +330,7 @@ document.getElementById('renewBtn').addEventListener('click', renew);
 inputEl.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
 inputEl.addEventListener('input', () => { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + 'px'; });
 
-render(); inputEl.focus();
+function startApp() { render(); inputEl.focus(); }
 </script>
 </body>
 </html>
