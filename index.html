@@ -236,12 +236,12 @@ async function doAuth() {
     if (mode === 'signup') {
       const { error } = await sb.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin } });
       if (error) throw error;
-      setMsg('Check your email to confirm your account, then sign in.');
       setMode('signin');
+      setMsg('Check your email to confirm your account, then sign in.');
     } else {
-      const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+      const { data: signInData, error } = await sb.auth.signInWithPassword({ email, password: pw });
       if (error) throw error;
-      /* success -> onAuthStateChange -> enterMember */
+      if (signInData && signInData.session) enterMember(signInData.session);
     }
   } catch (e) {
     setMsg(friendly(e), true);
