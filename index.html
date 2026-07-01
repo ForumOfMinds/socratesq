@@ -43,6 +43,13 @@
   .authwrap > .authback,
   .authwrap > .authdisc { position: relative; z-index: 2; }
 
+  /* Same treatment for the chat view */
+  #app { position: relative; overflow: hidden; min-height: 100vh; }
+  #app > * { position: relative; z-index: 2; }
+  #app > .digital-hero-overlay,
+  #app > .digital-hero-grid,
+  #app > .digital-hero-canvas { z-index: 1; }
+
   /* === Digital hero — animated background layers === */
   .digital-hero-overlay {
     position: absolute;
@@ -230,6 +237,9 @@
 
   <!-- ===== The dialogue ===== -->
   <div id="app" style="display:none; flex-direction:column;">
+    <div class="digital-hero-overlay" aria-hidden="true"></div>
+    <div class="digital-hero-grid" aria-hidden="true"></div>
+    <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
     <div class="acct"><span id="remaining" style="color:var(--gold);font-size:14px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
     <header>
       <div class="mark">Socrates<span>Q</span></div>
@@ -671,9 +681,9 @@ renewBtn.addEventListener('click', () => {
 inputEl.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
 inputEl.addEventListener('input', () => { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + 'px'; });
 
-/* ---------- Digital hero — particle network on the threshold ---------- */
+/* ---------- Digital hero — particle network on both threshold + chat views ---------- */
 document.querySelectorAll('[data-digital-hero]').forEach(function(canvas) {
-  var hero = canvas.closest('.authwrap');
+  var hero = canvas.closest('.authwrap, #app');
   if (!hero) return;
   var ctx = canvas.getContext('2d');
   var W = 0, H = 0, raf = null;
