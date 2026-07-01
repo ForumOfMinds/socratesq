@@ -58,22 +58,23 @@
   .authdisc { font-size: 12px; color: var(--dim); letter-spacing: .03em; margin-top: 26px; max-width: 340px; line-height: 1.5; }
 
   /* ---- Account bar ---- */
-  .acct { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 12px 4px 0; font-size: 13px; color: var(--dim); }
-  .acct button { background: transparent; border: none; color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer; text-decoration: underline; }
+  .acct { display: flex; align-items: center; justify-content: flex-end; gap: 14px; padding: 14px 4px 0; font-size: 15px; color: var(--parchment-dim); }
+  .acct button { background: transparent; border: none; color: var(--parchment); font-family: 'Inter', sans-serif; font-size: 15px; cursor: pointer; text-decoration: underline; }
   .acct button:hover { color: var(--gold); }
 
   /* ---- Dialogue ---- */
-  header { padding: 22px 4px 14px; text-align: center; border-bottom: 1px solid var(--surface-edge); }
-  .mark { font-family: 'EB Garamond', serif; font-size: 36px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
+  header { padding: 24px 4px 16px; text-align: center; border-bottom: 1px solid var(--surface-edge); }
+  .mark { font-family: 'EB Garamond', serif; font-size: 40px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .mark span { color: var(--gold); }
-  .sub { font-family: 'EB Garamond', serif; font-style: italic; color: var(--parchment-dim); font-size: 17px; margin-top: 4px; }
-  .disclaimer { font-size: 12px; color: var(--dim); letter-spacing: 0.03em; margin-top: 10px; }
+  .sub { font-family: 'EB Garamond', serif; font-style: italic; color: var(--parchment); font-size: 21px; margin-top: 8px; }
+  .disclaimer { font-size: 15px; color: var(--parchment-dim); letter-spacing: 0.03em; margin-top: 12px; }
+  .invitation { font-family: 'EB Garamond', serif; font-style: italic; color: var(--gold-soft); font-size: 19px; margin-top: 10px; letter-spacing: .02em; }
 
-  .arc { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 14px 0 4px; }
-  .arc .tick { width: 2px; height: 13px; background: var(--surface-edge); border-radius: 2px; transition: background .6s ease, height .6s ease, box-shadow .6s ease; }
-  .arc .tick.lit { background: var(--gold); box-shadow: 0 0 8px rgba(201,162,75,.45); }
-  .arc .tick.closing { height: 18px; background: var(--gold-soft); }
-  .arc-label { text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--dim); margin-bottom: 6px; letter-spacing: .02em; transition: color .5s ease; }
+  .arc { display: flex; align-items: center; justify-content: center; gap: 11px; padding: 16px 0 6px; }
+  .arc .tick { width: 3px; height: 17px; background: var(--surface-edge); border-radius: 2px; transition: background .6s ease, height .6s ease, box-shadow .6s ease; }
+  .arc .tick.lit { background: var(--gold); box-shadow: 0 0 10px rgba(201,162,75,.55); }
+  .arc .tick.closing { height: 22px; background: var(--gold-soft); }
+  .arc-label { text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; color: var(--parchment-dim); margin-bottom: 8px; letter-spacing: .02em; transition: color .5s ease; }
 
   /* Stream: no longer flex:1 — grows only as needed so the composer sits
      directly below the last message instead of anchored to viewport bottom */
@@ -143,11 +144,12 @@
 
   <!-- ===== The dialogue ===== -->
   <div id="app" style="display:none; flex-direction:column;">
-    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:12px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
+    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:14px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
     <header>
       <div class="mark">Socrates<span>Q</span></div>
-      <div class="sub">an inquiry, not an answer</div>
-      <div class="disclaimer">A philosophical reconstruction, not the historical figure — and not advice.</div>
+      <div class="sub">the question beneath the question</div>
+      <div class="disclaimer">A philosophical reconstruction — not the historical man, and not advice.</div>
+      <div class="invitation">Bring a question. Leave with a better one.</div>
     </header>
 
     <div class="arc" id="arc"></div>
@@ -317,7 +319,7 @@ if (sb) {
 
 /* ---------- The dialogue ---------- */
 const API = '/api/socrates';
-const GREETING = "Welcome. I am Socrates — an AI reconstruction inspired by the dialogues of Plato, Xenophon, and other sources. I make no claim to be the man himself. My purpose is to help you examine your own thinking, by asking. So — where shall we begin?";
+const GREETING = "Welcome. I am Socrates — an AI reconstruction shaped by the dialogues of Plato, Xenophon, and other sources. I make no claim to be the man himself. My purpose is to help you examine your own thinking, by asking. So — where shall we begin?";
 const ARC_TICKS = 8;
 
 let convo = [];
