@@ -30,83 +30,92 @@
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 720px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 0 18px; }
+  .wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; padding: 0 18px; }
 
   /* ---- Auth (the threshold) ---- */
-  .authwrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; }
+  .authwrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; min-height: 100vh; }
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
-  .authmark { font-family: 'EB Garamond', serif; font-size: 26px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
+  .authmark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .authmark span { color: var(--gold); }
-  .thresh { font-family: 'EB Garamond', serif; font-size: 26px; color: var(--parchment); margin: 16px 0 12px; }
-  .threshsub { font-size: 13.5px; color: var(--parchment-dim); line-height: 1.65; max-width: 340px; margin: 0 auto 26px; }
+  .thresh { font-family: 'EB Garamond', serif; font-size: 28px; color: var(--parchment); margin: 16px 0 12px; }
+  .threshsub { font-size: 15px; color: var(--parchment-dim); line-height: 1.65; max-width: 360px; margin: 0 auto 26px; }
   .authcard { width: 100%; max-width: 330px; display: flex; flex-direction: column; gap: 10px; }
   .tabs { display: flex; gap: 6px; margin-bottom: 4px; }
-  .tabs button { flex: 1; background: transparent; border: 1px solid var(--surface-edge); color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 13px; padding: 8px; border-radius: 10px; cursor: pointer; transition: border-color .2s ease, color .2s ease; }
+  .tabs button { flex: 1; background: transparent; border: 1px solid var(--surface-edge); color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 14px; padding: 9px; border-radius: 10px; cursor: pointer; transition: border-color .2s ease, color .2s ease; }
   .tabs button.active { border-color: var(--gold); color: var(--gold); }
-  .authcard input { background: var(--ink-2); border: 1px solid var(--surface-edge); color: var(--parchment); font-family: 'Inter', sans-serif; font-size: 15px; padding: 11px 14px; border-radius: 12px; outline: none; transition: border-color .2s ease; }
+  .authcard input { background: var(--ink-2); border: 1px solid var(--surface-edge); color: var(--parchment); font-family: 'Inter', sans-serif; font-size: 16px; padding: 12px 14px; border-radius: 12px; outline: none; transition: border-color .2s ease; }
   .authcard input:focus { border-color: var(--gold); }
   .authcard input::placeholder { color: var(--dim); }
-  .authsubmit { background: var(--gold); color: #20180a; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; padding: 12px; border-radius: 12px; cursor: pointer; transition: background .2s ease; margin-top: 4px; }
+  .authsubmit { background: var(--gold); color: #20180a; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px; padding: 13px; border-radius: 12px; cursor: pointer; transition: background .2s ease; margin-top: 4px; }
   .authsubmit:hover { background: var(--gold-soft); }
   .authsubmit:disabled { opacity: .5; cursor: default; }
-  .authmsg { font-size: 13px; color: var(--parchment-dim); font-family: 'Inter', sans-serif; min-height: 18px; line-height: 1.5; margin-top: 2px; }
+  .authmsg { font-size: 14px; color: var(--parchment-dim); font-family: 'Inter', sans-serif; min-height: 18px; line-height: 1.5; margin-top: 2px; }
   .authmsg.err { color: #d98c6a; }
   .authback { margin-top: 18px; }
-  .authback button { background: transparent; border: none; color: var(--dim); font-family: 'Inter', sans-serif; font-size: 12px; cursor: pointer; text-decoration: underline; }
+  .authback button { background: transparent; border: none; color: var(--dim); font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer; text-decoration: underline; }
   .authback button:hover { color: var(--gold); }
-  .authdisc { font-size: 11px; color: var(--dim); letter-spacing: .03em; margin-top: 26px; max-width: 340px; line-height: 1.5; }
+  .authdisc { font-size: 12px; color: var(--dim); letter-spacing: .03em; margin-top: 26px; max-width: 340px; line-height: 1.5; }
 
   /* ---- Account bar ---- */
-  .acct { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 12px 4px 0; font-size: 12px; color: var(--dim); }
-  .acct button { background: transparent; border: none; color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 12px; cursor: pointer; text-decoration: underline; }
+  .acct { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 12px 4px 0; font-size: 13px; color: var(--dim); }
+  .acct button { background: transparent; border: none; color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer; text-decoration: underline; }
   .acct button:hover { color: var(--gold); }
 
   /* ---- Dialogue ---- */
   header { padding: 22px 4px 14px; text-align: center; border-bottom: 1px solid var(--surface-edge); }
-  .mark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
+  .mark { font-family: 'EB Garamond', serif; font-size: 36px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .mark span { color: var(--gold); }
-  .sub { font-family: 'EB Garamond', serif; font-style: italic; color: var(--parchment-dim); font-size: 15px; margin-top: 4px; }
-  .disclaimer { font-size: 11px; color: var(--dim); letter-spacing: 0.03em; margin-top: 10px; }
+  .sub { font-family: 'EB Garamond', serif; font-style: italic; color: var(--parchment-dim); font-size: 17px; margin-top: 4px; }
+  .disclaimer { font-size: 12px; color: var(--dim); letter-spacing: 0.03em; margin-top: 10px; }
 
   .arc { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 14px 0 4px; }
   .arc .tick { width: 2px; height: 13px; background: var(--surface-edge); border-radius: 2px; transition: background .6s ease, height .6s ease, box-shadow .6s ease; }
   .arc .tick.lit { background: var(--gold); box-shadow: 0 0 8px rgba(201,162,75,.45); }
   .arc .tick.closing { height: 18px; background: var(--gold-soft); }
-  .arc-label { text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: 12px; color: var(--dim); margin-bottom: 6px; letter-spacing: .02em; transition: color .5s ease; }
+  .arc-label { text-align: center; font-family: 'EB Garamond', serif; font-style: italic; font-size: 13px; color: var(--dim); margin-bottom: 6px; letter-spacing: .02em; transition: color .5s ease; }
 
-  .stream { flex: 1; overflow-y: auto; padding: 18px 2px 8px; display: flex; flex-direction: column; gap: 22px; }
+  /* Stream: no longer flex:1 — grows only as needed so the composer sits
+     directly below the last message instead of anchored to viewport bottom */
+  .stream { overflow-y: auto; padding: 18px 2px 8px; display: flex; flex-direction: column; gap: 22px; max-height: 62vh; }
   .turn { display: flex; flex-direction: column; gap: 5px; animation: rise .5s ease both; }
   @keyframes rise { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: none; } }
-  .who { font-size: 11px; text-transform: uppercase; letter-spacing: .16em; font-weight: 600; }
+  .who { font-size: 12px; text-transform: uppercase; letter-spacing: .16em; font-weight: 600; }
   .turn.soc .who { color: var(--gold); }
   .turn.you .who { color: var(--olive); align-self: flex-end; }
-  .turn.soc .body { font-family: 'EB Garamond', serif; font-size: 20px; line-height: 1.6; color: var(--parchment); }
+  .turn.soc .body { font-family: 'EB Garamond', serif; font-size: 24px; line-height: 1.6; color: var(--parchment); }
   .turn.you { align-items: flex-end; }
-  .turn.you .body { font-size: 15.5px; line-height: 1.55; color: var(--user); background: var(--surface); border: 1px solid var(--surface-edge); padding: 9px 14px; border-radius: 12px 12px 3px 12px; max-width: 85%; }
-  .thinking { font-family: 'EB Garamond', serif; font-style: italic; color: var(--parchment-dim); font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .turn.you .body { font-size: 17px; line-height: 1.55; color: var(--user); background: var(--surface); border: 1px solid var(--surface-edge); padding: 10px 15px; border-radius: 12px 12px 3px 12px; max-width: 85%; }
+  .thinking { font-family: 'EB Garamond', serif; font-style: italic; color: var(--parchment-dim); font-size: 22px; display: flex; align-items: center; gap: 8px; }
   .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: pulse 1.1s infinite ease-in-out; }
   .dot:nth-child(2){ animation-delay: .2s; }
   .dot:nth-child(3){ animation-delay: .4s; }
   @keyframes pulse { 0%,100%{ opacity:.25; transform: translateY(0);} 50%{ opacity:1; transform: translateY(-2px);} }
 
   .endbar { text-align: center; padding: 2px 0 10px; }
-  .endbar button { background: transparent; border: none; color: var(--dim); font-family: 'Inter', sans-serif; font-size: 12px; cursor: pointer; text-decoration: underline; letter-spacing: .02em; }
+  .endbar button { background: transparent; border: none; color: var(--dim); font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer; text-decoration: underline; letter-spacing: .02em; }
   .endbar button:hover { color: var(--gold); }
 
   .composer { border-top: 1px solid var(--surface-edge); padding: 14px 0 22px; display: flex; gap: 10px; align-items: flex-end; }
-  textarea { flex: 1; resize: none; background: var(--ink-2); border: 1px solid var(--surface-edge); color: var(--parchment); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5; padding: 11px 14px; border-radius: 12px; max-height: 140px; outline: none; transition: border-color .2s ease; }
+  textarea { flex: 1; resize: none; background: var(--ink-2); border: 1px solid var(--surface-edge); color: var(--parchment); font-family: 'Inter', sans-serif; font-size: 17px; line-height: 1.5; padding: 12px 15px; border-radius: 12px; max-height: 140px; outline: none; transition: border-color .2s ease; }
   textarea:focus { border-color: var(--gold); }
   textarea::placeholder { color: var(--dim); }
   textarea:disabled { opacity: .45; cursor: default; }
-  button.send { background: var(--gold); color: #20180a; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; padding: 11px 18px; border-radius: 12px; cursor: pointer; transition: background .2s ease, opacity .2s ease; white-space: nowrap; }
+  button.send { background: var(--gold); color: #20180a; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px; padding: 12px 20px; border-radius: 12px; cursor: pointer; transition: background .2s ease, opacity .2s ease; white-space: nowrap; }
   button.send:hover { background: var(--gold-soft); }
   button.send:disabled { opacity: .4; cursor: default; }
   .renew { text-align: center; padding: 4px 0 16px; }
-  .renew button { background: transparent; border: 1px solid var(--surface-edge); color: var(--parchment-dim); font-family: 'EB Garamond', serif; font-style: italic; font-size: 15px; padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: border-color .2s ease, color .2s ease; }
+  .renew button { background: transparent; border: 1px solid var(--surface-edge); color: var(--parchment-dim); font-family: 'EB Garamond', serif; font-style: italic; font-size: 16px; padding: 9px 22px; border-radius: 20px; cursor: pointer; transition: border-color .2s ease, color .2s ease; }
   .renew button:hover { border-color: var(--gold); color: var(--gold); }
-  .err { color: #d98c6a; font-size: 13px; font-family: 'Inter', sans-serif; text-align: center; padding: 6px 0; }
-  @media (max-width: 520px) { .turn.soc .body { font-size: 18px; } .mark { font-size: 25px; } }
+  .err { color: #d98c6a; font-size: 14px; font-family: 'Inter', sans-serif; text-align: center; padding: 6px 0; }
+  @media (max-width: 520px) {
+    .turn.soc .body { font-size: 22px; }
+    .turn.you .body { font-size: 16px; }
+    .mark { font-size: 30px; }
+    .sub { font-size: 16px; }
+    textarea { font-size: 16px; }
+    .stream { max-height: 55vh; }
+  }
 </style>
 </head>
 <body>
@@ -133,8 +142,8 @@
   </div>
 
   <!-- ===== The dialogue ===== -->
-  <div id="app" style="display:none; flex:1; flex-direction:column;">
-    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:11px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
+  <div id="app" style="display:none; flex-direction:column;">
+    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:12px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
     <header>
       <div class="mark">Socrates<span>Q</span></div>
       <div class="sub">an inquiry, not an answer</div>
@@ -156,18 +165,18 @@
     </div>
 
     <div id="pdfBar" style="display:none;text-align:center;padding:2px 0 6px;">
-      <button id="pdfBtn" style="background:transparent;border:none;color:var(--parchment-dim);font-family:'EB Garamond',serif;font-style:italic;font-size:14px;cursor:pointer;text-decoration:underline;letter-spacing:.01em;">Save this dialogue as PDF</button>
+      <button id="pdfBtn" style="background:transparent;border:none;color:var(--parchment-dim);font-family:'EB Garamond',serif;font-style:italic;font-size:15px;cursor:pointer;text-decoration:underline;letter-spacing:.01em;">Save this dialogue as PDF</button>
     </div>
 
     <div id="limitReached" style="display:none;text-align:center;padding:18px 12px 10px;">
-      <div style="font-family:'EB Garamond',serif;font-size:19px;color:var(--parchment);margin-bottom:8px;">You have used all 5 conversations this month.</div>
-      <div style="font-size:13px;color:var(--parchment-dim);margin-bottom:16px;">Subscribe to continue — 30 conversations a month.</div>
-      <button onclick="alert('Subscriptions coming soon — stay with us.')" style="background:var(--gold);color:#20180a;border:none;font-family:Inter,sans-serif;font-weight:600;font-size:14px;padding:11px 24px;border-radius:12px;cursor:pointer;">Subscribe</button>
+      <div style="font-family:'EB Garamond',serif;font-size:22px;color:var(--parchment);margin-bottom:8px;">You have used all 5 conversations this month.</div>
+      <div style="font-size:14px;color:var(--parchment-dim);margin-bottom:16px;">Subscribe to continue — 30 conversations a month.</div>
+      <button onclick="alert('Subscriptions coming soon — stay with us.')" style="background:var(--gold);color:#20180a;border:none;font-family:Inter,sans-serif;font-weight:600;font-size:15px;padding:12px 26px;border-radius:12px;cursor:pointer;">Subscribe</button>
     </div>
 
     <div id="forumLink" style="display:none;text-align:center;padding:10px 0 6px;">
       <a href="https://www.forumofminds.com" target="_blank" rel="noopener"
-         style="font-family:'EB Garamond',serif;font-style:italic;font-size:15px;color:var(--gold);text-decoration:none;letter-spacing:.02em;">
+         style="font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:var(--gold);text-decoration:none;letter-spacing:.02em;">
         Bring your question to the Council&nbsp;→&nbsp;Forum of Minds
       </a>
     </div>
@@ -219,7 +228,7 @@ function setMsg(text, isErr) {
 function friendly(e) {
   const m = (e && e.message) ? e.message : '';
   if (/email not confirmed|confirm/i.test(m)) return 'Please confirm your email first — check your inbox for the link.';
-  if (/invalid login/i.test(m)) return 'That email and password don\u2019t match. Try again.';
+  if (/invalid login/i.test(m)) return 'That email and password don’t match. Try again.';
   if (/already registered|already been registered/i.test(m)) return 'That email already has an account — try signing in.';
   if (/password should be at least/i.test(m)) return 'Choose a password of at least 6 characters.';
   return m || 'Something went wrong. Please try again.';
@@ -231,7 +240,7 @@ async function doAuth() {
   const pw = pwEl.value;
   if (!email || !pw) { setMsg('Enter your email and a password.', true); return; }
   authBtn.disabled = true;
-  setMsg(mode === 'signup' ? 'Creating your account\u2026' : 'Signing you in\u2026');
+  setMsg(mode === 'signup' ? 'Creating your account…' : 'Signing you in…');
   try {
     if (mode === 'signup') {
       const { error } = await sb.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin } });
@@ -415,7 +424,7 @@ async function getToken() {
 
 function showRemaining(n) {
   if (!member || n === null || n === undefined) { remainingEl.textContent = ''; return; }
-  remainingEl.textContent = n + ' of 5 conversations left this month  ';
+  remainingEl.textContent = n + ' of 5 conversations left this month  ';
 }
 
 for (let i = 0; i < ARC_TICKS; i++) { const t = document.createElement('div'); t.className = 'tick'; arcEl.appendChild(t); }
@@ -510,7 +519,7 @@ async function send() {
 
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    convo.push({ role: 'assistant', text: (data.text || '\u2026') });
+    convo.push({ role: 'assistant', text: (data.text || '…') });
     if (n === 1 && data.remaining !== undefined) showRemaining(data.remaining);
     if (n >= 7) closed = true;
   } catch (e) {
@@ -539,7 +548,7 @@ async function endConversation() {
     });
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    convo.push({ role: 'assistant', text: (data.text || '\u2026') });
+    convo.push({ role: 'assistant', text: (data.text || '…') });
     closed = true;
   } catch (e) {
     errEl.textContent = 'The line to Socrates faltered. Give it another try in a moment.';
