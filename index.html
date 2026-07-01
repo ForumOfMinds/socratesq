@@ -43,12 +43,13 @@
   .authwrap > .authback,
   .authwrap > .authdisc { position: relative; z-index: 2; }
 
-  /* Same treatment for the chat view */
+  /* Same treatment for the chat view — but exclude the overlay elements
+     from the universal rule so their position: absolute is preserved. */
   #app { position: relative; overflow: hidden; min-height: 100vh; }
-  #app > * { position: relative; z-index: 2; }
-  #app > .digital-hero-overlay,
-  #app > .digital-hero-grid,
-  #app > .digital-hero-canvas { z-index: 1; }
+  #app > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas) {
+    position: relative;
+    z-index: 2;
+  }
 
   /* === Digital hero — animated background layers === */
   .digital-hero-overlay {
