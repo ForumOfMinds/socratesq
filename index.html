@@ -69,6 +69,19 @@
   .sub { font-family: 'EB Garamond', serif; font-style: italic; color: var(--parchment); font-size: 21px; margin-top: 8px; }
   .disclaimer { font-size: 15px; color: var(--parchment-dim); letter-spacing: 0.03em; margin-top: 12px; }
   .invitation { font-family: 'EB Garamond', serif; color: var(--gold-soft); font-size: 19px; margin-top: 10px; letter-spacing: .02em; }
+  .origin-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: 'EB Garamond', serif;
+    font-size: 16px;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,162,75,0.35);
+    padding-bottom: 2px;
+    letter-spacing: .02em;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .origin-link:hover { color: var(--gold-soft); border-bottom-color: var(--gold); }
 
   .arc { display: flex; align-items: center; justify-content: center; gap: 11px; padding: 16px 0 6px; }
   .arc .tick { width: 3px; height: 17px; background: var(--surface-edge); border-radius: 2px; transition: background .6s ease, height .6s ease, box-shadow .6s ease; }
@@ -147,6 +160,7 @@
     <div class="acct"><span id="remaining" style="color:var(--gold);font-size:14px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
     <header>
       <div class="mark">Socrates<span>Q</span></div>
+      <a class="origin-link" href="https://www.forumofminds.com/about" target="_blank" rel="noopener">Where this comes from &rarr;</a>
       <div class="sub">the question beneath the question</div>
       <div class="disclaimer">A philosophical reconstruction — not the historical man, and not advice.</div>
       <div class="invitation">Bring a question. Leave with a better one.</div>
