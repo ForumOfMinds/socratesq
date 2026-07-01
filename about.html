@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About — SocratesQ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&display=swap');
+
+  :root {
+    --ink:          #14181a;
+    --surface:      #1d2326;
+    --surface-edge: #2a3236;
+    --parchment:    #ece5d4;
+    --parchment-dim:#b9b3a3;
+    --gold:         #c9a24b;
+    --gold-soft:    #d9bd7e;
+    --dim:          #676d68;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: radial-gradient(1200px 700px at 50% -8%, #1c2326 0%, var(--ink) 60%) fixed;
+    color: var(--parchment);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 20px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ---- Nav ---- */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 0;
+    border-bottom: 1px solid var(--surface-edge);
+    padding-bottom: 18px;
+  }
+  .mark {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    color: var(--parchment);
+    text-decoration: none;
+  }
+  .mark span { color: var(--gold); }
+  nav a.enter {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid rgba(201,162,75,.35);
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: border-color .2s, background .2s;
+  }
+  nav a.enter:hover { border-color: var(--gold); background: rgba(201,162,75,.08); }
+
+  /* ---- Sections ---- */
+  .hero {
+    padding: 56px 0 10px;
+    text-align: center;
+  }
+  .seal {
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 22px;
+  }
+  .seal .q { font-size: 36px; color: var(--gold); line-height: 1; }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--parchment);
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .hero .lead {
+    font-style: italic;
+    font-size: 19px;
+    color: var(--parchment-dim);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .rule {
+    border: none;
+    border-top: 1px solid var(--surface-edge);
+    margin: 44px 0;
+  }
+
+  section { margin-bottom: 44px; }
+
+  h2 {
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  p { margin-bottom: 1.1em; color: var(--parchment); }
+  p:last-child { margin-bottom: 0; }
+
+  em { font-style: italic; color: var(--parchment-dim); }
+
+  blockquote {
+    border-left: 2px solid var(--gold);
+    margin: 28px 0;
+    padding: 2px 0 2px 22px;
+    font-style: italic;
+    font-size: 21px;
+    color: var(--parchment-dim);
+    line-height: 1.55;
+  }
+
+  /* ---- Forum band ---- */
+  .forum-band {
+    background: var(--surface);
+    border: 1px solid var(--surface-edge);
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin: 44px 0;
+    text-align: center;
+  }
+  .forum-band p {
+    font-size: 18px;
+    color: var(--parchment-dim);
+    margin-bottom: 20px;
+    line-height: 1.65;
+  }
+  .forum-band a {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold);
+    border: 1px solid rgba(201,162,75,.4);
+    padding: 9px 22px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: border-color .2s, background .2s;
+  }
+  .forum-band a:hover { border-color: var(--gold); background: rgba(201,162,75,.08); }
+
+  /* ---- Contact ---- */
+  .contact {
+    background: var(--surface);
+    border: 1px solid var(--surface-edge);
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin-top: 44px;
+  }
+  .contact h2 { margin-bottom: 10px; }
+  .contact p { font-size: 18px; color: var(--parchment-dim); margin-bottom: 12px; }
+  .contact a {
+    color: var(--gold);
+    text-decoration: none;
+    font-style: italic;
+  }
+  .contact a:hover { text-decoration: underline; }
+
+  /* ---- Disclaimer ---- */
+  .disc {
+    margin-top: 52px;
+    padding-top: 24px;
+    border-top: 1px solid var(--surface-edge);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    color: var(--dim);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  @media (max-width: 520px) {
+    html, body { font-size: 18px; }
+    .hero h1 { font-size: 28px; }
+    blockquote { font-size: 19px; }
+    .forum-band, .contact { padding: 22px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <a class="mark" href="/">Socrates<span>Q</span></a>
+    <a class="enter" href="/">Enter a dialogue →</a>
+  </nav>
+
+  <div class="hero">
+    <div class="seal"><span class="q">Q</span></div>
+    <h1>What would Socrates say?</h1>
+    <p class="lead">An AI reconstruction of the Socratic method — built for the curious, the doubting, and those who believe that examined thinking is worth the effort.</p>
+  </div>
+
+  <hr class="rule" />
+
+  <section>
+    <h2>The Method</h2>
+    <p>Socrates left no writings. What we know of him comes through the dialogues of Plato, the memoirs of Xenophon, and a handful of other ancient sources — and what those sources agree on is this: he taught by asking, not by telling. Every question he posed was an invitation to look more carefully at what you thought you already knew.</p>
+
+    <blockquote>"I know that I know nothing — and that not-knowing is the beginning of wisdom."</blockquote>
+
+    <p>When you begin a dialogue with SocratesQ, you bring a question. Socrates will not answer it. He will ask you one in return. And then another. Not to frustrate you, but because the examined thought is always the more honest one. A conversation that ends with more questions than it began with is a conversation that did its work.</p>
+  </section>
+
+  <section>
+    <h2>What This Is</h2>
+    <p>SocratesQ is an AI reconstruction of the philosophical method of Socrates. It draws on the Platonic dialogues and related sources to reconstruct his characteristic way of inquiring — his stance, his turns of thought, his discipline of the single question. It makes no claim to be the historical Socrates. It is, rather, a serious attempt to keep his method alive and available.</p>
+    <p>Each dialogue is complete in itself. You bring your question; the conversation unfolds; when it comes to rest, you carry the thread away. Nothing is stored. The only record is the one you choose to keep — which you can save as a PDF at the close of any dialogue.</p>
+  </section>
+
+  <div class="forum-band">
+    <p>SocratesQ is the public doorway to the <strong>Forum of Minds</strong> — a modern Republic of Letters where questions raised in dialogue may find their way before a council of AI-reconstructed philosophers. The Forum is a place for serious intellectual inquiry, built for those who believe that examined thinking is worth the effort.</p>
+    <a href="https://www.forumofminds.com" target="_blank" rel="noopener">Explore the Forum of Minds →</a>
+  </div>
+
+  <section>
+    <h2>Who We Are</h2>
+    <p>SocratesQ is built by the founders of the Forum of Minds — <strong>Svetlana Stolyarova</strong> and <strong>Dr. Anna Kondratova</strong>. Svetlana is a philosopher by training, a presenter of world-class classical music events in Cleveland, and a long-standing builder of cultural communities. Anna is a scholar and artistic director whose work sits at the intersection of music, philosophy, and intellectual life.</p>
+    <p>The Forum of Minds grew from a shared conviction: that the great philosophical tradition is not a museum exhibit but a living conversation — and that the right technology, handled with care, can keep that conversation going.</p>
+  </section>
+
+  <hr class="rule" />
+
+  <section>
+    <h2>An Honest Note</h2>
+    <p>SocratesQ is an AI application. The Socrates you meet here is a reconstruction — not the historical figure, not a channel to any ancient consciousness, and emphatically not a source of medical, legal, financial, or personal advice. What it offers is philosophical inquiry: a disciplined, careful, question-by-question examination of ideas.</p>
+    <p>If a question you bring is serious — concerning your health, your legal situation, your finances, or your safety — please seek a qualified human professional. Socrates would be the first to agree.</p>
+  </section>
+
+  <div class="contact">
+    <h2>Questions &amp; Concerns</h2>
+    <p>For questions about your account, technical concerns, or anything else, write to us at <a href="mailto:help@socratesq.app">help@socratesq.app</a> — we read every message.</p>
+  </div>
+
+  <div class="disc">
+    SocratesQ &nbsp;·&nbsp; A project of the Forum of Minds<br/>
+    A philosophical reconstruction, not the historical figure — and not advice.<br/><br/>
+    <a href="https://www.forumofminds.com" style="color:var(--gold);text-decoration:none;">forumofminds.com</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="/" style="color:var(--dim);text-decoration:none;">Return to SocratesQ</a>
+  </div>
+
+</div>
+</body>
+</html>
