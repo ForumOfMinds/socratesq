@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Socratic Method — SocratesQ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&display=swap');
+
+  :root {
+    --ink:          #14181a;
+    --surface:      #1d2326;
+    --surface-edge: #2a3236;
+    --parchment:    #ece5d4;
+    --parchment-dim:#b9b3a3;
+    --gold:         #c9a24b;
+    --gold-soft:    #d9bd7e;
+    --dim:          #676d68;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: radial-gradient(1200px 700px at 50% -8%, #1c2326 0%, var(--ink) 60%) fixed;
+    color: var(--parchment);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 20px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ---- Nav ---- */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 0;
+    border-bottom: 1px solid var(--surface-edge);
+    padding-bottom: 18px;
+  }
+  .mark {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    color: var(--parchment);
+    text-decoration: none;
+  }
+  .mark span { color: var(--gold); }
+  nav a.enter {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid rgba(201,162,75,.35);
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: border-color .2s, background .2s;
+  }
+  nav a.enter:hover { border-color: var(--gold); background: rgba(201,162,75,.08); }
+
+  /* ---- Hero ---- */
+  .hero {
+    padding: 56px 0 10px;
+    text-align: center;
+  }
+  .seal {
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 22px;
+  }
+  .seal .q { font-size: 36px; color: var(--gold); line-height: 1; }
+  .hero h1 {
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--parchment);
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .hero .lead {
+    font-style: italic;
+    font-size: 19px;
+    color: var(--parchment-dim);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .rule {
+    border: none;
+    border-top: 1px solid var(--surface-edge);
+    margin: 44px 0;
+  }
+
+  section { margin-bottom: 44px; }
+
+  h2 {
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  p { margin-bottom: 1.1em; color: var(--parchment); }
+  p:last-child { margin-bottom: 0; }
+
+  em { font-style: italic; color: var(--parchment-dim); }
+  strong { color: var(--parchment); font-weight: 500; }
+
+  blockquote {
+    border-left: 2px solid var(--gold);
+    margin: 28px 0;
+    padding: 2px 0 2px 22px;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--parchment-dim);
+    line-height: 1.6;
+  }
+
+  /* ---- Back link (to /about) ---- */
+  .back-wrap {
+    text-align: center;
+    margin: 48px 0 8px;
+  }
+  .back-link {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 16px;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,162,75,.35);
+    padding-bottom: 3px;
+    transition: border-color .2s;
+  }
+  .back-link:hover { border-color: var(--gold); }
+
+  /* ---- Disclaimer ---- */
+  .disc {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--surface-edge);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    color: var(--dim);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  @media (max-width: 520px) {
+    html, body { font-size: 18px; }
+    .hero h1 { font-size: 26px; }
+    blockquote { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <a class="mark" href="/">Socrates<span>Q</span></a>
+    <a class="enter" href="/">Enter a dialogue →</a>
+  </nav>
+
+  <div class="hero">
+    <div class="seal"><span class="q">Q</span></div>
+    <h1>The Socratic Method — a Historical View</h1>
+    <p class="lead">Athens, Phaenarete, and the practice that outlived every dogma.</p>
+  </div>
+
+  <hr class="rule" />
+
+  <section>
+    <h2>The Athens of Socrates</h2>
+    <p>Socrates lived in Athens from roughly 470 BCE to 399 BCE. He was born into a democracy at its confident height and lived to see it defeated by Sparta in the long Peloponnesian War, its walls torn down, its politics thrown into upheaval. His way of doing philosophy — public, oral, without books or fees, conducted with anyone who would talk to him — belonged to that particular city and that particular moment. He wrote nothing. He held no formal school. He would stand in the agora, or on the porticos of the <em>stoa</em>, or at the gymnasia, and ask people what they meant by the words they used most confidently: <em>justice</em>, <em>courage</em>, <em>piety</em>, <em>the good</em>.</p>
+  </section>
+
+  <section>
+    <h2>Phaenarete and the midwife's art</h2>
+    <p>Two people are said to have shaped him. His father, Sophroniscus, was a stonemason. His mother, <strong>Phaenarete</strong>, was a midwife — a <em>maia</em> (μαῖα) in Greek. That fact, mentioned quietly in a couple of ancient sources, becomes the key to how Socrates himself described what he was doing.</p>
+
+    <p>In Plato's dialogue <em>Theaetetus</em> (around 149a–151d), Socrates draws the analogy at length. Midwives, he observes, are past their own childbearing years; they no longer produce children of their own, but they have the skill to attend at another woman's labor and help her deliver. They know when a birth is real and when it is a false pregnancy, when to encourage and when to relieve.</p>
+
+    <blockquote>My own art is the same — only I attend to men's souls, not women's bodies. I am barren of wisdom myself. I produce no ideas of my own. But I have the skill to sit with someone in the labor of thought and help them bring forth what is already in them — and, just as important, to tell whether the thing brought forth is a living truth or a stillborn illusion.</blockquote>
+
+    <p>This is what the Greeks came to call <strong>maieutics</strong> (μαιευτική, <em>maieutikē</em>) — the midwifery of ideas. The word is not just a metaphor; it is a philosophical claim about where knowledge comes from. On Socrates's view (and here Plato takes the idea further, into the theory of <em>anamnēsis</em> — recollection), the person asking the question already possesses, in some form, what they need to know. The teacher does not deposit knowledge into an empty vessel. The teacher draws it out. The learner is not fed — the learner labors.</p>
+
+    <p>The image is a radical one for its time. It reverses the ordinary teacher-pupil hierarchy. It refuses the whole business of <em>sophia</em> as commodity — the trade of the Sophists, who traveled from city to city selling rhetorical skill for a fee. And it locates the dignity of philosophical inquiry not in the master who possesses truth but in the seeker who is willing to be brought, slowly and often painfully, to see it.</p>
+  </section>
+
+  <section>
+    <h2>The elenchus — the practice itself</h2>
+    <p>The tool of the midwife is the question. In the philosophical literature this is called the <strong>elenchus</strong> (ἔλεγχος) — a word that means both "cross-examination" and "refutation." A Socratic conversation typically begins with an innocent request: <em>tell me what courage is</em>, or <em>tell me what piety is</em>. The interlocutor — usually a citizen of good reputation, often smug about his own understanding — obliges with a confident definition. Socrates then produces a case the definition doesn't cover, or an implication the speaker didn't foresee. The speaker revises. Socrates presses again. Each round strips away a layer of certainty. By the end, the interlocutor is often no closer to a definition than when he started — but he has become aware that he did not, in fact, know what he thought he knew.</p>
+
+    <p>That awareness is the point. It is what the Delphic oracle meant, Socrates said, when it called him the wisest man in Athens: not that he possessed wisdom, but that, unlike the others, he did not falsely believe he did.</p>
+
+    <p>The elenchus, then, has three characteristic moves: <strong>the innocent question, the surprise about certainty, and the arrival at <em>aporia</em></strong> (ἀπορία, "no way through" — perplexity, impasse). Aporia is not failure. In the Socratic scheme it is the point at which real thinking can begin. The false pregnancy has been recognized as false; the ground is cleared for a birth that might be real.</p>
+  </section>
+
+  <section>
+    <h2>What we know, and how</h2>
+    <p>Socrates left no writings. Everything we know about him comes filtered through others.</p>
+
+    <p><strong>Plato</strong>, his most famous student, wrote roughly thirty dialogues in which Socrates is the central figure. Scholars generally distinguish the "early" dialogues — where Socrates is thought to represent something close to the historical man's actual practice — from the "middle" and "late" dialogues, where the character of Socrates becomes a mouthpiece for Plato's own developing metaphysics. The midwife passage in <em>Theaetetus</em> comes from the later group, but scholars generally treat it as preserving something authentic in Socrates's self-image: it is too specific, too tied to Phaenarete, to be pure Platonic invention.</p>
+
+    <p><strong>Xenophon</strong>, another student, wrote the <em>Memorabilia</em> — a plainer, less philosophical, more military-officer's account of Socrates as a practical moralist. Where Plato's Socrates is enigmatic, Xenophon's is a source of straightforward good advice.</p>
+
+    <p><strong>Aristophanes</strong>, the comic playwright, put Socrates on stage in <em>The Clouds</em> (423 BCE) as a caricature — a sophist hawking clever tricks and teaching young men to argue their fathers into confusion. It is a hostile source, but it confirms that Socrates was famous enough in Athens, by his mid-forties, to be worth mocking.</p>
+
+    <p><strong>Aristotle</strong>, who arrived in Athens a generation after Socrates's death, refers to him as the philosopher who first sought universal definitions and used inductive arguments — a technical description that lines up cleanly with the elenchus as we see it in Plato's early dialogues.</p>
+
+    <p>The reconstruction of "the historical Socrates" from these overlapping and sometimes contradictory sources is one of the oldest problems in classical scholarship — the so-called <em>Socratic problem</em>. What can be said with reasonable confidence is this: he questioned, he did not lecture; he sought definitions of the virtues; he claimed to know nothing; he practiced this in public, for free, for decades; and he described what he was doing, at least once, in terms borrowed from his mother's trade.</p>
+  </section>
+
+  <section>
+    <h2>The daimonion</h2>
+    <p>There is one more piece worth mentioning. Socrates reported, apparently in complete seriousness, that he was accompanied through life by an inner voice — a <em>daimonion</em>, a small divine sign — which never told him what to do but occasionally warned him against a course of action he was about to take. It was, he said, the reason he never entered politics. It was, on the morning of his execution, apparently silent — which he took to mean that death was not, after all, an evil. The daimonion is one of the reasons the charge of impiety at his trial had some plausibility to Athenian ears: Socrates worshipped, in some private and unfamiliar way, a god the city had not licensed.</p>
+  </section>
+
+  <hr class="rule" />
+
+  <section>
+    <h2>The end</h2>
+    <p>In 399 BCE, at the age of about seventy, Socrates was tried by an Athenian jury of five hundred on charges of impiety toward the city's gods and corrupting the youth. The charges were almost certainly political — Athens was raw and suspicious after its defeat by Sparta, and Socrates had trained several men (Alcibiades most notoriously, Critias the tyrant most damagingly) whose careers had ended badly for the city. He was convicted by a narrow margin, refused the traditional option of exile in favor of remaining faithful to the laws of Athens, and was executed by hemlock. Plato's <em>Apology</em>, <em>Crito</em>, and <em>Phaedo</em> give the traditional account of his defense, his refusal to escape, and his death.</p>
+
+    <p>He left behind no book, no school, no doctrine — only the method. The method has outlived every dogma that has tried to replace it. Two and a half thousand years after Phaenarete's son sat down on a bench in the agora and asked a passerby what he meant by the word <em>justice</em>, we are still, when we are honest, doing exactly what he did: examining, questioning, discovering how little we know, and calling that discovery the beginning of wisdom.</p>
+  </section>
+
+  <div class="back-wrap">
+    <a class="back-link" href="/about">← Back to About</a>
+  </div>
+
+  <div class="disc">
+    SocratesQ &nbsp;·&nbsp; A project of the Forum of Minds<br/>
+    <a href="https://www.forumofminds.com" style="color:var(--gold);text-decoration:none;">forumofminds.com</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="/" style="color:var(--dim);text-decoration:none;">Return to SocratesQ</a>
+  </div>
+
+</div>
+</body>
+</html>
