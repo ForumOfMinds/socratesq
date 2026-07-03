@@ -65,19 +65,25 @@
   }
   nav a.enter:hover { border-color: var(--gold); background: rgba(201,162,75,.08); }
 
-  /* ---- Sections ---- */
+  /* ---- Hero ---- */
   .hero {
     padding: 56px 0 10px;
     text-align: center;
+    perspective: 900px; /* gives the rotating logo its 3D feel */
   }
-  .seal {
-    width: 62px; height: 62px;
-    border-radius: 50%;
-    border: 1px solid var(--gold);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 22px;
+  .logo-rotate {
+    width: 96px;
+    height: auto;
+    display: block;
+    margin: 0 auto 24px;
+    animation: logo-spin-y 14s linear infinite;
+    transform-style: preserve-3d;
+    backface-visibility: visible;
   }
-  .seal .q { font-size: 36px; color: var(--gold); line-height: 1; }
+  @keyframes logo-spin-y {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(360deg); }
+  }
   .hero h1 {
     font-size: 36px;
     font-weight: 500;
@@ -86,6 +92,7 @@
     margin-bottom: 16px;
   }
   .hero .lead {
+    font-family: 'Comic Sans MS', 'Comic Neue', cursive;
     font-style: italic;
     font-size: 19px;
     color: var(--parchment-dim);
@@ -115,12 +122,13 @@
   p { margin-bottom: 1.1em; color: var(--parchment); }
   p:last-child { margin-bottom: 0; }
 
-  em { font-style: italic; color: var(--parchment-dim); }
+  em, i { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-style: italic; color: var(--parchment-dim); }
 
   blockquote {
     border-left: 2px solid var(--gold);
     margin: 28px 0;
     padding: 2px 0 2px 22px;
+    font-family: 'Comic Sans MS', 'Comic Neue', cursive;
     font-style: italic;
     font-size: 21px;
     color: var(--parchment-dim);
@@ -169,6 +177,7 @@
   .contact a {
     color: var(--gold);
     text-decoration: none;
+    font-family: 'Comic Sans MS', 'Comic Neue', cursive;
     font-style: italic;
   }
   .contact a:hover { text-decoration: underline; }
@@ -193,6 +202,7 @@
   .closer {
     text-align: center;
     margin-top: 40px;
+    font-family: 'Comic Sans MS', 'Comic Neue', cursive;
     font-style: italic;
     font-size: 17px;
     color: var(--parchment-dim);
@@ -214,6 +224,7 @@
   @media (max-width: 520px) {
     html, body { font-size: 18px; }
     .hero h1 { font-size: 28px; }
+    .logo-rotate { width: 80px; }
     blockquote { font-size: 19px; }
     .forum-band, .contact { padding: 22px 20px; }
   }
@@ -224,66 +235,66 @@
 
   <nav>
     <a class="mark" href="/">Socrates<span>Q</span></a>
-    <a class="enter" href="/">Enter a dialogue →</a>
+    <a class="enter" href="/">Enter a dialogue &rarr;</a>
   </nav>
 
   <div class="hero">
-    <div class="seal"><span class="q">Q</span></div>
+    <img class="logo-rotate" src="SocratesQ%20logo.png" alt="SocratesQ" />
     <h1>What would Socrates say?</h1>
-    <p class="lead">An AI reconstruction of the Socratic method — for the curious, the doubting, and those who take examined thinking seriously.</p>
+    <p class="lead">An AI reconstruction of the Socratic method &mdash; for the curious, the doubting, and those who take examined thinking seriously.</p>
   </div>
 
   <hr class="rule" />
 
   <section>
     <h2>The Method</h2>
-    <p>Socrates left no writings. What we know of him comes through the dialogues of Plato, the memoirs of Xenophon, and a handful of other ancient sources — and what those sources agree on is this: he taught by asking, not by telling. Every question he posed was an invitation to look more carefully at what you thought you already knew.</p>
+    <p>Socrates left no writings. What we know of him comes through the dialogues of Plato, the memoirs of Xenophon, and a handful of other ancient sources &mdash; and what those sources agree on is this: he taught by asking, not by telling. Every question he posed was an invitation to look more carefully at what you thought you already knew.</p>
 
-    <blockquote>"I know that I know nothing — and that not-knowing is the beginning of wisdom."</blockquote>
+    <blockquote>&ldquo;I know that I know nothing &mdash; and that not-knowing is the beginning of wisdom.&rdquo;</blockquote>
 
     <p>When you begin a dialogue with SocratesQ, you bring a question. Socrates will not answer it. He will ask you one in return. And then another. Not to frustrate you, but because the examined thought is always the more honest one. He rarely gives you a settled answer; instead he tends to hand you a better question than the one you arrived with. A conversation that ends with more questions than it began with is a conversation that did its work.</p>
   </section>
 
   <section>
     <h2>What This Is</h2>
-    <p>SocratesQ reconstructs Socrates's characteristic way of inquiring — the elenchus, the innocent question, the surprise about certainty — as an AI persona shaped by the Platonic dialogues and related sources. It makes no claim to be the historical man. It is, rather, a serious attempt to keep his method alive and available.</p>
-    <p>A single inquiry runs about seven or eight exchanges. When it comes to rest, you carry the thread away. Nothing is stored. The only record is the one you choose to keep — which you can save as a PDF at the close of any dialogue.</p>
+    <p>SocratesQ reconstructs Socrates&rsquo;s characteristic way of inquiring &mdash; the elenchus, the innocent question, the surprise about certainty &mdash; as an AI persona shaped by the Platonic dialogues and related sources. It makes no claim to be the historical man. It is, rather, a serious attempt to keep his method alive and available.</p>
+    <p>A single inquiry runs about seven or eight exchanges. When it comes to rest, you carry the thread away. Nothing is stored. The only record is the one you choose to keep &mdash; which you can save as a PDF at the close of any dialogue.</p>
   </section>
 
   <div class="forum-band">
-    <p>SocratesQ is the public doorway to the wider <strong>Forum of Minds</strong> — a modern Republic of Letters where the whole council speaks: AI reconstructions of Plato, Aristotle, Hannah Arendt, Heidegger, Kant, Erasmus, and others gathered around contemporary questions. If SocratesQ leaves you curious, the Forum is where that curiosity finds its next room.</p>
-    <a href="https://www.forumofminds.com" target="_blank" rel="noopener">Explore the Forum of Minds →</a>
+    <p>SocratesQ is the public doorway to the wider <strong>Forum of Minds</strong> &mdash; a modern Republic of Letters where the whole council speaks: AI reconstructions of Plato, Aristotle, Hannah Arendt, Heidegger, Kant, Erasmus, and others gathered around contemporary questions. If SocratesQ leaves you curious, the Forum is where that curiosity finds its next room.</p>
+    <a href="https://www.forumofminds.com" target="_blank" rel="noopener">Explore the Forum of Minds &rarr;</a>
   </div>
 
   <section>
     <h2>Who We Are</h2>
-    <p>SocratesQ is built by the founders of the Forum of Minds — <strong>Svetlana Stolyarova</strong> and <strong>Dr. Anna Kondratova</strong>. Svetlana is a philosopher by training, a presenter of world-class classical music events in Cleveland, and a long-standing builder of cultural communities. Anna is a scholar and artistic director whose work sits at the intersection of music, philosophy, and intellectual life.</p>
-    <p>The Forum of Minds grew from a shared conviction: that the great philosophical tradition is not a museum exhibit but a living conversation — and that the right technology, handled with care, can keep that conversation going.</p>
+    <p>SocratesQ is built by the founders of the Forum of Minds &mdash; <strong>Svetlana Stolyarova</strong> and <strong>Dr. Anna Kondratova</strong>. Svetlana is a philosopher by training, a presenter of world-class classical music events in Cleveland, and a long-standing builder of cultural communities. Anna is a scholar and artistic director whose work sits at the intersection of music, philosophy, and intellectual life.</p>
+    <p>The Forum of Minds grew from a shared conviction: that the great philosophical tradition is not a museum exhibit but a living conversation &mdash; and that the right technology, handled with care, can keep that conversation going.</p>
   </section>
 
   <hr class="rule" />
 
   <section>
     <h2>An Honest Note</h2>
-    <p>SocratesQ offers philosophical inquiry: a disciplined, careful, question-by-question examination of ideas. Treat its replies the way you would treat a well-read friend asking provocative questions in a café — a starting point for your own thinking, not a settled authority.</p>
-    <p>If a question you bring is serious — concerning your health, your legal situation, your finances, or your safety — please seek a qualified human professional. Socrates would be the first to agree.</p>
+    <p>SocratesQ offers philosophical inquiry: a disciplined, careful, question-by-question examination of ideas. Treat its replies the way you would treat a well-read friend asking provocative questions in a caf&eacute; &mdash; a starting point for your own thinking, not a settled authority.</p>
+    <p>If a question you bring is serious &mdash; concerning your health, your legal situation, your finances, or your safety &mdash; please seek a qualified human professional. Socrates would be the first to agree.</p>
   </section>
 
   <div class="origin-link-wrap">
-    <a class="origin-link" href="/socrates">The method, in fuller view →</a>
+    <a class="origin-link" href="/socrates">The method, in fuller view &rarr;</a>
   </div>
 
   <div class="contact">
     <h2>Questions &amp; Concerns</h2>
-    <p>For questions about your account, technical concerns, or anything else, write to us at <a href="mailto:help@socratesq.app">help@socratesq.app</a> — we read every message.</p>
+    <p>For questions about your account, technical concerns, or anything else, write to us at <a href="mailto:help@socratesq.app">help@socratesq.app</a> &mdash; we read every message.</p>
   </div>
 
   <div class="closer">every inquiry begins with a question</div>
 
   <div class="disc">
-    SocratesQ &nbsp;·&nbsp; A project of the Forum of Minds<br/>
+    SocratesQ &nbsp;&middot;&nbsp; A project of the Forum of Minds<br/>
     <a href="https://www.forumofminds.com" style="color:var(--gold);text-decoration:none;">forumofminds.com</a>
-    &nbsp;&nbsp;·&nbsp;&nbsp;
+    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
     <a href="/" style="color:var(--dim);text-decoration:none;">Return to SocratesQ</a>
   </div>
 
