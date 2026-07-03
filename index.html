@@ -168,6 +168,12 @@
       <input id="pw" type="password" autocomplete="current-password" placeholder="password" />
       <button id="authBtn" class="authsubmit">Sign in</button>
       <div id="authMsg" class="authmsg"></div>
+      <div id="forgotWrap" style="display:none; text-align:center; margin-top:2px;">
+        <button id="forgotBtn" style="background:transparent;border:none;color:var(--dim);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline;">Forgot your password?</button>
+      </div>
+      <div id="backSigninWrap" style="display:none; text-align:center; margin-top:4px;">
+        <button id="backSigninBtn" style="background:transparent;border:none;color:var(--dim);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline;">&larr; Back to sign in</button>
+      </div>
     </div>
     <div class="authback" id="authBack" style="display:none"><button id="backToTaste">← back to the conversation</button></div>
     <div class="authdisc">A philosophical reconstruction, not the historical figure — and not advice.<br/><a href="/disclaimer.html" style="color:var(--dim);font-size:11px;">Before We Begin — Terms &amp; Disclaimers</a></div>
@@ -283,6 +289,8 @@ const tabIn = document.getElementById('tabIn');
 const tabUp = document.getElementById('tabUp');
 const authBack = document.getElementById('authBack');
 const backToTaste = document.getElementById('backToTaste');
+const forgotWrap = document.getElementById('forgotWrap');
+const backSigninWrap = document.getElementById('backSigninWrap');
 const acctEmail = document.getElementById('acctEmail');
 const acctBtn = document.getElementById('acctBtn');
 
@@ -293,10 +301,26 @@ let currentEmail = '';
 
 function setMode(m) {
   mode = m;
+  const isReset = m === 'reset';
+  const isNewPw = m === 'newpw';
+  const isNormal = !isReset && !isNewPw;
   tabIn.classList.toggle('active', m === 'signin');
   tabUp.classList.toggle('active', m === 'signup');
-  authBtn.textContent = (m === 'signup') ? 'Create account' : 'Sign in';
-  pwEl.setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
+  // tabs
+  document.querySelector('.tabs').style.display = isNormal ? 'flex' : 'none';
+  // email field
+  emailEl.style.display = isNewPw ? 'none' : 'block';
+  // password field
+  pwEl.style.display = isReset ? 'none' : 'block';
+  pwEl.placeholder = isNewPw ? 'new password (6+ characters)' : 'password';
+  pwEl.setAttribute('autocomplete', (m === 'signup' || m === 'newpw') ? 'new-password' : 'current-password');
+  // button
+  if (isReset) authBtn.textContent = 'Send reset link';
+  else if (isNewPw) authBtn.textContent = 'Set new password';
+  else authBtn.textContent = m === 'signup' ? 'Create account' : 'Sign in';
+  // forgot / back links
+  forgotWrap.style.display = (m === 'signin') ? 'block' : 'none';
+  backSigninWrap.style.display = (isReset || isNewPw) ? 'block' : 'none';
   setMsg('');
 }
 function setMsg(text, isErr) {
@@ -312,7 +336,36 @@ function friendly(e) {
   return m || 'Something went wrong. Please try again.';
 }
 
+async function sendReset() {
+  const email = emailEl.value.trim();
+  if (!email) { setMsg('Enter your email address.', true); return; }
+  authBtn.disabled = true;
+  setMsg('Sending reset link\u2026');
+  try {
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+    if (error) throw error;
+    setMode('signin');
+    setMsg('Check your inbox — a reset link is on its way.');
+  } catch (e) { setMsg(friendly(e), true); }
+  finally { authBtn.disabled = false; }
+}
+
+async function setNewPassword() {
+  const pw = pwEl.value;
+  if (!pw || pw.length < 6) { setMsg('Choose a password of at least 6 characters.', true); return; }
+  authBtn.disabled = true;
+  setMsg('Setting your new password\u2026');
+  try {
+    const { error } = await sb.auth.updateUser({ password: pw });
+    if (error) throw error;
+    setMsg('Password updated. Signing you in\u2026');
+  } catch (e) { setMsg(friendly(e), true); }
+  finally { authBtn.disabled = false; }
+}
+
 async function doAuth() {
+  if (mode === 'reset') { await sendReset(); return; }
+  if (mode === 'newpw') { await setNewPassword(); return; }
   if (!sb) { setMsg('Could not reach the sign-in service. Reload and try again.', true); return; }
   const email = emailEl.value.trim();
   const pw = pwEl.value;
@@ -386,6 +439,8 @@ function enterAuth(preferSignup) {
 acctBtn.addEventListener('click', () => { if (member) signOut(); else enterAuth(false); });
 tabIn.addEventListener('click', () => setMode('signin'));
 tabUp.addEventListener('click', () => setMode('signup'));
+document.getElementById('forgotBtn').addEventListener('click', () => { emailEl.value = ''; setMode('reset'); setMsg('Enter your email and we\u2019ll send a reset link.'); });
+document.getElementById('backSigninBtn').addEventListener('click', () => setMode('signin'));
 authBtn.addEventListener('click', doAuth);
 pwEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doAuth(); } });
 emailEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); pwEl.focus(); } });
@@ -394,6 +449,11 @@ backToTaste.addEventListener('click', () => { if (!localStorage.getItem('sq_tast
 if (sb) {
   sb.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN' && session && session.user) enterMember(session);
+    else if (event === 'PASSWORD_RECOVERY') {
+      showAuth();
+      setMode('newpw');
+      setMsg('Enter a new password for your account.');
+    }
     else if (event === 'SIGNED_OUT') enterAuth(false);
   });
   (async () => {
