@@ -142,7 +142,7 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: 'Server is missing its API key.' }) };
   }
 
-  let messages, userTurns, ending, daily, dailyQuestion, dailyContext;
+  let messages, userTurns, ending, daily, dailyQuestion, dailyContext, fromDaily;
   try {
     const parsed = JSON.parse(event.body || '{}');
     messages = parsed.messages;
@@ -151,6 +151,7 @@ exports.handler = async (event) => {
     daily = parsed.daily;
     dailyQuestion = parsed.dailyQuestion;
     dailyContext = parsed.dailyContext;
+    fromDaily = parsed.fromDaily;
   } catch (e) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Bad request.' }) };
   }
@@ -210,7 +211,8 @@ exports.handler = async (event) => {
   const authHeader = (event.headers || {})['authorization'] || (event.headers || {})['Authorization'] || '';
   const userToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
-  if (userToken && sbKey && turns === 1 && !ending && !daily) {
+  const shouldMeter = !ending && !daily && (turns === 1 || (turns === 2 && fromDaily));
+  if (userToken && sbKey && shouldMeter) {
     try {
       // 1. Verify the session token and get the user's ID
       const authRes = await fetch(`${SB_URL}/auth/v1/user`, {
