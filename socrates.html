@@ -30,146 +30,44 @@
     min-height: 100vh;
   }
 
-  .wrap {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 0 24px 80px;
-  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 24px 80px; }
 
-  /* ---- Nav ---- */
   nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 0 0;
-    border-bottom: 1px solid var(--surface-edge);
-    padding-bottom: 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0 18px; border-bottom: 1px solid var(--surface-edge);
   }
-  .mark {
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: .04em;
-    color: var(--parchment);
-    text-decoration: none;
-  }
+  .mark { font-size: 22px; font-weight: 500; letter-spacing: .04em; color: var(--parchment); text-decoration: none; }
   .mark span { color: var(--gold); }
-  nav a.enter {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    color: var(--gold);
-    text-decoration: none;
-    border: 1px solid rgba(201,162,75,.35);
-    padding: 6px 14px;
-    border-radius: 20px;
-    transition: border-color .2s, background .2s;
-  }
+  nav a.enter { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--gold); text-decoration: none; border: 1px solid rgba(201,162,75,.35); padding: 6px 14px; border-radius: 20px; transition: border-color .2s, background .2s; }
   nav a.enter:hover { border-color: var(--gold); background: rgba(201,162,75,.08); }
 
-  /* ---- Hero ---- */
-  .hero {
-    padding: 56px 0 10px;
-    text-align: center;
-    perspective: 900px;
-  }
-  .logo-rotate {
-    width: 96px;
-    height: auto;
-    display: block;
-    margin: 0 auto 24px;
-    animation: logo-spin-y 14s linear infinite;
-    transform-style: preserve-3d;
-    backface-visibility: visible;
-  }
-  @keyframes logo-spin-y {
-    from { transform: rotateY(0deg); }
-    to   { transform: rotateY(360deg); }
-  }
-  .hero h1 {
-    font-size: 34px;
-    font-weight: 500;
-    color: var(--parchment);
-    line-height: 1.25;
-    margin-bottom: 16px;
-  }
-  .hero .lead {
-    font-family: 'Patrick Hand', cursive;
-    font-style: italic;
-    font-size: 19px;
-    color: var(--parchment-dim);
-    max-width: 500px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
+  .hero { padding: 56px 0 10px; text-align: center; perspective: 900px; }
+  .logo-rotate { width: 96px; height: auto; display: block; margin: 0 auto 24px; animation: logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
+  @keyframes logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+  .logo-fallback { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; animation: logo-spin-y 14s linear infinite; }
+  .logo-fallback span { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
+  .hero h1 { font-size: 34px; font-weight: 500; color: var(--parchment); line-height: 1.25; margin-bottom: 16px; }
+  .hero .lead { font-family: 'Patrick Hand', cursive; font-style: italic; font-size: 19px; color: var(--parchment-dim); max-width: 500px; margin: 0 auto; line-height: 1.6; }
 
-  .rule {
-    border: none;
-    border-top: 1px solid var(--surface-edge);
-    margin: 44px 0;
-  }
-
+  .rule { border: none; border-top: 1px solid var(--surface-edge); margin: 44px 0; }
   section { margin-bottom: 44px; }
-
-  h2 {
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 18px;
-  }
-
+  h2 { font-size: 13px; font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
   p { margin-bottom: 1.1em; color: var(--parchment); }
   p:last-child { margin-bottom: 0; }
-
   em, i { font-family: 'Patrick Hand', cursive; font-style: italic; color: var(--parchment-dim); }
   strong { color: var(--parchment); font-weight: 500; }
 
-  blockquote {
-    border-left: 2px solid var(--gold);
-    margin: 28px 0;
-    padding: 2px 0 2px 22px;
-    font-family: 'Patrick Hand', cursive;
-    font-style: italic;
-    font-size: 20px;
-    color: var(--parchment-dim);
-    line-height: 1.6;
-  }
+  blockquote { border-left: 2px solid var(--gold); margin: 28px 0; padding: 2px 0 2px 22px; font-family: 'Patrick Hand', cursive; font-style: italic; font-size: 20px; color: var(--parchment-dim); line-height: 1.6; }
 
-  /* ---- Back link (to /about) ---- */
-  .back-wrap {
-    text-align: center;
-    margin: 48px 0 8px;
-  }
-  .back-link {
-    font-family: 'EB Garamond', Georgia, serif;
-    font-size: 16px;
-    color: var(--gold);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(201,162,75,.35);
-    padding-bottom: 3px;
-    transition: border-color .2s;
-  }
+  .back-wrap { text-align: center; margin: 48px 0 8px; }
+  .back-link { font-family: 'EB Garamond', Georgia, serif; font-size: 16px; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,162,75,.35); padding-bottom: 3px; transition: border-color .2s; }
   .back-link:hover { border-color: var(--gold); }
 
-  /* ---- Disclaimer ---- */
-  .disc {
-    margin-top: 40px;
-    padding-top: 24px;
-    border-top: 1px solid var(--surface-edge);
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    color: var(--dim);
-    line-height: 1.6;
-    text-align: center;
-  }
+  .disc { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--surface-edge); font-size: 12px; font-family: 'Inter', sans-serif; color: var(--dim); line-height: 1.7; text-align: center; }
+  .disc a { color: var(--dim); text-decoration: none; }
+  .disc a:hover { color: var(--gold); }
 
-  @media (max-width: 520px) {
-    html, body { font-size: 18px; }
-    .hero h1 { font-size: 26px; }
-    .logo-rotate { width: 80px; }
-    blockquote { font-size: 18px; }
-  }
+  @media (max-width: 520px) { html, body { font-size: 18px; } .hero h1 { font-size: 26px; } .logo-rotate { width: 80px; } blockquote { font-size: 18px; } }
 </style>
 </head>
 <body>
@@ -181,7 +79,9 @@
   </nav>
 
   <div class="hero">
-    <img class="logo-rotate" src="SocratesQ%20logo.png" alt="SocratesQ" />
+    <img class="logo-rotate" src="SocratesQ%20logo.png" alt="SocratesQ"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+    <div class="logo-fallback" style="display:none;"><span>Q</span></div>
     <h1>The Socratic Method &mdash; a Historical View</h1>
     <p class="lead">Athens, Phaenarete, and the practice that outlived every dogma.</p>
   </div>
@@ -196,37 +96,26 @@
   <section>
     <h2>Phaenarete and the midwife's art</h2>
     <p>Two people are said to have shaped him. His father, Sophroniscus, was a stonemason. His mother, <strong>Phaenarete</strong>, was a midwife &mdash; a <em>maia</em> (&mu;&alpha;&iota;&#x0304;&alpha;) in Greek. That fact, mentioned quietly in a couple of ancient sources, becomes the key to how Socrates himself described what he was doing.</p>
-
     <p>In Plato&rsquo;s dialogue <em>Theaetetus</em> (around 149a&ndash;151d), Socrates draws the analogy at length. Midwives, he observes, are past their own childbearing years; they no longer produce children of their own, but they have the skill to attend at another woman&rsquo;s labor and help her deliver. They know when a birth is real and when it is a false pregnancy, when to encourage and when to relieve.</p>
-
     <blockquote>My own art is the same &mdash; only I attend to men&rsquo;s souls, not women&rsquo;s bodies. I am barren of wisdom myself. I produce no ideas of my own. But I have the skill to sit with someone in the labor of thought and help them bring forth what is already in them &mdash; and, just as important, to tell whether the thing brought forth is a living truth or a stillborn illusion.</blockquote>
-
     <p>This is what the Greeks came to call <strong>maieutics</strong> (&mu;&alpha;&iota;&epsilon;&upsilon;&tau;&iota;&kappa;&#x1F75;, <em>maieutik&#x0113;</em>) &mdash; the midwifery of ideas. The word is not just a metaphor; it is a philosophical claim about where knowledge comes from. On Socrates&rsquo;s view (and here Plato takes the idea further, into the theory of <em>anamn&#x0113;sis</em> &mdash; recollection), the person asking the question already possesses, in some form, what they need to know. The teacher does not deposit knowledge into an empty vessel. The teacher draws it out. The learner is not fed &mdash; the learner labors.</p>
-
     <p>The image is a radical one for its time. It reverses the ordinary teacher-pupil hierarchy. It refuses the whole business of <em>sophia</em> as commodity &mdash; the trade of the Sophists, who traveled from city to city selling rhetorical skill for a fee. And it locates the dignity of philosophical inquiry not in the master who possesses truth but in the seeker who is willing to be brought, slowly and often painfully, to see it.</p>
   </section>
 
   <section>
     <h2>The elenchus &mdash; the practice itself</h2>
     <p>The tool of the midwife is the question. In the philosophical literature this is called the <strong>elenchus</strong> (&#x1F14;&lambda;&epsilon;&gamma;&chi;&omicron;&sigmaf;) &mdash; a word that means both &ldquo;cross-examination&rdquo; and &ldquo;refutation.&rdquo; A Socratic conversation typically begins with an innocent request: <em>tell me what courage is</em>, or <em>tell me what piety is</em>. The interlocutor &mdash; usually a citizen of good reputation, often smug about his own understanding &mdash; obliges with a confident definition. Socrates then produces a case the definition doesn&rsquo;t cover, or an implication the speaker didn&rsquo;t foresee. The speaker revises. Socrates presses again. Each round strips away a layer of certainty. By the end, the interlocutor is often no closer to a definition than when he started &mdash; but he has become aware that he did not, in fact, know what he thought he knew.</p>
-
     <p>That awareness is the point. It is what the Delphic oracle meant, Socrates said, when it called him the wisest man in Athens: not that he possessed wisdom, but that, unlike the others, he did not falsely believe he did.</p>
-
     <p>The elenchus, then, has three characteristic moves: <strong>the innocent question, the surprise about certainty, and the arrival at <em>aporia</em></strong> (&#x1F00;&pi;&omicron;&rho;&#x1F77;&alpha;, &ldquo;no way through&rdquo; &mdash; perplexity, impasse). Aporia is not failure. In the Socratic scheme it is the point at which real thinking can begin. The false pregnancy has been recognized as false; the ground is cleared for a birth that might be real.</p>
   </section>
 
   <section>
     <h2>What we know, and how</h2>
     <p>Socrates left no writings. Everything we know about him comes filtered through others.</p>
-
     <p><strong>Plato</strong>, his most famous student, wrote roughly thirty dialogues in which Socrates is the central figure. Scholars generally distinguish the &ldquo;early&rdquo; dialogues &mdash; where Socrates is thought to represent something close to the historical man&rsquo;s actual practice &mdash; from the &ldquo;middle&rdquo; and &ldquo;late&rdquo; dialogues, where the character of Socrates becomes a mouthpiece for Plato&rsquo;s own developing metaphysics. The midwife passage in <em>Theaetetus</em> comes from the later group, but scholars generally treat it as preserving something authentic in Socrates&rsquo;s self-image: it is too specific, too tied to Phaenarete, to be pure Platonic invention.</p>
-
     <p><strong>Xenophon</strong>, another student, wrote the <em>Memorabilia</em> &mdash; a plainer, less philosophical, more military-officer&rsquo;s account of Socrates as a practical moralist. Where Plato&rsquo;s Socrates is enigmatic, Xenophon&rsquo;s is a source of straightforward good advice.</p>
-
     <p><strong>Aristophanes</strong>, the comic playwright, put Socrates on stage in <em>The Clouds</em> (423 BCE) as a caricature &mdash; a sophist hawking clever tricks and teaching young men to argue their fathers into confusion. It is a hostile source, but it confirms that Socrates was famous enough in Athens, by his mid-forties, to be worth mocking.</p>
-
     <p><strong>Aristotle</strong>, who arrived in Athens a generation after Socrates&rsquo;s death, refers to him as the philosopher who first sought universal definitions and used inductive arguments &mdash; a technical description that lines up cleanly with the elenchus as we see it in Plato&rsquo;s early dialogues.</p>
-
     <p>The reconstruction of &ldquo;the historical Socrates&rdquo; from these overlapping and sometimes contradictory sources is one of the oldest problems in classical scholarship &mdash; the so-called <em>Socratic problem</em>. What can be said with reasonable confidence is this: he questioned, he did not lecture; he sought definitions of the virtues; he claimed to know nothing; he practiced this in public, for free, for decades; and he described what he was doing, at least once, in terms borrowed from his mother&rsquo;s trade.</p>
   </section>
 
@@ -240,19 +129,22 @@
   <section>
     <h2>The end</h2>
     <p>In 399 BCE, at the age of about seventy, Socrates was tried by an Athenian jury of five hundred on charges of impiety toward the city&rsquo;s gods and corrupting the youth. The charges were almost certainly political &mdash; Athens was raw and suspicious after its defeat by Sparta, and Socrates had trained several men (Alcibiades most notoriously, Critias the tyrant most damagingly) whose careers had ended badly for the city. He was convicted by a narrow margin, refused the traditional option of exile in favor of remaining faithful to the laws of Athens, and was executed by hemlock. Plato&rsquo;s <em>Apology</em>, <em>Crito</em>, and <em>Phaedo</em> give the traditional account of his defense, his refusal to escape, and his death.</p>
-
     <p>He left behind no book, no school, no doctrine &mdash; only the method. The method has outlived every dogma that has tried to replace it. Two and a half thousand years after Phaenarete&rsquo;s son sat down on a bench in the agora and asked a passerby what he meant by the word <em>justice</em>, we are still, when we are honest, doing exactly what he did: examining, questioning, discovering how little we know, and calling that discovery the beginning of wisdom.</p>
   </section>
 
   <div class="back-wrap">
-    <a class="back-link" href="/about">&larr; Back to About</a>
+    <a class="back-link" href="about.html">&larr; Back to About</a>
   </div>
 
   <div class="disc">
-    SocratesQ &nbsp;&middot;&nbsp; A project of the Forum of Minds<br/>
-    <a href="https://www.forumofminds.com" style="color:var(--gold);text-decoration:none;">forumofminds.com</a>
-    &nbsp;&nbsp;&middot;&nbsp;&nbsp;
-    <a href="/" style="color:var(--dim);text-decoration:none;">Return to SocratesQ</a>
+    <a href="/">SocratesQ</a>
+    &nbsp;&middot;&nbsp;
+    <a href="about.html">About</a>
+    &nbsp;&middot;&nbsp;
+    <a href="disclaimer.html">Before We Begin</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://www.forumofminds.com" target="_blank" rel="noopener" style="color:var(--gold);">forumofminds.com</a><br/><br/>
+    A project of The Forum of Minds Society
   </div>
 
 </div>
