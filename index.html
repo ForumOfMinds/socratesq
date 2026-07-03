@@ -178,8 +178,16 @@
   <div id="daily" style="display:none; flex:1; flex-direction:column;">
     <div class="acct"><span id="dailyEmail"></span><button id="dailySignoutBtn">Sign out</button></div>
     <div class="daily-wrap">
+      <!-- Shown only to anonymous visitors — orientation before the question -->
+      <div id="dailyTasterIntro" style="display:none; text-align:center; margin-bottom:28px; padding-bottom:28px; border-bottom:1px solid var(--surface-edge); width:100%; max-width:460px;">
+        <div class="seal" style="margin:0 auto 16px;"><span class="q">Q</span></div>
+        <div style="font-family:'EB Garamond',serif; font-size:22px; font-weight:500; letter-spacing:.04em; color:var(--parchment);">Socrates<span style="color:var(--gold);">Q</span></div>
+        <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:17px; color:var(--parchment-dim); margin-top:14px; line-height:1.7; max-width:380px;">
+          An AI reconstruction of Socratic dialogue — the discipline of examining ideas through questions rather than answers. Each day, one question for anyone who stops to consider it. No right answer. Just the examination.
+        </div>
+      </div>
       <div class="daily-greeting" id="dailyGreetingEl"></div>
-      <div class="daily-intro">Socrates has a question for you today.</div>
+      <div class="daily-intro" id="dailyIntroText">Socrates has a question for you today.</div>
       <div class="daily-q" id="dailyQEl"></div>
 
       <div class="daily-btns" id="dailyBtnsEl">
@@ -359,9 +367,11 @@ function enterTaste() {
   member = false; taster = true; currentEmail = '';
   setAcct();
   if (!localStorage.getItem(todayKey())) {
-    showDaily();
+    showDaily();                              // daily question first — always
+  } else if (localStorage.getItem('sq_tasted')) {
+    enterAuth(false);                         // daily done, test drive done → register
   } else {
-    showApp(); startFresh();
+    showApp(); startFresh();                  // daily done, test drive not yet used → test drive
   }
 }
 function enterAuth(preferSignup) {
@@ -389,7 +399,6 @@ if (sb) {
   (async () => {
     const { data } = await sb.auth.getSession();
     if (data.session && data.session.user) enterMember(data.session);
-    else if (localStorage.getItem('sq_tasted')) enterAuth(true);
     else enterTaste();
   })();
 } else {
@@ -577,6 +586,11 @@ function showDaily() {
   dailyGreetingEl.textContent = dailyGreetingText();
   dailyQEl.textContent = dailyQuestion;
   dailyEmailEl.textContent = currentEmail;
+  // show intro card only for anonymous visitors
+  const introEl = document.getElementById('dailyTasterIntro');
+  const introText = document.getElementById('dailyIntroText');
+  if (introEl) introEl.style.display = member ? 'none' : 'block';
+  if (introText) introText.style.display = member ? 'block' : 'none';
   // reset state
   dailyBtnsEl.style.display = 'flex';
   dailyInputArea.style.display = 'none';
@@ -709,7 +723,8 @@ function addTurn(cls, who, text) {
 
 function render() {
   streamEl.innerHTML = '';
-  addTurn('soc', 'Socrates', GREETING);
+  const opener = (dailyContextForServer && convo.length >= 2) ? dailyQuestion : GREETING;
+  addTurn('soc', 'Socrates', opener);
   convo.forEach(m => addTurn(m.role === 'user' ? 'you' : 'soc', m.role === 'user' ? 'You' : 'Socrates', m.text));
   if (busy) {
     const t = document.createElement('div'); t.className = 'turn soc';
