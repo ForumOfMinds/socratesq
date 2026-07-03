@@ -357,7 +357,12 @@ function enterMember(session) {
 }
 function enterTaste() {
   member = false; taster = true; currentEmail = '';
-  setAcct(); showApp(); startFresh();
+  setAcct();
+  if (!localStorage.getItem(todayKey())) {
+    showDaily();
+  } else {
+    showApp(); startFresh();
+  }
 }
 function enterAuth(preferSignup) {
   member = false; taster = false;
@@ -448,6 +453,7 @@ function todayKey() {
 }
 
 let dailyContextForServer = null;
+let dailyContinuationPending = false;
 const GREETING = "Welcome. I am Socrates — an AI reconstruction shaped by the dialogues of Plato, Xenophon, and other sources. I make no claim to be the man himself. My purpose is to help you examine your own thinking, by asking. So — where shall we begin?";
 const ARC_TICKS = 8;
 
@@ -612,6 +618,7 @@ async function sendDailyAnswer() {
     dailyThinkEl.style.display = 'none';
     dailyReplyEl.textContent = dailySocratesReply;
     dailyContArea.style.display = 'flex';
+    dailyContBtn.textContent = member ? 'Continue this dialogue →' : 'Create an account to continue';
     localStorage.setItem(todayKey(), 'answered');
   } catch (e) {
     dailyThinkEl.style.display = 'none';
@@ -622,15 +629,32 @@ async function sendDailyAnswer() {
 }
 
 function enterAppFromDaily(withContext) {
-  if (withContext) {
+  dailyEl.style.display = 'none';
+  closed = false;
+  if (errEl) errEl.style.display = 'none';
+  if (limitEl) limitEl.style.display = 'none';
+  dailyContextForServer = null; dailyContinuationPending = false;
+  if (forumLinkEl) forumLinkEl.style.display = 'none';
+  if (pdfBarEl) pdfBarEl.style.display = 'none';
+  arcLabel.style.color = '';
+  arcLabel.textContent = 'a dialogue lasts as long as it needs — end it whenever you like';
+  if (withContext && dailyUserAnswer && dailySocratesReply) {
     dailyContextForServer = 'You asked: "' + dailyQuestion + '" — They answered: "' + dailyUserAnswer + '" — You replied: "' + dailySocratesReply + '"';
+    dailyContinuationPending = true;
+    convo = [
+      { role: 'user', text: dailyUserAnswer },
+      { role: 'assistant', text: dailySocratesReply }
+    ];
     localStorage.setItem(todayKey(), 'continued');
   } else {
+    dailyContextForServer = null;
+    dailyContinuationPending = false;
+    convo = [];
     localStorage.setItem(todayKey(), 'skipped');
   }
-  dailyEl.style.display = 'none';
   showApp();
-  resetConversation(); inputEl.focus();
+  render();
+  inputEl.focus();
 }
 
 document.getElementById('dailyAnswerBtn').addEventListener('click', () => {
@@ -642,7 +666,10 @@ document.getElementById('dailySwitchBtn').addEventListener('click', () => enterA
 document.getElementById('dailySkipBtn').addEventListener('click', () => enterAppFromDaily(false));
 document.getElementById('dailySendBtn').addEventListener('click', sendDailyAnswer);
 document.getElementById('dailyTextarea').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendDailyAnswer(); } });
-document.getElementById('dailyContBtn').addEventListener('click', () => enterAppFromDaily(true));
+document.getElementById('dailyContBtn').addEventListener('click', () => {
+  if (member) { enterAppFromDaily(true); }
+  else { localStorage.setItem(todayKey(), 'continued'); enterAuth(true); }
+});
 document.getElementById('dailyTmrwBtn').addEventListener('click', () => enterAppFromDaily(false));
 document.getElementById('dailySignoutBtn').addEventListener('click', signOut);
 
@@ -735,7 +762,8 @@ async function send() {
       body: JSON.stringify({
         userTurns: n,
         messages: convo.map(m => ({ role: m.role, content: m.text })),
-        dailyContext: dailyContextForServer || null
+        dailyContext: dailyContextForServer || null,
+        fromDaily: (dailyContinuationPending && n === 2) || false
       })
     });
 
@@ -754,6 +782,7 @@ async function send() {
     const data = await res.json();
     convo.push({ role: 'assistant', text: (data.text || '\u2026') });
     if (n === 1 && data.remaining !== undefined) showRemaining(data.remaining);
+    if (dailyContinuationPending && n === 2) { dailyContinuationPending = false; if (data.remaining !== undefined) showRemaining(data.remaining); }
     if (n >= 7) closed = true;
   } catch (e) {
     convo.pop();
