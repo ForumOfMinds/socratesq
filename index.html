@@ -30,73 +30,16 @@
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 720px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 0 18px; }
+  .wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; padding: 0 18px; }
 
   /* ---- Auth (the threshold) ---- */
-  .authwrap { position: relative; overflow: hidden; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; min-height: 100vh; }
-  .authwrap > .seal,
-  .authwrap > .authmark,
-  .authwrap > .thresh,
-  .authwrap > .threshsub,
-  .authwrap > .authcard,
-  .authwrap > .authback,
-  .authwrap > .authdisc { position: relative; z-index: 2; }
-
-  #app { position: relative; overflow: hidden; min-height: 100vh; }
-  #app > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas) {
-    position: relative;
-    z-index: 2;
-  }
-
-  /* === Digital hero — background layers (moving sweep removed) === */
-  .digital-hero-overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-  }
-  .digital-hero-overlay::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      transparent 3px,
-      rgba(0,0,0,0.10) 3px,
-      rgba(0,0,0,0.10) 4px
-    );
-  }
-  .digital-hero-grid {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    background-image: radial-gradient(circle, rgba(201,162,75,0.28) 1px, transparent 1px);
-    background-size: 44px 44px;
-    -webkit-mask-image: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.40) 55%, transparent 85%);
-            mask-image: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.40) 55%, transparent 85%);
-    animation: dh-grid-pulse 6s ease-in-out infinite;
-  }
-  @keyframes dh-grid-pulse {
-    0%, 100% { opacity: 0.35; }
-    50%      { opacity: 0.70; }
-  }
-  .digital-hero-canvas {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-  }
+  .authwrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; min-height: 100vh; }
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
   .authmark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .authmark span { color: var(--gold); }
   .thresh { font-family: 'EB Garamond', serif; font-size: 28px; color: var(--parchment); margin: 16px 0 12px; }
-  .threshsub { font-size: 15px; color: var(--parchment-dim); line-height: 1.65; max-width: 340px; margin: 0 auto 26px; }
+  .threshsub { font-size: 15px; color: var(--parchment-dim); line-height: 1.65; max-width: 360px; margin: 0 auto 26px; }
   .authcard { width: 100%; max-width: 330px; display: flex; flex-direction: column; gap: 10px; }
   .tabs { display: flex; gap: 6px; margin-bottom: 4px; }
   .tabs button { flex: 1; background: transparent; border: 1px solid var(--surface-edge); color: var(--parchment-dim); font-family: 'Inter', sans-serif; font-size: 14px; padding: 9px; border-radius: 10px; cursor: pointer; transition: border-color .2s ease, color .2s ease; }
@@ -114,23 +57,6 @@
   .authback button:hover { color: var(--gold); }
   .authdisc { font-size: 12px; color: var(--dim); letter-spacing: .03em; margin-top: 26px; max-width: 340px; line-height: 1.5; }
 
-  /* Elevate sign-in content above animation layers */
-  .authwrap > .seal, .authwrap > .authmark, .authwrap > .thresh,
-  .authwrap > .threshsub, .authwrap > .authcard, .authwrap > .authback,
-  .authwrap > .authdisc { position: relative; z-index: 2; }
-
-  #app { position: relative; overflow: hidden; min-height: 100vh; }
-  #app > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas) { position: relative; z-index: 2; }
-
-  /* === Digital hero — animated background === */
-  .digital-hero-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
-  .digital-hero-overlay::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,0,0,0.10) 3px, rgba(0,0,0,0.10) 4px); }
-  .digital-hero-overlay::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 180px; background: linear-gradient(180deg, transparent 0%, rgba(201,162,75,0.05) 35%, rgba(217,189,126,0.14) 50%, rgba(201,162,75,0.05) 65%, transparent 100%); animation: dh-sweep 16s linear infinite; }
-  @keyframes dh-sweep { 0% { transform: translateY(-180px); } 100% { transform: translateY(120vh); } }
-  .digital-hero-grid { position: absolute; inset: 0; pointer-events: none; z-index: 1; background-image: radial-gradient(circle, rgba(201,162,75,0.28) 1px, transparent 1px); background-size: 44px 44px; -webkit-mask-image: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.40) 55%, transparent 85%); mask-image: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.40) 55%, transparent 85%); animation: dh-grid-pulse 6s ease-in-out infinite; }
-  @keyframes dh-grid-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.70; } }
-  .digital-hero-canvas { position: absolute; inset: 0; pointer-events: none; z-index: 1; width: 100%; height: 100%; }
-
   /* ---- Account bar ---- */
   .acct { display: flex; align-items: center; justify-content: flex-end; gap: 14px; padding: 14px 4px 0; font-size: 15px; color: var(--parchment-dim); }
   .acct button { background: transparent; border: none; color: var(--parchment); font-family: 'Inter', sans-serif; font-size: 15px; cursor: pointer; text-decoration: underline; }
@@ -143,7 +69,18 @@
   .sub { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-style: italic; color: var(--parchment); font-size: 21px; margin-top: 8px; }
   .disclaimer { font-size: 15px; color: var(--parchment-dim); letter-spacing: 0.03em; margin-top: 12px; }
   .invitation { font-family: 'EB Garamond', serif; color: var(--gold-soft); font-size: 19px; margin-top: 10px; letter-spacing: .02em; }
-  .origin-link { display: inline-block; margin-top: 6px; font-family: 'EB Garamond', serif; font-size: 16px; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,162,75,0.35); padding-bottom: 2px; letter-spacing: .02em; transition: color .2s ease, border-color .2s ease; }
+  .origin-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: 'EB Garamond', serif;
+    font-size: 16px;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,162,75,0.35);
+    padding-bottom: 2px;
+    letter-spacing: .02em;
+    transition: color .2s ease, border-color .2s ease;
+  }
   .origin-link:hover { color: var(--gold-soft); border-bottom-color: var(--gold); }
 
   .arc { display: flex; align-items: center; justify-content: center; gap: 11px; padding: 16px 0 6px; }
@@ -152,10 +89,12 @@
   .arc .tick.closing { height: 22px; background: var(--gold-soft); }
   .arc-label { text-align: center; font-family: 'EB Garamond', serif; font-size: 16px; color: var(--parchment-dim); margin-bottom: 8px; letter-spacing: .02em; transition: color .5s ease; }
 
-  .stream { overflow-y: auto; max-height: 62vh; padding: 18px 2px 8px; display: flex; flex-direction: column; gap: 22px; }
+  /* Stream: no longer flex:1 — grows only as needed so the composer sits
+     directly below the last message instead of anchored to viewport bottom */
+  .stream { overflow-y: auto; padding: 18px 2px 8px; display: flex; flex-direction: column; gap: 22px; max-height: 62vh; }
   .turn { display: flex; flex-direction: column; gap: 5px; animation: rise .5s ease both; }
   @keyframes rise { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: none; } }
-  .who { font-size: 11px; text-transform: uppercase; letter-spacing: .16em; font-weight: 600; }
+  .who { font-size: 12px; text-transform: uppercase; letter-spacing: .16em; font-weight: 600; }
   .turn.soc .who { color: var(--gold); }
   .turn.you .who { color: var(--olive); align-self: flex-end; }
   .turn.soc .body { font-family: 'EB Garamond', serif; font-size: 24px; line-height: 1.6; color: var(--parchment); }
@@ -168,7 +107,7 @@
   @keyframes pulse { 0%,100%{ opacity:.25; transform: translateY(0);} 50%{ opacity:1; transform: translateY(-2px);} }
 
   .endbar { text-align: center; padding: 2px 0 10px; }
-  .endbar button { background: transparent; border: none; color: var(--dim); font-family: 'Inter', sans-serif; font-size: 12px; cursor: pointer; text-decoration: underline; letter-spacing: .02em; }
+  .endbar button { background: transparent; border: none; color: var(--dim); font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer; text-decoration: underline; letter-spacing: .02em; }
   .endbar button:hover { color: var(--gold); }
 
   .composer { border-top: 1px solid var(--surface-edge); padding: 14px 0 22px; display: flex; gap: 10px; align-items: flex-end; }
@@ -183,25 +122,14 @@
   .renew button { background: transparent; border: 1px solid var(--surface-edge); color: var(--parchment-dim); font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-style: italic; font-size: 16px; padding: 9px 22px; border-radius: 20px; cursor: pointer; transition: border-color .2s ease, color .2s ease; }
   .renew button:hover { border-color: var(--gold); color: var(--gold); }
   .err { color: #d98c6a; font-size: 14px; font-family: 'Inter', sans-serif; text-align: center; padding: 6px 0; }
-
-  /* ---- Daily question ---- */
-  .daily-wrap { max-width:520px; width:100%; margin:0 auto; padding:40px 0 36px; display:flex; flex-direction:column; align-items:center; text-align:center; }
-  .daily-greeting { font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim); margin-bottom:8px; }
-  .daily-intro { font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:var(--parchment-dim); margin-bottom:24px; }
-  .daily-q { font-family:'EB Garamond',serif; font-size:26px; color:var(--parchment); line-height:1.45; margin-bottom:30px; max-width:460px; }
-  .daily-btns { display:flex; flex-direction:column; gap:10px; width:100%; max-width:270px; }
-  .daily-primary { background:var(--gold); color:#20180a; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:14px; padding:12px; border-radius:12px; cursor:pointer; transition:background .2s; }
-  .daily-primary:hover { background:var(--gold-soft); }
-  .daily-primary:disabled { opacity:.4; cursor:default; }
-  .daily-secondary { background:transparent; border:1px solid var(--surface-edge); color:var(--parchment-dim); font-family:'Inter',sans-serif; font-size:13px; padding:11px; border-radius:12px; cursor:pointer; transition:border-color .2s,color .2s; }
-  .daily-secondary:hover { border-color:var(--gold); color:var(--gold); }
-  .daily-ghost { background:transparent; border:none; color:var(--dim); font-family:'Inter',sans-serif; font-size:12px; cursor:pointer; text-decoration:underline; }
-  .daily-ghost:hover { color:var(--parchment-dim); }
-  #dailyTextarea { width:100%; max-width:440px; resize:none; background:var(--ink-2); border:1px solid var(--surface-edge); color:var(--parchment); font-family:'Inter',sans-serif; font-size:15px; line-height:1.5; padding:11px 14px; border-radius:12px; outline:none; transition:border-color .2s; margin-bottom:8px; }
-  #dailyTextarea:focus { border-color:var(--gold); }
-  .daily-who { font-size:11px; text-transform:uppercase; letter-spacing:.16em; font-weight:600; color:var(--gold); margin-bottom:8px; text-align:left; width:100%; max-width:440px; }
-  .daily-reply-body { font-family:'EB Garamond',serif; font-size:20px; line-height:1.6; color:var(--parchment); text-align:left; width:100%; max-width:440px; margin-bottom:26px; }
-  @media (max-width: 520px) { .turn.soc .body { font-size: 22px; } .turn.you .body { font-size: 16px; } .mark { font-size: 30px; } .sub { font-size: 16px; } textarea { font-size: 16px; } .stream { max-height: 55vh; } }
+  @media (max-width: 520px) {
+    .turn.soc .body { font-size: 22px; }
+    .turn.you .body { font-size: 16px; }
+    .mark { font-size: 30px; }
+    .sub { font-size: 16px; }
+    textarea { font-size: 16px; }
+    .stream { max-height: 55vh; }
+  }
 </style>
 </head>
 <body>
@@ -209,9 +137,6 @@
 
   <!-- ===== The threshold (sign in / create account) ===== -->
   <div id="auth" class="authwrap" style="display:none">
-    <div class="digital-hero-overlay" aria-hidden="true"></div>
-    <div class="digital-hero-grid" aria-hidden="true"></div>
-    <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
     <div class="seal"><span class="q">Q</span></div>
     <div class="authmark">Socrates<span>Q</span></div>
     <div class="thresh">What would Socrates say?</div>
@@ -230,45 +155,9 @@
     <div class="authdisc">A philosophical reconstruction, not the historical figure — and not advice.</div>
   </div>
 
-
-  <!-- ===== Daily question (shown to members on first visit of each day) ===== -->
-  <div id="daily" style="display:none; flex:1; flex-direction:column;">
-    <div class="acct"><span id="dailyEmail"></span><button id="dailySignoutBtn">Sign out</button></div>
-    <div class="daily-wrap">
-      <div class="daily-greeting" id="dailyGreetingEl"></div>
-      <div class="daily-intro">Socrates has a question for you today.</div>
-      <div class="daily-q" id="dailyQEl"></div>
-
-      <div class="daily-btns" id="dailyBtnsEl">
-        <button id="dailyAnswerBtn" class="daily-primary">Answer</button>
-        <button id="dailySwitchBtn" class="daily-secondary">Ask me something instead</button>
-        <button id="dailySkipBtn" class="daily-ghost">Not today</button>
-      </div>
-
-      <div id="dailyInputArea" style="display:none; flex-direction:column; align-items:center; width:100%;">
-        <textarea id="dailyTextarea" rows="3" placeholder="Your answer…"></textarea>
-        <button id="dailySendBtn" class="daily-primary" style="max-width:440px; width:100%;">Send</button>
-      </div>
-
-      <div id="dailyResponseArea" style="display:none; flex-direction:column; align-items:center; width:100%;">
-        <div class="daily-who">Socrates</div>
-        <div class="daily-reply-body" id="dailyReplyEl"></div>
-        <div id="dailyThinkEl" class="thinking" style="display:none; margin-bottom:20px;">considers<span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-      </div>
-
-      <div id="dailyContArea" style="display:none; flex-direction:column; gap:10px; width:100%; max-width:270px;">
-        <button id="dailyContBtn" class="daily-primary">Continue this dialogue →</button>
-        <button id="dailyTmrwBtn" class="daily-ghost">Perhaps tomorrow</button>
-      </div>
-    </div>
-  </div>
-
   <!-- ===== The dialogue ===== -->
   <div id="app" style="display:none; flex-direction:column;">
-    <div class="digital-hero-overlay" aria-hidden="true"></div>
-    <div class="digital-hero-grid" aria-hidden="true"></div>
-    <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
-    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:11px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
+    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:14px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
     <header>
       <div class="mark">Socrates<span>Q</span></div>
       <a class="origin-link" href="about.html">Where this comes from &rarr;</a>
@@ -296,9 +185,9 @@
     </div>
 
     <div id="limitReached" style="display:none;text-align:center;padding:18px 12px 10px;">
-      <div style="font-family:'EB Garamond',serif;font-size:19px;color:var(--parchment);margin-bottom:8px;">You have used all 5 conversations this month.</div>
-      <div style="font-size:13px;color:var(--parchment-dim);margin-bottom:16px;">Subscribe to continue — 30 conversations a month.</div>
-      <button onclick="alert('Subscriptions coming soon — stay with us.')" style="background:var(--gold);color:#20180a;border:none;font-family:Inter,sans-serif;font-weight:600;font-size:14px;padding:11px 24px;border-radius:12px;cursor:pointer;">Subscribe</button>
+      <div style="font-family:'EB Garamond',serif;font-size:22px;color:var(--parchment);margin-bottom:8px;">You have used all 5 conversations this month.</div>
+      <div style="font-size:14px;color:var(--parchment-dim);margin-bottom:16px;">Subscribe to continue — 30 conversations a month.</div>
+      <button onclick="alert('Subscriptions coming soon — stay with us.')" style="background:var(--gold);color:#20180a;border:none;font-family:Inter,sans-serif;font-weight:600;font-size:15px;padding:12px 26px;border-radius:12px;cursor:pointer;">Subscribe</button>
     </div>
 
     <div id="forumLink" style="display:none;text-align:center;padding:10px 0 6px;">
@@ -355,7 +244,7 @@ function setMsg(text, isErr) {
 function friendly(e) {
   const m = (e && e.message) ? e.message : '';
   if (/email not confirmed|confirm/i.test(m)) return 'Please confirm your email first — check your inbox for the link.';
-  if (/invalid login/i.test(m)) return 'That email and password don\u2019t match. Try again.';
+  if (/invalid login/i.test(m)) return 'That email and password don’t match. Try again.';
   if (/already registered|already been registered/i.test(m)) return 'That email already has an account — try signing in.';
   if (/password should be at least/i.test(m)) return 'Choose a password of at least 6 characters.';
   return m || 'Something went wrong. Please try again.';
@@ -367,7 +256,7 @@ async function doAuth() {
   const pw = pwEl.value;
   if (!email || !pw) { setMsg('Enter your email and a password.', true); return; }
   authBtn.disabled = true;
-  setMsg(mode === 'signup' ? 'Creating your account\u2026' : 'Signing you in\u2026');
+  setMsg(mode === 'signup' ? 'Creating your account…' : 'Signing you in…');
   try {
     if (mode === 'signup') {
       const { error } = await sb.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin } });
@@ -404,14 +293,7 @@ function startFresh() { resetConversation(); inputEl.focus(); }
 function enterMember(session) {
   member = true; taster = false;
   currentEmail = (session && session.user && session.user.email) || '';
-  setAcct();
-  if (!localStorage.getItem(todayKey())) {
-    showDaily();
-  } else {
-    showApp();
-    if (!started) { startApp(); started = true; }
-    else { resetConversation(); inputEl.focus(); }
-  }
+  setAcct(); showApp(); startFresh();
 }
 function enterTaste() {
   member = false; taster = true; currentEmail = '';
@@ -451,57 +333,7 @@ if (sb) {
 
 /* ---------- The dialogue ---------- */
 const API = '/api/socrates';
-
-/* ---------- Daily questions ---------- */
-const DAILY_QUESTIONS = [
-  "Which opinion of yours has become suspiciously comfortable?",
-  "What are you pretending not to know?",
-  "Is the thing you call a habit actually a choice you keep making?",
-  "What have you accepted simply because everyone else has?",
-  "What do you believe that you cannot prove?",
-  "When did you last change your mind about something that mattered?",
-  "Which word do you use often that you could not define precisely if pressed?",
-  "When you call someone \"good,\" what exactly do you mean?",
-  "Is there a difference between the life you are living and the life you intended to live?",
-  "If your calendar could speak honestly, what would it say about your values?",
-  "What are you becoming, without quite deciding to?",
-  "What task did you avoid this week — and what does the avoidance tell you?",
-  "What obligation do you owe your future self — and are you paying it?",
-  "What did you do today that you would not want examined too closely?",
-  "If today were repeated exactly tomorrow, would that be a gift or a punishment?",
-  "What do the people who love you most still not understand about you?",
-  "Is there a conversation you have been postponing that you know you should have?",
-  "What kindness did someone do for you that quietly changed how you see them?",
-  "What would you still defend if everyone you admired disagreed with you?",
-  "What was the last thing that genuinely surprised you — and why did it surprise you?",
-  "Is \"I don't know\" a confession, a beginning, or an evasion?",
-  "What does \"success\" mean to you today — and where did that definition come from?",
-  "What are you certain of today that you were wrong about five years ago?",
-  "Would you rather be wise or be thought wise — and notice how quickly you answered?",
-  "If your younger self could ask you one question, which would you most want to avoid?",
-  "What are you certain of about yourself that no one else seems to share?",
-  "What question are you hoping I won't ask?",
-  "If your coffee could form an opinion of you, what would it suspect?",
-  "If your dog could question one of your daily choices, which would trouble it most?",
-  "How many browser tabs are open right now — and what does each one represent?"
-];
-
-function getTodayQuestion() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const day = Math.floor((now - start) / 86400000);
-  return DAILY_QUESTIONS[day % DAILY_QUESTIONS.length];
-}
-function dailyGreetingText() {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning.';
-  if (h < 17) return 'Good afternoon.';
-  return 'Good evening.';
-}
-function todayKey() { return 'sq_daily_' + new Date().toISOString().slice(0, 10); }
-
-let dailyContextForServer = null;
-const GREETING = "Welcome. I am Socrates — an AI reconstruction inspired by the dialogues of Plato, Xenophon, and other sources. I make no claim to be the man himself. My purpose is to help you examine your own thinking, by asking. So — where shall we begin?";
+const GREETING = "Welcome. I am Socrates — an AI reconstruction shaped by the dialogues of Plato, Xenophon, and other sources. I make no claim to be the man himself. My purpose is to help you examine your own thinking, by asking. So — where shall we begin?";
 const ARC_TICKS = 8;
 
 let convo = [];
@@ -598,108 +430,6 @@ function saveAsPDF() {
 
 if (pdfBtn) pdfBtn.addEventListener('click', saveAsPDF);
 
-/* ---------- Daily view ---------- */
-const dailyEl = document.getElementById('daily');
-const dailyGreetingEl = document.getElementById('dailyGreetingEl');
-const dailyQEl = document.getElementById('dailyQEl');
-const dailyBtnsEl = document.getElementById('dailyBtnsEl');
-const dailyInputArea = document.getElementById('dailyInputArea');
-const dailyTextarea = document.getElementById('dailyTextarea');
-const dailySendBtn = document.getElementById('dailySendBtn');
-const dailyResponseArea = document.getElementById('dailyResponseArea');
-const dailyReplyEl = document.getElementById('dailyReplyEl');
-const dailyThinkEl = document.getElementById('dailyThinkEl');
-const dailyContArea = document.getElementById('dailyContArea');
-const dailyEmailEl = document.getElementById('dailyEmail');
-
-let dailyQuestion = '';
-let dailyUserAnswer = '';
-let dailySocratesReply = '';
-
-function showDaily() {
-  authEl.style.display = 'none';
-  appEl.style.display = 'none';
-  dailyEl.style.display = 'flex';
-  dailyQuestion = getTodayQuestion();
-  dailyGreetingEl.textContent = dailyGreetingText();
-  dailyQEl.textContent = dailyQuestion;
-  dailyEmailEl.textContent = currentEmail;
-  // reset state
-  dailyBtnsEl.style.display = 'flex';
-  dailyInputArea.style.display = 'none';
-  dailyResponseArea.style.display = 'none';
-  dailyContArea.style.display = 'none';
-  dailyTextarea.value = '';
-  dailyReplyEl.textContent = '';
-  dailyContextForServer = null;
-}
-
-async function sendDailyAnswer() {
-  const text = dailyTextarea.value.trim();
-  if (!text) return;
-  dailyUserAnswer = text;
-  dailySendBtn.disabled = true;
-  dailyTextarea.disabled = true;
-  dailyResponseArea.style.display = 'flex';
-  dailyThinkEl.style.display = 'flex';
-  dailyReplyEl.textContent = '';
-
-  const token = await getToken();
-  const hdrs = { 'Content-Type': 'application/json' };
-  if (token) hdrs['Authorization'] = 'Bearer ' + token;
-
-  try {
-    const res = await fetch(API, {
-      method: 'POST',
-      headers: hdrs,
-      body: JSON.stringify({
-        daily: true,
-        dailyQuestion,
-        userTurns: 1,
-        messages: [{ role: 'user', content: text }]
-      })
-    });
-    if (!res.ok) throw new Error('status ' + res.status);
-    const data = await res.json();
-    dailySocratesReply = data.text || '…';
-    dailyThinkEl.style.display = 'none';
-    dailyReplyEl.textContent = dailySocratesReply;
-    dailyContArea.style.display = 'flex';
-    localStorage.setItem(todayKey(), 'answered');
-  } catch (e) {
-    dailyThinkEl.style.display = 'none';
-    dailyReplyEl.textContent = 'The line to Socrates faltered. Give it another try in a moment.';
-    dailySendBtn.disabled = false;
-    dailyTextarea.disabled = false;
-  }
-}
-
-function enterAppFromDaily(withContext) {
-  if (withContext) {
-    dailyContextForServer = 'You asked: "' + dailyQuestion + '" — They answered: "' + dailyUserAnswer + '" — You replied: "' + dailySocratesReply + '"';
-    localStorage.setItem(todayKey(), 'continued');
-  } else {
-    localStorage.setItem(todayKey(), 'skipped');
-  }
-  dailyEl.style.display = 'none';
-  showApp();
-  if (!started) { startApp(); started = true; }
-  else { resetConversation(); inputEl.focus(); }
-}
-
-document.getElementById('dailyAnswerBtn').addEventListener('click', () => {
-  dailyBtnsEl.style.display = 'none';
-  dailyInputArea.style.display = 'flex';
-  dailyTextarea.focus();
-});
-document.getElementById('dailySwitchBtn').addEventListener('click', () => enterAppFromDaily(false));
-document.getElementById('dailySkipBtn').addEventListener('click', () => enterAppFromDaily(false));
-document.getElementById('dailySendBtn').addEventListener('click', sendDailyAnswer);
-document.getElementById('dailyTextarea').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendDailyAnswer(); } });
-document.getElementById('dailyContBtn').addEventListener('click', () => enterAppFromDaily(true));
-document.getElementById('dailyTmrwBtn').addEventListener('click', () => enterAppFromDaily(false));
-document.getElementById('dailySignoutBtn').addEventListener('click', signOut);
-
 async function getToken() {
   if (!member || !sb) return null;
   try {
@@ -710,7 +440,7 @@ async function getToken() {
 
 function showRemaining(n) {
   if (!member || n === null || n === undefined) { remainingEl.textContent = ''; return; }
-  remainingEl.textContent = n + ' of 5 conversations left this month  ';
+  remainingEl.textContent = n + ' of 5 conversations left this month  ';
 }
 
 for (let i = 0; i < ARC_TICKS; i++) { const t = document.createElement('div'); t.className = 'tick'; arcEl.appendChild(t); }
@@ -788,8 +518,7 @@ async function send() {
       headers,
       body: JSON.stringify({
         userTurns: n,
-        messages: convo.map(m => ({ role: m.role, content: m.text })),
-        dailyContext: dailyContextForServer || null
+        messages: convo.map(m => ({ role: m.role, content: m.text }))
       })
     });
 
@@ -806,7 +535,7 @@ async function send() {
 
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    convo.push({ role: 'assistant', text: (data.text || '\u2026') });
+    convo.push({ role: 'assistant', text: (data.text || '…') });
     if (n === 1 && data.remaining !== undefined) showRemaining(data.remaining);
     if (n >= 7) closed = true;
   } catch (e) {
@@ -835,7 +564,7 @@ async function endConversation() {
     });
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    convo.push({ role: 'assistant', text: (data.text || '\u2026') });
+    convo.push({ role: 'assistant', text: (data.text || '…') });
     closed = true;
   } catch (e) {
     errEl.textContent = 'The line to Socrates faltered. Give it another try in a moment.';
@@ -868,50 +597,6 @@ renewBtn.addEventListener('click', () => {
 });
 inputEl.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
 inputEl.addEventListener('input', () => { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + 'px'; });
-
-/* ---------- Digital hero — particle network on threshold + dialogue views ---------- */
-document.querySelectorAll('[data-digital-hero]').forEach(function(canvas) {
-  var hero = canvas.closest('.authwrap, #app');
-  if (!hero) return;
-  var ctx = canvas.getContext('2d');
-  var W = 0, H = 0;
-  var PARTICLE_COUNT = 52, CONNECT_DIST = 120;
-  var R = 201, G = 162, B = 75;
-  function resize() { W = canvas.width = hero.offsetWidth || 800; H = canvas.height = hero.offsetHeight || 600; }
-  resize();
-  var ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
-  if (ro) ro.observe(hero); else window.addEventListener('resize', resize);
-  var particles = [];
-  for (var i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*0.26, vy: (Math.random()-0.5)*0.20, r: Math.random()*1.4+0.5 });
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i]; p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-    }
-    for (var i = 0; i < particles.length; i++) {
-      var a = particles[i];
-      for (var j = i+1; j < particles.length; j++) {
-        var b = particles[j], dx = a.x-b.x, dy = a.y-b.y, d = Math.sqrt(dx*dx+dy*dy);
-        if (d < CONNECT_DIST) {
-          var alpha = (1 - d/CONNECT_DIST) * 0.32;
-          ctx.strokeStyle = 'rgba('+R+','+G+','+B+','+alpha+')';
-          ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-        }
-      }
-    }
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i];
-      ctx.fillStyle = 'rgba('+R+','+G+','+B+',0.68)';
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-    }
-    requestAnimationFrame(draw);
-  }
-  draw();
-});
 </script>
 </body>
 </html>
