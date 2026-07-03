@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Before We Begin — SocratesQ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&display=swap');
+
+  :root {
+    --ink:          #14181a;
+    --surface:      #1d2326;
+    --surface-edge: #2a3236;
+    --parchment:    #ece5d4;
+    --parchment-dim:#b9b3a3;
+    --gold:         #c9a24b;
+    --gold-soft:    #d9bd7e;
+    --dim:          #676d68;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: radial-gradient(1200px 700px at 50% -8%, #1c2326 0%, var(--ink) 60%) fixed;
+    color: var(--parchment);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ---- Nav ---- */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0 18px; border-bottom: 1px solid var(--surface-edge);
+  }
+  .mark { font-size: 22px; font-weight: 500; letter-spacing: .04em; color: var(--parchment); text-decoration: none; }
+  .mark span { color: var(--gold); }
+  nav a.back { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--parchment-dim); text-decoration: none; transition: color .2s; }
+  nav a.back:hover { color: var(--gold); }
+
+  /* ---- Hero ---- */
+  .hero { padding: 52px 0 4px; }
+  .hero .eyebrow { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .hero h1 { font-size: 36px; font-weight: 500; color: var(--parchment); line-height: 1.2; margin-bottom: 14px; }
+  .hero .subtitle { font-style: italic; font-size: 17px; color: var(--parchment-dim); margin-bottom: 10px; }
+  .hero .updated { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--dim); letter-spacing: .08em; }
+
+  /* ---- Rules ---- */
+  .rule { border: none; border-top: 1px solid var(--surface-edge); margin: 40px 0; }
+
+  /* ---- Intro block ---- */
+  .intro { padding: 28px 0 4px; }
+  .intro p { font-size: 19px; color: var(--parchment-dim); line-height: 1.7; margin-bottom: 1em; }
+
+  /* ---- Sections ---- */
+  section { margin-bottom: 38px; }
+  h2 { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  p { margin-bottom: 1em; color: var(--parchment); }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 500; color: var(--parchment); }
+
+  /* ---- Belief list ---- */
+  .beliefs { list-style: none; margin: 4px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .beliefs li { padding-left: 20px; position: relative; color: var(--parchment); line-height: 1.65; }
+  .beliefs li::before { content: '·'; position: absolute; left: 0; color: var(--gold); font-size: 22px; line-height: 1.2; }
+
+  /* ---- Callout ---- */
+  .callout {
+    background: var(--surface); border: 1px solid var(--surface-edge);
+    border-left: 3px solid var(--gold); border-radius: 10px;
+    padding: 20px 24px; margin: 32px 0;
+    font-size: 18px; color: var(--parchment-dim); line-height: 1.7;
+  }
+  .callout strong { color: var(--parchment); }
+
+  /* ---- Final word ---- */
+  .final {
+    background: var(--surface); border: 1px solid var(--surface-edge);
+    border-radius: 12px; padding: 28px 30px; margin-top: 44px;
+    text-align: center;
+  }
+  .final p { font-style: italic; font-size: 20px; color: var(--parchment-dim); line-height: 1.65; margin-bottom: 1em; }
+  .final p:last-child { margin-bottom: 0; font-size: 16px; color: var(--dim); font-style: normal; }
+
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---- Footer ---- */
+  .disc {
+    margin-top: 52px; padding-top: 24px;
+    border-top: 1px solid var(--surface-edge);
+    font-family: 'Inter', sans-serif; font-size: 12px;
+    color: var(--dim); line-height: 1.7; text-align: center;
+  }
+  .disc a { color: var(--dim); }
+  .disc a:hover { color: var(--gold); }
+
+  @media (max-width: 520px) { html, body { font-size: 17px; } .hero h1 { font-size: 28px; } .final p { font-size: 18px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <a class="mark" href="/">Socrates<span>Q</span></a>
+    <a class="back" href="about.html">← About</a>
+  </nav>
+
+  <div class="hero">
+    <div class="eyebrow">Principles, Disclaimers &amp; Terms of Use</div>
+    <h1>Before We Begin</h1>
+    <div class="updated">Last updated: July 2026</div>
+  </div>
+
+  <div class="intro">
+    <p>Welcome to <strong>SocratesQ</strong>.</p>
+    <p>SocratesQ exists for one purpose: <strong>to encourage thoughtful inquiry.</strong></p>
+    <p>It is a place where questions matter more than quick answers, where ideas are examined through conversation, and where disagreement is welcomed as part of learning. Our goal is not to tell you what to think, but to help you think more carefully.</p>
+    <p>At the same time, SocratesQ is an artificial intelligence application. It has important limitations, and there are situations in which philosophical conversation is no substitute for professional expertise. The following principles and terms explain what SocratesQ is, what it is not, and the responsibilities we all share in using it.</p>
+  </div>
+
+  <hr class="rule" />
+
+  <section>
+    <h2>What SocratesQ Is</h2>
+    <p>SocratesQ is an AI application inspired by the philosophical method of Socrates: the disciplined examination of ideas through questions. Its conversations draw primarily upon the dialogues of Plato, the writings of Xenophon, and other historical sources concerning Socrates and the early Greek philosophical tradition.</p>
+    <p>The Socrates you encounter here is a <strong>computational reconstruction</strong>. He is not the historical Socrates, not a channel to an ancient consciousness, and not a representation of any living or deceased person.</p>
+    <p>Every effort has been made to preserve the spirit of Socratic inquiry and remain faithful to the surviving historical record. At the same time, any reconstruction necessarily involves interpretation. The conversations you have here should therefore be understood as historically informed philosophical simulations rather than historical documents.</p>
+    <p>Our aim is simple: to preserve one of humanity's oldest traditions of inquiry in a form accessible to modern readers.</p>
+  </section>
+
+  <section>
+    <h2>What We Believe</h2>
+    <ul class="beliefs">
+      <li>Good questions are often more valuable than quick answers.</li>
+      <li>Changing one's mind is a sign of intellectual strength, not weakness.</li>
+      <li>Respectful disagreement is one of the foundations of learning.</li>
+      <li>Philosophy is not merely an academic subject but a way of examining life.</li>
+      <li>Every conversation is an opportunity to understand ourselves and one another a little better.</li>
+    </ul>
+    <p style="margin-top:1.2em;">These principles guide both the design of SocratesQ and the conversations it encourages.</p>
+  </section>
+
+  <div class="callout">
+    SocratesQ is <strong>not</strong> a therapist, physician, psychologist, psychiatrist, lawyer, financial adviser, or crisis service. Nothing discussed here constitutes professional advice of any kind. If you are facing a situation requiring professional expertise, please seek guidance from a qualified human being.
+  </div>
+
+  <section>
+    <h2>Not Professional Advice</h2>
+    <p>Nothing discussed within SocratesQ constitutes medical, psychological, legal, financial, or other professional advice. The conversations are philosophical in nature: exploratory, reflective, and intended to encourage critical thinking rather than provide definitive answers.</p>
+    <p>If you are experiencing a medical emergency, a mental health crisis, or thoughts of harming yourself or others, do not rely on SocratesQ. Contact your local emergency services or an appropriate crisis service immediately. In the United States, you can reach the 988 Suicide and Crisis Lifeline by calling or texting <strong>988</strong>.</p>
+    <p>As Socrates himself might remind us: some questions belong to philosophers — but others belong to physicians, engineers, judges, or those best equipped to help.</p>
+  </section>
+
+  <section>
+    <h2>The Limits of AI</h2>
+    <p>SocratesQ is powered by artificial intelligence. Like any conversation partner — human or artificial — it can misunderstand, oversimplify, overlook important context, or simply be mistaken. Although we strive for historical fidelity and thoughtful dialogue, we make no guarantee that every response is accurate, complete, or appropriate for every situation.</p>
+    <p>Treat every conversation as an invitation to think critically, not as an authoritative source of fact.</p>
+    <p>Do not rely on any dialogue generated by SocratesQ when making important medical, legal, financial, educational, or other consequential decisions.</p>
+  </section>
+
+  <section>
+    <h2>Your Privacy</h2>
+    <p>Your conversations belong to you. We do <strong>not</strong> store your completed conversations. When a dialogue ends, its contents are removed from our systems and are not retained by us.</p>
+    <p>We do <strong>not</strong> use your conversations to train AI models. We do <strong>not</strong> sell your personal information or share it with third parties for advertising purposes.</p>
+    <p>The personal information we retain is limited to what is reasonably necessary to operate your account, such as your email address and basic account information.</p>
+    <p>If you choose to save a dialogue as a PDF, that file exists only on your own device. We do not keep a copy.</p>
+  </section>
+
+  <section>
+    <h2>Age &amp; Eligibility</h2>
+    <p>SocratesQ is intended for users who are at least <strong>18 years of age</strong>. By creating an account, you confirm that you meet this requirement.</p>
+    <p>If you are under 18, please do not use SocratesQ except with the knowledge and consent of a parent or legal guardian, where permitted by applicable law.</p>
+  </section>
+
+  <section>
+    <h2>The Spirit of the Conversation</h2>
+    <p>SocratesQ was created to foster curiosity, intellectual honesty, and respectful dialogue. By using the service, you agree to use it in that spirit.</p>
+    <p>You agree not to use SocratesQ to generate or promote unlawful, abusive, fraudulent, or harmful content; to impersonate others; to interfere with the operation of the service; or to attempt to circumvent its intended safeguards.</p>
+    <p>We reserve the right to suspend or terminate accounts that seriously or repeatedly violate these principles or these Terms of Use.</p>
+  </section>
+
+  <section>
+    <h2>Limitation of Liability</h2>
+    <p>To the fullest extent permitted by applicable law, SocratesQ, The Forum of Minds Society, and their owners, contributors, and affiliates shall not be liable for any direct, indirect, incidental, consequential, special, or punitive damages arising from your use of this service, including decisions made in reliance upon AI-generated conversations.</p>
+    <p>SocratesQ is provided <strong>"as is"</strong> and <strong>"as available,"</strong> without warranties of any kind, whether express or implied, including warranties of accuracy, reliability, merchantability, fitness for a particular purpose, or non-infringement.</p>
+    <p>Your use of the service is entirely at your own discretion and risk.</p>
+  </section>
+
+  <section>
+    <h2>Changes to These Terms</h2>
+    <p>We may update these Principles and Terms of Use from time to time. When we do, the "Last updated" date at the top of this page will change. Continued use of SocratesQ after changes become effective constitutes acceptance of the revised terms.</p>
+    <p>If we make material changes, we will make reasonable efforts to notify registered users.</p>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p>Questions about these Terms, our privacy practices, or the operation of SocratesQ are always welcome.</p>
+    <p><strong>Email:</strong> <a href="mailto:help@socratesq.app">help@socratesq.app</a></p>
+    <p>We read every message.</p>
+  </section>
+
+  <div class="final">
+    <p>Philosophy has never promised certainty.</p>
+    <p>It has promised something both more modest and more enduring: the willingness to examine our beliefs with honesty, curiosity, and humility.</p>
+    <p>That is the spirit in which SocratesQ was created. We hope that, when each conversation ends, you leave not simply with answers — but with better questions than the ones you brought.</p>
+    <p>— SocratesQ &nbsp;·&nbsp; A project of The Forum of Minds Society</p>
+  </div>
+
+  <div class="disc">
+    <a href="/">SocratesQ</a>
+    &nbsp;·&nbsp;
+    <a href="about.html">About</a>
+    &nbsp;·&nbsp;
+    <a href="disclaimer.html" style="color:var(--gold);">Before We Begin</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.forumofminds.com" target="_blank" rel="noopener">forumofminds.com</a><br/><br/>
+    <span>A philosophical reconstruction — not the historical figure, and not advice.</span><br/>
+    <span>© The Forum of Minds Society, 2026</span>
+  </div>
+
+</div>
+</body>
+</html>
