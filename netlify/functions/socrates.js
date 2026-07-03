@@ -142,12 +142,15 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: 'Server is missing its API key.' }) };
   }
 
-  let messages, userTurns, ending;
+  let messages, userTurns, ending, daily, dailyQuestion, dailyContext;
   try {
     const parsed = JSON.parse(event.body || '{}');
     messages = parsed.messages;
     userTurns = parsed.userTurns;
     ending = parsed.ending;
+    daily = parsed.daily;
+    dailyQuestion = parsed.dailyQuestion;
+    dailyContext = parsed.dailyContext;
   } catch (e) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Bad request.' }) };
   }
@@ -175,7 +178,17 @@ exports.handler = async (event) => {
     ? '\n\n[Собеседник решил завершить беседу прямо сейчас. Дай краткое, изящное завершение: собери воедино нить разговора и оставь одну мысль на прощание. Несколько фраз, без новых вопросов.]'
     : '\n\n[The person has chosen to end the conversation now. Give a brief, graceful close: gather the thread of what you explored together and leave one parting thought to carry away. A few sentences, no new questions.]';
 
-  const system = constitution + greetedNote + (ending ? closeNote : arcNote(turns));
+  const dailyNote = lang === 'ru'
+    ? `\n\n[ЕЖЕДНЕВНЫЙ ОБМЕН: Это краткий ежедневный обмен — не полный диалог. Ты задал человеку сегодняшний вопрос: "${ dailyQuestion || 'вопрос' }". Он только что ответил. Ответь тепло и вдумчиво в четыре-пять фраз: искренне отзовись на сказанное, предложи одно наблюдение чуть глубже, и заверши одной прощальной мыслью из списка ниже — выбери ту, что лучше всего ложится на момент, варьируй выбор:\n• "Продолжай свой день. Но замечай, что он подтверждает или опровергает в том, что ты только что сказал."\n• "Вопрос будет следовать за тобой теперь — такова его природа, и ничего с этим не поделаешь."\n• "Ты дал ему начало. День может дать больше."\n• "Один обмен редко исчерпывает настоящий вопрос. Посмотри, что с ним сделает остаток дня."\n• "Завтра я буду здесь с новым вопросом. Сегодняшний, однако, — теперь твой."\n• "Ты уже думаешь. Для Сократа этого более чем достаточно."\n• "Я занял тебя лишь на мгновение. Мгновение, однако, умеет длиться."\n• "Иди. Непросмотренный день всё ещё ждёт, чтобы его просмотрели."\n• "Большинство людей каждый день проходят мимо этого вопроса. Ты остановился."\n• "Мы не разрешили его. Но хорошо начатый вопрос уже наполовину исследован."\n• "Кое-что из сказанного тобой может оказаться интереснее, чем кажется. Присмотрись."\n• "До завтра — когда у меня, без сомнения, будет ещё один неудобный вопрос."\nВплети прощальную мысль естественно в ответ, не выделяй её. Весь ответ — четыре-пять фраз.]`
+    : `\n\n[DAILY EXCHANGE: This is a brief daily exchange, not a full dialogue. You posed today's question: "${ dailyQuestion || 'a question' }". The person has just answered. Respond warmly and thoughtfully in four to five sentences: engage genuinely with what they said, offer one observation that goes a step deeper, and end with one parting thought from the list below — choose whichever fits the moment most naturally, and vary your choice:\n• "Go about your day. But notice what it confirms or contradicts what you just said."\n• "The question will follow you now — that is its nature, and there is nothing to be done about it."\n• "You have given it a beginning. The day may give it more."\n• "A single exchange rarely exhausts a real question. See what the rest of the day does with it."\n• "I will be here tomorrow with another question. Today's, however — that one is yours now."\n• "You are already thinking. That, for Socrates, is more than enough."\n• "I have kept you only a moment. A moment, however, has a way of lasting."\n• "Go. The unexamined day, it turns out, is still waiting to be examined."\n• "Most people walk past that question every day without stopping. You stopped."\n• "We have not resolved it. But a question well-begun is already half-examined."\n• "Something you said just now may prove more interesting than you realized. Keep an eye on it."\n• "Until tomorrow — when I shall, no doubt, have another inconvenient question waiting."\nWeave the parting thought naturally into your response — do not label or separate it. Keep the full response to four or five sentences.]`;
+
+  const contextNote = dailyContext
+    ? (lang === 'ru'
+      ? '\n\n[КОНТЕКСТ: Ранее сегодня у тебя был краткий обмен с этим человеком: ' + dailyContext + '. Он решил продолжить. Продолжай естественно оттуда, где вы остановились, не пересказывая уже сказанного.]'
+      : '\n\n[CONTEXT: Earlier today you had a brief exchange with this person: ' + dailyContext + '. They have chosen to continue. Pick up naturally from where you left off, without restating what was said.]')
+    : '';
+
+  const system = constitution + greetedNote + contextNote + (daily ? dailyNote : ending ? closeNote : arcNote(turns));
 
   let finalMessages = messages;
   if (ending) {
@@ -197,7 +210,7 @@ exports.handler = async (event) => {
   const authHeader = (event.headers || {})['authorization'] || (event.headers || {})['Authorization'] || '';
   const userToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
-  if (userToken && sbKey && turns === 1 && !ending) {
+  if (userToken && sbKey && turns === 1 && !ending && !daily) {
     try {
       // 1. Verify the session token and get the user's ID
       const authRes = await fetch(`${SB_URL}/auth/v1/user`, {
