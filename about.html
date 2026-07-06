@@ -69,15 +69,35 @@
   .hero {
     padding: 56px 0 10px;
     text-align: center;
+    perspective: 900px;
   }
-  .seal {
-    width: 62px; height: 62px;
+  .logo-rotate {
+    width: 96px;
+    height: auto;
+    display: block;
+    margin: 0 auto 24px;
+    animation: logo-spin-y 14s linear infinite;
+    transform-style: preserve-3d;
+    backface-visibility: visible;
+  }
+  @keyframes logo-spin-y {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(360deg); }
+  }
+  .logo-fallback {
+    width: 74px; height: 74px;
     border-radius: 50%;
     border: 1px solid var(--gold);
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 22px;
+    margin: 0 auto 24px;
+    animation: logo-spin-y 14s linear infinite;
   }
-  .seal .q { font-size: 36px; color: var(--gold); line-height: 1; }
+  .logo-fallback span {
+    font-family: 'EB Garamond', serif;
+    font-size: 42px;
+    color: var(--gold);
+    line-height: 1;
+  }
   .hero h1 {
     font-size: 36px;
     font-weight: 500;
@@ -189,6 +209,7 @@
 
   @media (max-width: 520px) {
     html, body { font-size: 18px; }
+    .logo-rotate { width: 80px; }
     .hero h1 { font-size: 28px; }
     blockquote { font-size: 19px; }
     .forum-band, .contact { padding: 22px 20px; }
@@ -204,7 +225,9 @@
   </nav>
 
   <div class="hero">
-    <div class="seal"><span class="q">Q</span></div>
+        <img class="logo-rotate" src="SocratesQ%20logo.png" alt="SocratesQ"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+    <div class="logo-fallback" style="display:none;"><span>Q</span></div>
     <h1>What would Socrates say?</h1>
     <p class="lead">An AI reconstruction of the Socratic method — built for the curious, the doubting, and those who believe that examined thinking is worth the effort.</p>
   </div>
