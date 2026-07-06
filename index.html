@@ -165,7 +165,30 @@
         <button id="tabUp">Create account</button>
       </div>
       <input id="email" type="email" autocomplete="email" placeholder="you@example.com" />
-      <input id="pw" type="password" autocomplete="current-password" placeholder="password" />
+      <div style="position:relative; width:100%;">
+        <input id="pw" type="password" autocomplete="current-password" placeholder="password"
+               style="width:100%; padding-right:44px;" />
+        <button id="pwToggle" type="button" title="Show / hide password"
+                style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                       background:transparent; border:none; cursor:pointer; color:var(--dim);
+                       font-size:16px; line-height:1; padding:4px;"
+                aria-label="Show password">
+          <svg id="pwEyeOpen" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12S5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <svg id="pwEyeClosed" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+               style="display:none;">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+            <line x1="1" y1="1" x2="23" y2="23"/>
+          </svg>
+        </button>
+      </div>
       <button id="authBtn" class="authsubmit">Sign in</button>
       <div id="authMsg" class="authmsg"></div>
       <div id="forgotWrap" style="display:none; text-align:center; margin-top:2px;">
@@ -228,15 +251,15 @@
     <div class="acct"><span id="remaining" style="color:var(--gold);font-size:11px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
     <header>
       <div class="mark">Socrates<span>Q</span></div>
+      <a class="origin-link" href="about.html">Where this comes from &rarr;</a>
+      <div class="sub">the question beneath the question</div>
+      <div class="disclaimer">A philosophical reconstruction — not the historical man, and not advice.</div>
       <div class="invitation">Bring a question. Leave with a better one.</div>
     </header>
 
     <div class="arc" id="arc"></div>
     <div class="arc-label" id="arcLabel">a dialogue lasts as long as it needs — end it whenever you like</div>
-    <div class="origin-link-wrap" style="text-align:center;padding:6px 0 4px;">
-      <a class="origin-link" href="about.html">Where this comes from &rarr;</a>
-    </div>
-    
+
     <div class="stream" id="stream"></div>
     <div class="err" id="err" style="display:none"></div>
 
@@ -440,6 +463,13 @@ acctBtn.addEventListener('click', () => { if (member) signOut(); else enterAuth(
 tabIn.addEventListener('click', () => setMode('signin'));
 tabUp.addEventListener('click', () => setMode('signup'));
 document.getElementById('forgotBtn').addEventListener('click', () => { emailEl.value = ''; setMode('reset'); setMsg('Enter your email and we\u2019ll send a reset link.'); });
+document.getElementById('pwToggle').addEventListener('click', () => {
+  const isHidden = pwEl.type === 'password';
+  pwEl.type = isHidden ? 'text' : 'password';
+  document.getElementById('pwEyeOpen').style.display = isHidden ? 'none' : 'block';
+  document.getElementById('pwEyeClosed').style.display = isHidden ? 'block' : 'none';
+  pwEl.focus();
+});
 document.getElementById('backSigninBtn').addEventListener('click', () => setMode('signin'));
 authBtn.addEventListener('click', doAuth);
 pwEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doAuth(); } });
@@ -470,36 +500,36 @@ const API = '/api/socrates';
 
 /* ---------- Daily questions ---------- */
 const DAILY_QUESTIONS = [
-  "What is the first thing you noticed this morning that was not a screen?",
-  "What have you been meaning to do for a week that takes less than ten minutes?",
-  "What did you learn this week that you did not expect to learn?",
-  "What is something small that made yesterday slightly better than it might have been?",
-  "If your home could give you one piece of advice today, what would it say?",
-  "What is something you are certain you would enjoy — but have never actually tried?",
-  "What was the last thing that made you genuinely laugh?",
-  "If you had one free hour today with nothing required of you, what would you actually do with it?",
-  "What is something you own that you have never used?",
-  "What do you claim to be bad at that you have never seriously tried?",
-  "When did you last change your mind about something — even something small?",
-  "What is a skill you once enjoyed that you have quietly let fade?",
-  "What is something you tell yourself every day that may not quite be true?",
-  "If your morning routine were narrated by a sports commentator, what would the highlights be?",
-  "What is the most useful thing you own that cost almost nothing?",
-  "If your pet could describe your daily schedule, what would they get completely wrong?",
-  "What is something you do automatically now that you once had to think hard about?",
-  "Is there something you do every day without knowing exactly why you started?",
-  "What is something you read or heard recently that stayed with you longer than you expected?",
-  "When did you last do something for the very first time?",
-  "What is a question nobody has ever asked you that you wish they would?",
-  "What is something a person in your life does for you that you have never thanked them for?",
-  "What is one small thing you are genuinely good at that you rarely mention?",
-  "What would you do differently today if you knew nobody would notice the difference?",
-  "What is a place you have been meaning to return to?",
-  "If today were a chapter in a book, what would it be called?",
-  "What is something you recently discovered you had been doing the hard way all along?",
-  "What is the kindest thing a stranger has ever done for you?",
-  "What is a word you love the sound of, regardless of its meaning?",
-  "If your brain had a browser history visible to a stranger, what would need the most explaining?"
+  "What is virtue — and do you have it?",
+  "What is justice?",
+  "What makes a life good — is it pleasure, honor, or something else entirely?",
+  "Can virtue be taught, or is one simply born with it?",
+  "Is it worse to do wrong, or to suffer wrong?",
+  "What is courage — and can there be too much of it?",
+  "What is friendship — and can you be a true friend to someone you do not admire?",
+  "What do we owe to those who raised us?",
+  "Is wisdom the same as knowledge — or can a person know much and still be unwise?",
+  "What is beauty — and is it the same thing in a person, a building, and a piece of music?",
+  "What is something that always makes you laugh — no matter how many times you encounter it?",
+  "If you could ask one question and receive a perfectly honest answer from anyone, living or dead — what would you ask, and of whom?",
+  "What is the best piece of advice you have ever received — and did you actually follow it?",
+  "What is something small and ordinary that you find quietly beautiful?",
+  "If Socrates appeared at your door this morning, would you invite him in — or pretend to be out?",
+  "What is one thing you have changed your mind about in the past year?",
+  "What is something you do every day that you genuinely enjoy but rarely mention to others?",
+  "What is a question a child once asked you that you found surprisingly difficult to answer?",
+  "What is something you are grateful for today — something you might not normally think to mention?",
+  "If you could live one day of your life over again — just to experience it once more — which would you choose?",
+  "If Socrates sat down beside you right now and asked what troubles you most — what would you say?",
+  "What is something you once thought was foolish that you now think is wise?",
+  "Is there something you pretend to understand in conversation — but quietly don’t?",
+  "If your life were a dialogue in Plato — what would the title be?",
+  "What is one question you ask yourself that you never quite answer?",
+  "What would Socrates find most puzzling about how you spend your days?",
+  "What is one thing you believe that almost no one around you believes?",
+  "If a wise person reviewed how you spent yesterday — what would they say?",
+  "What is something you have that you did not earn?",
+  "What would you attempt if you knew you could not fail — and what is actually stopping you?"
 ];
 
 function getTodayQuestion() {
