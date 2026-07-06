@@ -33,7 +33,7 @@
   .wrap { max-width: 720px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 0 18px; }
 
   /* ---- Auth (the threshold) ---- */
-  .authwrap { position: relative; overflow: hidden; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; min-height: 100vh; }
+  .authwrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; min-height: 100vh; }
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
   .authmark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
@@ -56,23 +56,6 @@
   .authback button { background: transparent; border: none; color: var(--dim); font-family: 'Inter', sans-serif; font-size: 13px; cursor: pointer; text-decoration: underline; }
   .authback button:hover { color: var(--gold); }
   .authdisc { font-size: 12px; color: var(--dim); letter-spacing: .03em; margin-top: 26px; max-width: 340px; line-height: 1.5; }
-
-  /* Elevate sign-in content above animation layers */
-  .authwrap > .seal, .authwrap > .authmark, .authwrap > .thresh,
-  .authwrap > .threshsub, .authwrap > .authcard, .authwrap > .authback,
-  .authwrap > .authdisc { position: relative; z-index: 2; }
-
-  #app { position: relative; overflow: hidden; min-height: 100vh; }
-  #app > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas) { position: relative; z-index: 2; }
-
-  /* === Digital hero — animated background === */
-  .digital-hero-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
-  .digital-hero-overlay::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,0,0,0.10) 3px, rgba(0,0,0,0.10) 4px); }
-  .digital-hero-overlay::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 180px; background: linear-gradient(180deg, transparent 0%, rgba(201,162,75,0.05) 35%, rgba(217,189,126,0.14) 50%, rgba(201,162,75,0.05) 65%, transparent 100%); animation: dh-sweep 16s linear infinite; }
-  @keyframes dh-sweep { 0% { transform: translateY(-180px); } 100% { transform: translateY(120vh); } }
-  .digital-hero-grid { position: absolute; inset: 0; pointer-events: none; z-index: 1; background-image: radial-gradient(circle, rgba(201,162,75,0.28) 1px, transparent 1px); background-size: 44px 44px; -webkit-mask-image: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.40) 55%, transparent 85%); mask-image: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.40) 55%, transparent 85%); animation: dh-grid-pulse 6s ease-in-out infinite; }
-  @keyframes dh-grid-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.70; } }
-  .digital-hero-canvas { position: absolute; inset: 0; pointer-events: none; z-index: 1; width: 100%; height: 100%; }
 
   /* ---- Account bar ---- */
   .acct { display: flex; align-items: center; justify-content: flex-end; gap: 14px; padding: 14px 4px 0; font-size: 15px; color: var(--parchment-dim); }
@@ -152,9 +135,6 @@
 
   <!-- ===== The threshold (sign in / create account) ===== -->
   <div id="auth" class="authwrap" style="display:none">
-    <div class="digital-hero-overlay" aria-hidden="true"></div>
-    <div class="digital-hero-grid" aria-hidden="true"></div>
-    <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
     <div class="seal"><span class="q">Q</span></div>
     <div class="authmark">Socrates<span>Q</span></div>
     <div class="thresh">What would Socrates say?</div>
@@ -165,30 +145,7 @@
         <button id="tabUp">Create account</button>
       </div>
       <input id="email" type="email" autocomplete="email" placeholder="you@example.com" />
-      <div style="position:relative; width:100%;">
-        <input id="pw" type="password" autocomplete="current-password" placeholder="password"
-               style="width:100%; padding-right:44px;" />
-        <button id="pwToggle" type="button" title="Show / hide password"
-                style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
-                       background:transparent; border:none; cursor:pointer; color:var(--dim);
-                       font-size:16px; line-height:1; padding:4px;"
-                aria-label="Show password">
-          <svg id="pwEyeOpen" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-               viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12S5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-          <svg id="pwEyeClosed" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-               viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-               style="display:none;">
-            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-            <line x1="1" y1="1" x2="23" y2="23"/>
-          </svg>
-        </button>
-      </div>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="password" />
       <button id="authBtn" class="authsubmit">Sign in</button>
       <div id="authMsg" class="authmsg"></div>
       <div id="forgotWrap" style="display:none; text-align:center; margin-top:2px;">
@@ -207,7 +164,6 @@
   <div id="daily" style="display:none; flex:1; flex-direction:column;">
     <div class="acct"><span id="dailyEmail"></span><button id="dailySignoutBtn">Sign out</button></div>
     <div class="daily-wrap">
-      <!-- Shown only to anonymous visitors — orientation before the question -->
       <div id="dailyTasterIntro" style="display:none; text-align:center; margin-bottom:28px; padding-bottom:28px; border-bottom:1px solid var(--surface-edge); width:100%; max-width:460px;">
         <div class="seal" style="margin:0 auto 16px;"><span class="q">Q</span></div>
         <div style="font-family:'EB Garamond',serif; font-size:22px; font-weight:500; letter-spacing:.04em; color:var(--parchment);">Socrates<span style="color:var(--gold);">Q</span></div>
@@ -245,20 +201,17 @@
 
   <!-- ===== The dialogue ===== -->
   <div id="app" style="display:none; flex-direction:column;">
-    <div class="digital-hero-overlay" aria-hidden="true"></div>
-    <div class="digital-hero-grid" aria-hidden="true"></div>
-    <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
     <div class="acct"><span id="remaining" style="color:var(--gold);font-size:11px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
     <header>
       <div class="mark">Socrates<span>Q</span></div>
-      <a class="origin-link" href="about.html">Where this comes from &rarr;</a>
-      <div class="sub">the question beneath the question</div>
-      <div class="disclaimer">A philosophical reconstruction — not the historical man, and not advice.</div>
       <div class="invitation">Bring a question. Leave with a better one.</div>
     </header>
 
     <div class="arc" id="arc"></div>
     <div class="arc-label" id="arcLabel">a dialogue lasts as long as it needs — end it whenever you like</div>
+    <div class="origin-link-wrap" style="text-align:center;padding:6px 0 4px;">
+      <a class="origin-link" href="about.html">Where this comes from &rarr;</a>
+    </div>
 
     <div class="stream" id="stream"></div>
     <div class="err" id="err" style="display:none"></div>
@@ -329,19 +282,14 @@ function setMode(m) {
   const isNormal = !isReset && !isNewPw;
   tabIn.classList.toggle('active', m === 'signin');
   tabUp.classList.toggle('active', m === 'signup');
-  // tabs
   document.querySelector('.tabs').style.display = isNormal ? 'flex' : 'none';
-  // email field
   emailEl.style.display = isNewPw ? 'none' : 'block';
-  // password field
   pwEl.style.display = isReset ? 'none' : 'block';
   pwEl.placeholder = isNewPw ? 'new password (6+ characters)' : 'password';
   pwEl.setAttribute('autocomplete', (m === 'signup' || m === 'newpw') ? 'new-password' : 'current-password');
-  // button
   if (isReset) authBtn.textContent = 'Send reset link';
   else if (isNewPw) authBtn.textContent = 'Set new password';
   else authBtn.textContent = m === 'signup' ? 'Create account' : 'Sign in';
-  // forgot / back links
   forgotWrap.style.display = (m === 'signin') ? 'block' : 'none';
   backSigninWrap.style.display = (isReset || isNewPw) ? 'block' : 'none';
   setMsg('');
@@ -353,7 +301,7 @@ function setMsg(text, isErr) {
 function friendly(e) {
   const m = (e && e.message) ? e.message : '';
   if (/email not confirmed|confirm/i.test(m)) return 'Please confirm your email first — check your inbox for the link.';
-  if (/invalid login/i.test(m)) return 'That email and password don\u2019t match. Try again.';
+  if (/invalid login/i.test(m)) return 'That email and password don’t match. Try again.';
   if (/already registered|already been registered/i.test(m)) return 'That email already has an account — try signing in.';
   if (/password should be at least/i.test(m)) return 'Choose a password of at least 6 characters.';
   return m || 'Something went wrong. Please try again.';
@@ -363,7 +311,7 @@ async function sendReset() {
   const email = emailEl.value.trim();
   if (!email) { setMsg('Enter your email address.', true); return; }
   authBtn.disabled = true;
-  setMsg('Sending reset link\u2026');
+  setMsg('Sending reset link…');
   try {
     const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
     if (error) throw error;
@@ -377,11 +325,11 @@ async function setNewPassword() {
   const pw = pwEl.value;
   if (!pw || pw.length < 6) { setMsg('Choose a password of at least 6 characters.', true); return; }
   authBtn.disabled = true;
-  setMsg('Setting your new password\u2026');
+  setMsg('Setting your new password…');
   try {
     const { error } = await sb.auth.updateUser({ password: pw });
     if (error) throw error;
-    setMsg('Password updated. Signing you in\u2026');
+    setMsg('Password updated. Signing you in…');
   } catch (e) { setMsg(friendly(e), true); }
   finally { authBtn.disabled = false; }
 }
@@ -394,7 +342,7 @@ async function doAuth() {
   const pw = pwEl.value;
   if (!email || !pw) { setMsg('Enter your email and a password.', true); return; }
   authBtn.disabled = true;
-  setMsg(mode === 'signup' ? 'Creating your account\u2026' : 'Signing you in\u2026');
+  setMsg(mode === 'signup' ? 'Creating your account…' : 'Signing you in…');
   try {
     if (mode === 'signup') {
       const { error } = await sb.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin } });
@@ -415,10 +363,8 @@ async function doAuth() {
 
 async function signOut() {
   if (sb) await sb.auth.signOut();
-  /* SIGNED_OUT -> enterAuth */
 }
 
-/* ---------- Views & modes ---------- */
 function showAuth() { authEl.style.display = 'flex'; appEl.style.display = 'none'; }
 function showApp() { authEl.style.display = 'none'; appEl.style.display = 'flex'; }
 
@@ -443,18 +389,17 @@ function enterTaste() {
   member = false; taster = true; currentEmail = '';
   setAcct();
   if (!localStorage.getItem(todayKey())) {
-    showDaily();                              // daily question first — always
+    showDaily();
   } else if (localStorage.getItem('sq_tasted')) {
-    enterAuth(false);                         // daily done, test drive done → register
+    enterAuth(false);
   } else {
-    showApp(); startFresh();                  // daily done, test drive not yet used → test drive
+    showApp(); startFresh();
   }
 }
 function enterAuth(preferSignup) {
   member = false; taster = false;
   setMode(preferSignup ? 'signup' : 'signin');
   setMsg('');
-  /* offer a way back into the taste only if it hasn't been used up */
   authBack.style.display = localStorage.getItem('sq_tasted') ? 'none' : 'block';
   showAuth();
 }
@@ -462,14 +407,7 @@ function enterAuth(preferSignup) {
 acctBtn.addEventListener('click', () => { if (member) signOut(); else enterAuth(false); });
 tabIn.addEventListener('click', () => setMode('signin'));
 tabUp.addEventListener('click', () => setMode('signup'));
-document.getElementById('forgotBtn').addEventListener('click', () => { emailEl.value = ''; setMode('reset'); setMsg('Enter your email and we\u2019ll send a reset link.'); });
-document.getElementById('pwToggle').addEventListener('click', () => {
-  const isHidden = pwEl.type === 'password';
-  pwEl.type = isHidden ? 'text' : 'password';
-  document.getElementById('pwEyeOpen').style.display = isHidden ? 'none' : 'block';
-  document.getElementById('pwEyeClosed').style.display = isHidden ? 'block' : 'none';
-  pwEl.focus();
-});
+document.getElementById('forgotBtn').addEventListener('click', () => { emailEl.value = ''; setMode('reset'); setMsg('Enter your email and we’ll send a reset link.'); });
 document.getElementById('backSigninBtn').addEventListener('click', () => setMode('signin'));
 authBtn.addEventListener('click', doAuth);
 pwEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doAuth(); } });
@@ -495,41 +433,39 @@ if (sb) {
   enterTaste();
 }
 
-/* ---------- The dialogue ---------- */
 const API = '/api/socrates';
 
-/* ---------- Daily questions ---------- */
 const DAILY_QUESTIONS = [
-  "What is virtue — and do you have it?",
-  "What is justice?",
-  "What makes a life good — is it pleasure, honor, or something else entirely?",
-  "Can virtue be taught, or is one simply born with it?",
-  "Is it worse to do wrong, or to suffer wrong?",
-  "What is courage — and can there be too much of it?",
-  "What is friendship — and can you be a true friend to someone you do not admire?",
-  "What do we owe to those who raised us?",
-  "Is wisdom the same as knowledge — or can a person know much and still be unwise?",
-  "What is beauty — and is it the same thing in a person, a building, and a piece of music?",
-  "What is something that always makes you laugh — no matter how many times you encounter it?",
-  "If you could ask one question and receive a perfectly honest answer from anyone, living or dead — what would you ask, and of whom?",
-  "What is the best piece of advice you have ever received — and did you actually follow it?",
-  "What is something small and ordinary that you find quietly beautiful?",
-  "If Socrates appeared at your door this morning, would you invite him in — or pretend to be out?",
-  "What is one thing you have changed your mind about in the past year?",
-  "What is something you do every day that you genuinely enjoy but rarely mention to others?",
-  "What is a question a child once asked you that you found surprisingly difficult to answer?",
-  "What is something you are grateful for today — something you might not normally think to mention?",
-  "If you could live one day of your life over again — just to experience it once more — which would you choose?",
-  "If Socrates sat down beside you right now and asked what troubles you most — what would you say?",
-  "What is something you once thought was foolish that you now think is wise?",
-  "Is there something you pretend to understand in conversation — but quietly don’t?",
-  "If your life were a dialogue in Plato — what would the title be?",
-  "What is one question you ask yourself that you never quite answer?",
-  "What would Socrates find most puzzling about how you spend your days?",
-  "What is one thing you believe that almost no one around you believes?",
-  "If a wise person reviewed how you spent yesterday — what would they say?",
-  "What is something you have that you did not earn?",
-  "What would you attempt if you knew you could not fail — and what is actually stopping you?"
+  "What is the first thing you noticed this morning that was not a screen?",
+  "What have you been meaning to do for a week that takes less than ten minutes?",
+  "What did you learn this week that you did not expect to learn?",
+  "What is something small that made yesterday slightly better than it might have been?",
+  "If your home could give you one piece of advice today, what would it say?",
+  "What is something you are certain you would enjoy — but have never actually tried?",
+  "What was the last thing that made you genuinely laugh?",
+  "If you had one free hour today with nothing required of you, what would you actually do with it?",
+  "What is something you own that you have never used?",
+  "What do you claim to be bad at that you have never seriously tried?",
+  "When did you last change your mind about something — even something small?",
+  "What is a skill you once enjoyed that you have quietly let fade?",
+  "What is something you tell yourself every day that may not quite be true?",
+  "If your morning routine were narrated by a sports commentator, what would the highlights be?",
+  "What is the most useful thing you own that cost almost nothing?",
+  "If your pet could describe your daily schedule, what would they get completely wrong?",
+  "What is something you do automatically now that you once had to think hard about?",
+  "Is there something you do every day without knowing exactly why you started?",
+  "What is something you read or heard recently that stayed with you longer than you expected?",
+  "When did you last do something for the very first time?",
+  "What is a question nobody has ever asked you that you wish they would?",
+  "What is something a person in your life does for you that you have never thanked them for?",
+  "What is one small thing you are genuinely good at that you rarely mention?",
+  "What would you do differently today if you knew nobody would notice the difference?",
+  "What is a place you have been meaning to return to?",
+  "If today were a chapter in a book, what would it be called?",
+  "What is something you recently discovered you had been doing the hard way all along?",
+  "What is the kindest thing a stranger has ever done for you?",
+  "What is a word you love the sound of, regardless of its meaning?",
+  "If your brain had a browser history visible to a stranger, what would need the most explaining?"
 ];
 
 function getTodayQuestion() {
@@ -580,77 +516,41 @@ function saveAsPDF() {
   if (!window.jspdf) { alert('PDF library not loaded. Please reload the page and try again.'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'pt', format: 'letter' });
-
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
   const ML = 60, MR = 60, MT = 64, MB = 64;
   const TW = W - ML - MR;
   let y = MT;
-
-  function checkPage(needed) {
-    if (y + needed > H - MB) { doc.addPage(); y = MT; }
-  }
-  function rule() {
-    doc.setDrawColor(180, 155, 90); doc.setLineWidth(0.5);
-    doc.line(ML, y, W - MR, y); y += 18;
-  }
-
-  // Header
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(22);
-  doc.setTextColor(30, 25, 15);
+  function checkPage(needed) { if (y + needed > H - MB) { doc.addPage(); y = MT; } }
+  function rule() { doc.setDrawColor(180, 155, 90); doc.setLineWidth(0.5); doc.line(ML, y, W - MR, y); y += 18; }
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(22); doc.setTextColor(30, 25, 15);
   doc.text('SocratesQ', ML, y);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  doc.setTextColor(130, 118, 95);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(130, 118, 95);
   const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   doc.text(dateStr, W - MR, y, { align: 'right' });
-  y += 16;
-  rule();
-
-  // Turns — greeting first, then the conversation
+  y += 16; rule();
   const turns = [{ role: 'assistant', text: GREETING }, ...convo];
   for (const m of turns) {
     const isUser = m.role === 'user';
-    // Speaker label
     checkPage(44);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8);
     doc.setTextColor(isUser ? 95 : 155, isUser ? 125 : 125, isUser ? 60 : 52);
-    doc.setCharSpace(1.8);
-    doc.text(isUser ? 'YOU' : 'SOCRATES', ML, y);
-    doc.setCharSpace(0);
+    doc.setCharSpace(1.8); doc.text(isUser ? 'YOU' : 'SOCRATES', ML, y); doc.setCharSpace(0);
     y += 14;
-    // Body
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.setTextColor(28, 24, 14);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(12); doc.setTextColor(28, 24, 14);
     const lines = doc.splitTextToSize(m.text, TW);
-    checkPage(lines.length * 17);
-    doc.text(lines, ML, y);
+    checkPage(lines.length * 17); doc.text(lines, ML, y);
     y += lines.length * 17 + 18;
   }
-
-  // Footer
-  checkPage(70);
-  y += 6;
-  rule();
-  doc.setFont('helvetica', 'italic');
-  doc.setFontSize(11);
-  doc.setTextColor(158, 128, 52);
-  doc.text('Bring your question to the Council — forumofminds.com', ML, y);
-  y += 18;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(140, 128, 110);
+  checkPage(70); y += 6; rule();
+  doc.setFont('helvetica', 'italic'); doc.setFontSize(11); doc.setTextColor(158, 128, 52);
+  doc.text('Bring your question to the Council — forumofminds.com', ML, y); y += 18;
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(140, 128, 110);
   doc.text('A philosophical reconstruction, not the historical figure — and not advice.', ML, y);
-
   doc.save('SocratesQ-' + new Date().toISOString().slice(0, 10) + '.pdf');
 }
-
 if (pdfBtn) pdfBtn.addEventListener('click', saveAsPDF);
 
-/* ---------- Daily view ---------- */
 const dailyEl = document.getElementById('daily');
 const dailyGreetingEl = document.getElementById('dailyGreetingEl');
 const dailyQEl = document.getElementById('dailyQEl');
@@ -676,12 +576,10 @@ function showDaily() {
   dailyGreetingEl.textContent = dailyGreetingText();
   dailyQEl.textContent = dailyQuestion;
   dailyEmailEl.textContent = currentEmail;
-  // show intro card only for anonymous visitors
   const introEl = document.getElementById('dailyTasterIntro');
   const introText = document.getElementById('dailyIntroText');
   if (introEl) introEl.style.display = member ? 'none' : 'block';
   if (introText) introText.style.display = member ? 'block' : 'none';
-  // reset state
   dailyBtnsEl.style.display = 'flex';
   dailyInputArea.style.display = 'none';
   dailyResponseArea.style.display = 'none';
@@ -700,21 +598,13 @@ async function sendDailyAnswer() {
   dailyResponseArea.style.display = 'flex';
   dailyThinkEl.style.display = 'flex';
   dailyReplyEl.textContent = '';
-
   const token = await getToken();
   const hdrs = { 'Content-Type': 'application/json' };
   if (token) hdrs['Authorization'] = 'Bearer ' + token;
-
   try {
     const res = await fetch(API, {
-      method: 'POST',
-      headers: hdrs,
-      body: JSON.stringify({
-        daily: true,
-        dailyQuestion,
-        userTurns: 1,
-        messages: [{ role: 'user', content: text }]
-      })
+      method: 'POST', headers: hdrs,
+      body: JSON.stringify({ daily: true, dailyQuestion, userTurns: 1, messages: [{ role: 'user', content: text }] })
     });
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
@@ -787,7 +677,7 @@ async function getToken() {
 
 function showRemaining(n) {
   if (!member || n === null || n === undefined) { remainingEl.textContent = ''; return; }
-  remainingEl.textContent = n + ' of 5 conversations left this month  ';
+  remainingEl.textContent = n + ' of 5 conversations left this month  ';
 }
 
 for (let i = 0; i < ARC_TICKS; i++) { const t = document.createElement('div'); t.className = 'tick'; arcEl.appendChild(t); }
@@ -823,10 +713,8 @@ function render() {
   }
   streamEl.scrollTop = streamEl.scrollHeight;
   updateArc();
-
   const done = closed || userTurns() >= ARC_TICKS;
   endbarEl.style.display = (!done && !busy && userTurns() >= 1) ? 'block' : 'none';
-
   if (done) {
     if (taster) localStorage.setItem('sq_tasted', '1');
     renewEl.style.display = 'block';
@@ -836,10 +724,8 @@ function render() {
   } else {
     renewEl.style.display = 'none';
     if (forumLinkEl) forumLinkEl.style.display = 'none';
-  if (pdfBarEl) pdfBarEl.style.display = 'none';
     if (pdfBarEl) pdfBarEl.style.display = 'none';
   }
-
   inputEl.disabled = done;
   inputEl.placeholder = done
     ? (member ? 'This inquiry has come to rest — begin a new one below.' : 'Your conversation has come to rest.')
@@ -854,16 +740,13 @@ async function send() {
   convo.push({ role: 'user', text });
   inputEl.value = ''; inputEl.style.height = 'auto';
   busy = true; render(); sendEl.disabled = true;
-
   const n = userTurns();
   const token = await getToken();
   const headers = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = 'Bearer ' + token;
-
   try {
     const res = await fetch(API, {
-      method: 'POST',
-      headers,
+      method: 'POST', headers,
       body: JSON.stringify({
         userTurns: n,
         messages: convo.map(m => ({ role: m.role, content: m.text })),
@@ -871,10 +754,8 @@ async function send() {
         fromDaily: (dailyContinuationPending && n === 2) || false
       })
     });
-
     if (res.status === 429) {
-      convo.pop();
-      closed = true;
+      convo.pop(); closed = true;
       limitEl.style.display = 'block';
       renewEl.style.display = 'none';
       inputEl.disabled = true;
@@ -882,10 +763,9 @@ async function send() {
       sendEl.disabled = true;
       busy = false; render(); return;
     }
-
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    convo.push({ role: 'assistant', text: (data.text || '\u2026') });
+    convo.push({ role: 'assistant', text: (data.text || '…') });
     if (n === 1 && data.remaining !== undefined) showRemaining(data.remaining);
     if (dailyContinuationPending && n === 2) { dailyContinuationPending = false; if (data.remaining !== undefined) showRemaining(data.remaining); }
     if (n >= 7) closed = true;
@@ -905,17 +785,12 @@ async function endConversation() {
   const n = userTurns();
   try {
     const res = await fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ending: true,
-        userTurns: n,
-        messages: convo.map(m => ({ role: m.role, content: m.text }))
-      })
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ending: true, userTurns: n, messages: convo.map(m => ({ role: m.role, content: m.text })) })
     });
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    convo.push({ role: 'assistant', text: (data.text || '\u2026') });
+    convo.push({ role: 'assistant', text: (data.text || '…') });
     closed = true;
   } catch (e) {
     errEl.textContent = 'The line to Socrates faltered. Give it another try in a moment.';
@@ -935,10 +810,7 @@ function resetConversation() {
   render();
 }
 
-function renew() {
-  resetConversation();
-  inputEl.focus();
-}
+function renew() { resetConversation(); inputEl.focus(); }
 
 sendEl.addEventListener('click', send);
 endBtn.addEventListener('click', endConversation);
@@ -948,50 +820,6 @@ renewBtn.addEventListener('click', () => {
 });
 inputEl.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
 inputEl.addEventListener('input', () => { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + 'px'; });
-
-/* ---------- Digital hero — particle network on threshold + dialogue views ---------- */
-document.querySelectorAll('[data-digital-hero]').forEach(function(canvas) {
-  var hero = canvas.closest('.authwrap, #app');
-  if (!hero) return;
-  var ctx = canvas.getContext('2d');
-  var W = 0, H = 0;
-  var PARTICLE_COUNT = 52, CONNECT_DIST = 120;
-  var R = 201, G = 162, B = 75;
-  function resize() { W = canvas.width = hero.offsetWidth || 800; H = canvas.height = hero.offsetHeight || 600; }
-  resize();
-  var ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
-  if (ro) ro.observe(hero); else window.addEventListener('resize', resize);
-  var particles = [];
-  for (var i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*0.26, vy: (Math.random()-0.5)*0.20, r: Math.random()*1.4+0.5 });
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i]; p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-    }
-    for (var i = 0; i < particles.length; i++) {
-      var a = particles[i];
-      for (var j = i+1; j < particles.length; j++) {
-        var b = particles[j], dx = a.x-b.x, dy = a.y-b.y, d = Math.sqrt(dx*dx+dy*dy);
-        if (d < CONNECT_DIST) {
-          var alpha = (1 - d/CONNECT_DIST) * 0.32;
-          ctx.strokeStyle = 'rgba('+R+','+G+','+B+','+alpha+')';
-          ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-        }
-      }
-    }
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i];
-      ctx.fillStyle = 'rgba('+R+','+G+','+B+',0.68)';
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-    }
-    requestAnimationFrame(draw);
-  }
-  draw();
-});
 </script>
 </body>
 </html>
