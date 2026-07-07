@@ -110,7 +110,7 @@ function creditsEmailHtml() {
     </div>
     <h2 style="font-family:Georgia,serif;font-size:22px;font-weight:normal;color:#ece5d4;margin:0 0 16px;">7 conversation credits added.</h2>
     <p style="font-size:17px;color:#b9b3a3;line-height:1.65;margin:0 0 20px;">
-      Your account now has <strong style="color:#ece5d4;">7 conversation credits</strong>. Credits never expire &mdash; use them whenever you&rsquo;re ready to bring a question to Socrates.
+      Your account now has <strong style="color:#ece5d4;">7 additional conversation credits</strong>. Credits never expire &mdash; use them whenever you&rsquo;re ready to bring a question to Socrates.
     </p>
     <div style="background:#1d2326;border:1px solid #2a3236;border-radius:10px;padding:20px 22px;margin:0 0 24px;">
       <p style="font-size:15px;color:#b9b3a3;margin:0;font-family:Georgia,serif;">
