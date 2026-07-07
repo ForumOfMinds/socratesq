@@ -144,6 +144,28 @@
   #dailyTextarea:focus { border-color:var(--gold); }
   .daily-who { font-size:11px; text-transform:uppercase; letter-spacing:.16em; font-weight:600; color:var(--gold); margin-bottom:8px; text-align:left; width:100%; max-width:440px; }
   .daily-reply-body { font-family:'EB Garamond',serif; font-size:20px; line-height:1.6; color:var(--parchment); text-align:left; width:100%; max-width:440px; margin-bottom:26px; }
+  /* ---- Account modal ---- */
+  .acct-modal-overlay { position:fixed; inset:0; z-index:100; background:rgba(10,12,14,.82); display:flex; align-items:center; justify-content:center; padding:20px; }
+  .acct-modal { background:var(--surface); border:1px solid var(--surface-edge); border-radius:14px; width:100%; max-width:390px; padding:26px 26px 22px; }
+  .acct-modal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+  .acct-modal-head h3 { font-family:'EB Garamond',serif; font-size:21px; color:var(--parchment); font-weight:400; }
+  .acct-modal-close { background:transparent; border:none; color:var(--dim); cursor:pointer; font-size:20px; padding:2px 6px; }
+  .acct-modal-close:hover { color:var(--parchment); }
+  .acct-section { border-top:1px solid var(--surface-edge); padding:16px 0 4px; margin-top:4px; }
+  .acct-label { font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .acct-plan { font-family:'EB Garamond',serif; font-size:20px; color:var(--parchment); margin-bottom:4px; }
+  .acct-detail { font-family:'Inter',sans-serif; font-size:13px; color:var(--parchment-dim); line-height:1.55; margin-bottom:3px; }
+  .acct-renew { font-family:'Inter',sans-serif; font-size:12px; color:var(--dim); margin-top:6px; }
+  .acct-btn-gold { display:block; width:100%; background:var(--gold); color:#20180a; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:13px; padding:11px; border-radius:10px; cursor:pointer; margin-top:12px; transition:background .2s; }
+  .acct-btn-gold:hover { background:var(--gold-soft); }
+  .acct-btn-outline { display:block; width:100%; background:transparent; border:1px solid var(--surface-edge); color:var(--parchment-dim); font-family:'Inter',sans-serif; font-size:13px; padding:10px; border-radius:10px; cursor:pointer; margin-top:8px; transition:border-color .2s, color .2s; }
+  .acct-btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+  .acct-what { background:var(--ink-2); border-radius:10px; padding:14px 16px; margin-top:14px; }
+  .acct-what-row { display:flex; justify-content:space-between; align-items:baseline; padding:5px 0; border-bottom:1px solid var(--surface-edge); font-family:'Inter',sans-serif; font-size:12px; }
+  .acct-what-row:last-child { border-bottom:none; }
+  .acct-what-row span:first-child { color:var(--parchment-dim); }
+  .acct-what-row span:last-child { color:var(--gold); }
+
   @media (max-width: 520px) { .turn.soc .body { font-size: 22px; } .turn.you .body { font-size: 16px; } .mark { font-size: 30px; } .sub { font-size: 16px; } textarea { font-size: 16px; } .stream { max-height: 55vh; } }
 </style>
 </head>
@@ -248,7 +270,7 @@
     <div class="digital-hero-overlay" aria-hidden="true"></div>
     <div class="digital-hero-grid" aria-hidden="true"></div>
     <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
-    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:11px;"></span><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
+    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:11px;"></span><button id="acctPageBtn" style="background:transparent;border:none;color:var(--parchment-dim);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline;">Account</button><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
     <header>
       <div class="mark">Socrates<span>Q</span></div>
       <a class="origin-link" href="about.html">Where this comes from &rarr;</a>
@@ -298,6 +320,19 @@
     <div class="composer">
       <textarea id="input" rows="1" placeholder="Put your question to Socrates…"></textarea>
       <button class="send" id="send">Send</button>
+    </div>
+  </div>
+
+  <!-- ===== Account modal ===== -->
+  <div id="accountModal" class="acct-modal-overlay" style="display:none;" onclick="if(event.target===this)closeAccount()">
+    <div class="acct-modal">
+      <div class="acct-modal-head">
+        <h3>Your Account</h3>
+        <button class="acct-modal-close" onclick="closeAccount()">&#x2715;</button>
+      </div>
+      <div id="accountContent">
+        <div style="text-align:center;padding:28px 0;font-family:'Inter',sans-serif;font-size:13px;color:var(--dim);">Loading&hellip;</div>
+      </div>
     </div>
   </div>
 
@@ -480,6 +515,7 @@ function enterAuth(preferSignup) {
 }
 
 acctBtn.addEventListener('click', () => { if (member) signOut(); else enterAuth(false); });
+document.getElementById('acctPageBtn').addEventListener('click', openAccount);
 tabIn.addEventListener('click', () => setMode('signin'));
 tabUp.addEventListener('click', () => setMode('signup'));
 document.getElementById('forgotBtn').addEventListener('click', () => { emailEl.value = ''; setMode('reset'); setMsg('Enter your email and we\u2019ll send a reset link.'); });
@@ -803,6 +839,108 @@ async function getToken() {
     const { data } = await sb.auth.getSession();
     return (data && data.session && data.session.access_token) ? data.session.access_token : null;
   } catch (e) { return null; }
+}
+
+/* ---------- Account modal ---------- */
+function openAccount() {
+  document.getElementById('accountModal').style.display = 'flex';
+  loadAccountStatus();
+}
+function closeAccount() {
+  document.getElementById('accountModal').style.display = 'none';
+}
+
+async function loadAccountStatus() {
+  const contentEl = document.getElementById('accountContent');
+  contentEl.innerHTML = '<div style="text-align:center;padding:28px 0;font-family:Inter,sans-serif;font-size:13px;color:var(--dim);">Loading…</div>';
+  const token = await getToken();
+  if (!token) { closeAccount(); enterAuth(false); return; }
+  try {
+    const res  = await fetch('/api/get-status', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    renderAccountStatus(data);
+  } catch (e) {
+    contentEl.innerHTML = '<div style="color:var(--dim);font-family:Inter,sans-serif;font-size:13px;text-align:center;padding:20px;">Could not load account details. Please try again.</div>';
+  }
+}
+
+function renderAccountStatus(d) {
+  const contentEl = document.getElementById('accountContent');
+  const plan      = d.plan    || 'free';
+  const used      = d.used    || 0;
+  const limit     = d.limit   || 5;
+  const credits   = d.credits || 0;
+  const remaining = limit - used;
+
+  let planHtml = '';
+  if (plan === 'paid') {
+    const renews = d.subscription_end
+      ? new Date(d.subscription_end).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })
+      : null;
+    planHtml = `
+      <div class="acct-section">
+        <div class="acct-label">Plan</div>
+        <div class="acct-plan" style="color:var(--gold);">✦ SocratesQ Member</div>
+        <div class="acct-detail">${remaining < 0 ? 0 : remaining} of 30 conversations left this month</div>
+        ${renews ? `<div class="acct-renew">Renews ${renews}</div>` : ''}
+        <button class="acct-btn-outline" onclick="manageSubscription()">Manage subscription &rarr;</button>
+        ${credits > 0 ? `<div class="acct-detail" style="margin-top:10px;">${credits} conversation credit${credits===1?'':'s'} also in your account</div>` : ''}
+        <button class="acct-btn-outline" onclick="closeAccount();startCheckout('credits')">Buy 7 more conversations &mdash; $4.99</button>
+      </div>`;
+  } else if (credits > 0) {
+    planHtml = `
+      <div class="acct-section">
+        <div class="acct-label">Plan</div>
+        <div class="acct-plan">Free</div>
+        <div class="acct-detail">${remaining < 0 ? 0 : remaining} of 5 conversations left this month</div>
+      </div>
+      <div class="acct-section">
+        <div class="acct-label">Conversation Credits</div>
+        <div class="acct-plan">${credits} credit${credits===1?'':'s'} remaining</div>
+        <div class="acct-detail">Credits never expire &mdash; use them any time.</div>
+        <button class="acct-btn-outline" onclick="closeAccount();startCheckout('credits')">Buy 7 more &mdash; $4.99</button>
+        <button class="acct-btn-gold" onclick="closeAccount();startCheckout('subscription')">Subscribe &mdash; $12.99/month &middot; 30 conversations</button>
+      </div>`;
+  } else {
+    planHtml = `
+      <div class="acct-section">
+        <div class="acct-label">Plan</div>
+        <div class="acct-plan">Free</div>
+        <div class="acct-detail">${remaining < 0 ? 0 : remaining} of 5 conversations left this month</div>
+        <button class="acct-btn-gold" onclick="closeAccount();startCheckout('subscription')">Subscribe &mdash; $12.99/month &middot; 30 conversations</button>
+        <button class="acct-btn-outline" onclick="closeAccount();startCheckout('credits')">Buy 7 conversations &mdash; $4.99</button>
+      </div>`;
+  }
+
+  contentEl.innerHTML = `
+    <div style="font-family:'Inter',sans-serif;font-size:13px;color:var(--dim);margin-bottom:4px;">${d.email || ''}</div>
+    ${planHtml}
+    <div class="acct-section">
+      <div class="acct-label">What&rsquo;s included</div>
+      <div class="acct-what">
+        <div class="acct-what-row"><span>Free</span><span>5 dialogues / month</span></div>
+        <div class="acct-what-row"><span>Member</span><span>30 dialogues / month</span></div>
+        <div class="acct-what-row"><span>Credits</span><span>7 dialogues, never expire</span></div>
+        <div class="acct-what-row"><span>Daily question</span><span>always free</span></div>
+        <div class="acct-what-row"><span>PDF keepsake</span><span>always free</span></div>
+      </div>
+    </div>`;
+}
+
+async function manageSubscription() {
+  const token = await getToken();
+  if (!token) { enterAuth(false); return; }
+  try {
+    const res = await fetch('/api/create-portal', {
+      method:  'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const { url, error } = await res.json();
+    if (error) throw new Error(error);
+    window.location.href = url;
+  } catch (err) {
+    alert('Could not open subscription management. Please try again.');
+  }
 }
 
 /* ---------- Payment success banner ---------- */
