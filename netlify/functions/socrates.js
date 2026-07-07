@@ -203,10 +203,12 @@ exports.handler = async (event) => {
   // Fires only on the first turn of a new conversation, for signed-in members.
   // Anonymous tasters are already limited via localStorage; no server meter needed.
   const FREE_LIMIT = 5;
+  const PAID_LIMIT = 30;
   const SB_URL = 'https://lhreleeqqchskicxgocc.supabase.co';
   const sbKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   let remaining = null;
+  let userPlan = 'free';
 
   const authHeader = (event.headers || {})['authorization'] || (event.headers || {})['Authorization'] || '';
   const userToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
@@ -227,43 +229,63 @@ exports.handler = async (event) => {
       // 2. Get this user's current usage row
       const currentPeriod = new Date().toISOString().slice(0, 7); // YYYY-MM
       const usageRes = await fetch(
-        `${SB_URL}/rest/v1/usage?user_id=eq.${userId}&select=conversations_used,period`,
+        `${SB_URL}/rest/v1/usage?user_id=eq.${userId}&select=conversations_used,period,plan,credits`,
         { headers: { 'Authorization': `Bearer ${sbKey}`, 'apikey': sbKey } }
       );
       const usageData = await usageRes.json();
 
       let used = 0;
+      let plan = 'free';
+      let credits = 0;
+
       if (Array.isArray(usageData) && usageData.length > 0) {
         const row = usageData[0];
-        // If same month, use the stored count; if new month, reset to 0
-        used = (row.period === currentPeriod) ? row.conversations_used : 0;
+        plan    = row.plan    || 'free';
+        credits = row.credits || 0;
+        used    = (row.period === currentPeriod) ? (row.conversations_used || 0) : 0;
       }
 
-      // 3. Check limit — stop before calling Anthropic
-      if (used >= FREE_LIMIT) {
-        return {
-          statusCode: 429,
-          body: JSON.stringify({ error: 'limit_reached', used, limit: FREE_LIMIT })
-        };
+      userPlan = plan;
+      const limit = (plan === 'paid') ? PAID_LIMIT : FREE_LIMIT;
+
+      if (plan === 'paid' || credits === 0) {
+        // Monthly conversation counting
+        if (used >= limit) {
+          return {
+            statusCode: 429,
+            body: JSON.stringify({ error: 'limit_reached', used, limit, plan, credits })
+          };
+        }
+        // Increment conversations_used
+        await fetch(`${SB_URL}/rest/v1/usage`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sbKey}`,
+            'apikey': sbKey,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            conversations_used: used + 1,
+            period: currentPeriod,
+            plan
+          })
+        });
+        remaining = limit - (used + 1);
+      } else {
+        // Use a credit (doesn't expire monthly)
+        await fetch(`${SB_URL}/rest/v1/usage?user_id=eq.${userId}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${sbKey}`,
+            'apikey': sbKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ credits: credits - 1 })
+        });
+        remaining = credits - 1;
       }
-
-      // 4. Increment (upsert — merge on primary key user_id)
-      await fetch(`${SB_URL}/rest/v1/usage`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${sbKey}`,
-          'apikey': sbKey,
-          'Content-Type': 'application/json',
-          'Prefer': 'resolution=merge-duplicates'
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          conversations_used: used + 1,
-          period: currentPeriod
-        })
-      });
-
-      remaining = FREE_LIMIT - (used + 1);
     } catch (meterErr) {
       console.error('METER ERROR: ' + (meterErr && meterErr.message ? meterErr.message : meterErr));
       // Don't block the conversation on a meter error — let it through
@@ -303,7 +325,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: text || '…', remaining })
+      body: JSON.stringify({ text: text || '…', remaining, plan: userPlan })
     };
   } catch (e) {
     console.error('FUNCTION CRASH: ' + (e && e.message ? e.message : e));
