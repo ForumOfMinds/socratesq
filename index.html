@@ -473,6 +473,7 @@ function startFresh() { resetConversation(); inputEl.focus(); }
 function enterMember(session) {
   member = true; taster = false;
   currentEmail = (session && session.user && session.user.email) || '';
+  localStorage.setItem('sq_has_account', '1');  // mark as known user — no free rides after sign-out
   setAcct();
   if (window._paymentSuccess) {
     const type = window._paymentSuccess;
@@ -545,7 +546,8 @@ if (sb) {
   (async () => {
     const { data } = await sb.auth.getSession();
     if (data.session && data.session.user) enterMember(data.session);
-    else enterTaste();
+    else if (localStorage.getItem('sq_has_account')) enterAuth(false);  // returning user → sign in, not test drive
+    else enterTaste();  // genuine first-time visitor
   })();
 } else {
   enterTaste();
