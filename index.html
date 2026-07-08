@@ -1090,8 +1090,8 @@ async function send() {
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
     convo.push({ role: 'assistant', text: (data.text || '\u2026') });
-    if (n === 1 && data.remaining !== undefined) showRemaining(data.remaining, data.plan, null);
-    if (dailyContinuationPending && n === 2) { dailyContinuationPending = false; if (data.remaining !== undefined) showRemaining(data.remaining, data.plan, null); }
+    if (n === 1 && data.remaining !== undefined) showRemaining(data.remaining, data.plan, data.credits);
+    if (dailyContinuationPending && n === 2) { dailyContinuationPending = false; if (data.remaining !== undefined) showRemaining(data.remaining, data.plan, data.credits); }
     if (n >= 7) closed = true;
   } catch (e) {
     convo.pop();
