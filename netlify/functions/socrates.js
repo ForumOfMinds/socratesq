@@ -209,6 +209,7 @@ exports.handler = async (event) => {
 
   let remaining = null;
   let userPlan = 'free';
+  let userCredits = 0;
 
   const authHeader = (event.headers || {})['authorization'] || (event.headers || {})['Authorization'] || '';
   const userToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
@@ -245,7 +246,8 @@ exports.handler = async (event) => {
         used    = (row.period === currentPeriod) ? (row.conversations_used || 0) : 0;
       }
 
-      userPlan = plan;
+      userPlan    = plan;
+      userCredits = credits;
       const limit = (plan === 'paid') ? PAID_LIMIT : FREE_LIMIT;
 
       if (plan === 'paid' || credits === 0) {
@@ -284,6 +286,7 @@ exports.handler = async (event) => {
           },
           body: JSON.stringify({ credits: credits - 1 })
         });
+        userCredits = credits - 1;
         remaining = credits - 1;
       }
     } catch (meterErr) {
@@ -325,7 +328,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: text || '…', remaining, plan: userPlan })
+      body: JSON.stringify({ text: text || '…', remaining, plan: userPlan, credits: userCredits })
     };
   } catch (e) {
     console.error('FUNCTION CRASH: ' + (e && e.message ? e.message : e));
