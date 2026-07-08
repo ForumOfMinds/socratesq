@@ -142,13 +142,14 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: 'Server is missing its API key.' }) };
   }
 
-  let messages, userTurns, ending, daily, dailyQuestion, dailyContext, fromDaily;
+  let messages, userTurns, ending, daily, dailyQuestion, dailyContext, fromDaily, landing;
   try {
     const parsed = JSON.parse(event.body || '{}');
     messages = parsed.messages;
     userTurns = parsed.userTurns;
     ending = parsed.ending;
     daily = parsed.daily;
+    landing = parsed.landing;
     dailyQuestion = parsed.dailyQuestion;
     dailyContext = parsed.dailyContext;
     fromDaily = parsed.fromDaily;
@@ -214,7 +215,7 @@ exports.handler = async (event) => {
   const authHeader = (event.headers || {})['authorization'] || (event.headers || {})['Authorization'] || '';
   const userToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
-  const shouldMeter = !ending && !daily && (turns === 1 || (turns === 2 && fromDaily));
+  const shouldMeter = !ending && !daily && !landing && (turns === 1 || (turns === 2 && fromDaily));
   if (userToken && sbKey && shouldMeter) {
     try {
       // 1. Verify the session token and get the user's ID
@@ -250,15 +251,8 @@ exports.handler = async (event) => {
       userCredits = credits;
       const limit = (plan === 'paid') ? PAID_LIMIT : FREE_LIMIT;
 
-      if (plan === 'paid' || credits === 0) {
-        // Monthly conversation counting
-        if (used >= limit) {
-          return {
-            statusCode: 429,
-            body: JSON.stringify({ error: 'limit_reached', used, limit, plan, credits })
-          };
-        }
-        // Increment conversations_used
+      // Helper: increment monthly conversations_used
+      const incrementMonthly = async () => {
         await fetch(`${SB_URL}/rest/v1/usage`, {
           method: 'POST',
           headers: {
@@ -274,9 +268,10 @@ exports.handler = async (event) => {
             plan
           })
         });
-        remaining = limit - (used + 1);
-      } else {
-        // Use a credit (doesn't expire monthly)
+      };
+
+      // Helper: decrement a credit
+      const decrementCredit = async () => {
         await fetch(`${SB_URL}/rest/v1/usage?user_id=eq.${userId}`, {
           method: 'PATCH',
           headers: {
@@ -287,7 +282,24 @@ exports.handler = async (event) => {
           body: JSON.stringify({ credits: credits - 1 })
         });
         userCredits = credits - 1;
-        remaining = credits - 1;
+        remaining   = credits - 1;
+      };
+
+      // Priority: always use monthly allowance first (it resets anyway),
+      // then fall back to non-expiring credits.
+      if (used < limit) {
+        // Monthly allowance still available — use it first
+        await incrementMonthly();
+        remaining = limit - (used + 1);
+      } else if (credits > 0) {
+        // Monthly exhausted but credits available — use a credit
+        await decrementCredit();
+      } else {
+        // Both exhausted — stop
+        return {
+          statusCode: 429,
+          body: JSON.stringify({ error: 'limit_reached', used, limit, plan, credits })
+        };
       }
     } catch (meterErr) {
       console.error('METER ERROR: ' + (meterErr && meterErr.message ? meterErr.message : meterErr));
