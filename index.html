@@ -197,7 +197,8 @@
   .lp-scroll-hint { position:absolute; bottom:28px; left:50%; transform:translateX(-50%); font-family:'Inter',sans-serif; font-size:12px; color:var(--dim); letter-spacing:.1em; text-transform:uppercase; display:flex; flex-direction:column; align-items:center; gap:6px; }
   .lp-scroll-hint::after { content:''; width:1px; height:24px; background:var(--surface-edge); }
   /* Sticky nav */
-  #lpNav { display:none; position:sticky; top:0; z-index:50; background:rgba(20,24,26,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--surface-edge); padding:0 24px; }
+  #lpNav { position:fixed; top:0; left:0; right:0; z-index:200; background:rgba(20,24,26,.95); backdrop-filter:blur(8px); border-bottom:1px solid var(--surface-edge); padding:0 24px; transform:translateY(-100%); transition:transform .25s ease; }
+  #lpNav.lpnav-visible { transform:translateY(0); }
   #lpNav .lpnav-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:48px; gap:0; overflow:hidden; }
   #lpNav .lpnav-mark { font-family:'EB Garamond',serif; font-size:18px; color:var(--parchment); font-weight:500; letter-spacing:.03em; white-space:nowrap; }
   #lpNav .lpnav-mark span { color:var(--gold); }
@@ -276,6 +277,7 @@
           <a href="#method">The Socratic Method</a>
           <a href="#forum">Forum of Minds</a>
         </div>
+        <button onclick="showLpAuth()" style="background:transparent;border:1px solid rgba(201,162,75,.35);color:var(--gold);font-family:'Inter',sans-serif;font-size:12px;padding:6px 14px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:border-color .2s;">Sign in</button>
       </div>
     </nav>
 
@@ -287,7 +289,7 @@
 
       <div style="position:relative;z-index:2;width:100%;max-width:680px;">
         <div style="font-family:'EB Garamond',serif;font-size:28px;font-weight:500;letter-spacing:.04em;color:var(--parchment);margin-bottom:8px;">Socrates<span style="color:var(--gold);">Q</span></div>
-        <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--parchment-dim);margin-bottom:36px;">an inquiry, not an answer</div>
+        <div id="lpGreeting" style="font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:var(--parchment-dim);margin-bottom:36px;max-width:520px;line-height:1.65;"></div>
 
         <div class="lp-label">Every day, one dialogue &mdash; open to all, as Socrates intended.</div>
         <div class="lp-question" id="lpQuestion"></div>
@@ -490,6 +492,7 @@
 
     <!-- Footer -->
     <div class="lp-footer">
+      <button onclick="showLpAuth()" style="background:var(--gold);color:#20180a;border:none;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;padding:12px 28px;border-radius:12px;cursor:pointer;margin-bottom:24px;display:inline-block;">Sign in to your account &rarr;</button><br/>
       <a href="/">SocratesQ</a> &nbsp;&middot;&nbsp;
       <a href="about.html">About</a> &nbsp;&middot;&nbsp;
       <a href="socrates.html">The Socratic Method</a> &nbsp;&middot;&nbsp;
@@ -548,7 +551,6 @@
         <button id="backSigninBtn" style="background:transparent;border:none;color:var(--dim);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline;">&larr; Back to sign in</button>
       </div>
     </div>
-    <div class="authback" id="authBack" style="display:none"><button id="backToTaste">← back to the conversation</button></div>
     <div class="authdisc">A philosophical reconstruction, not the historical figure — and not advice.<br/><a href="/disclaimer.html" style="color:var(--dim);font-size:11px;">Before We Begin — Terms &amp; Disclaimers</a></div>
   </div>
 
@@ -681,8 +683,7 @@ const authBtn = document.getElementById('authBtn');
 const authMsg = document.getElementById('authMsg');
 const tabIn = document.getElementById('tabIn');
 const tabUp = document.getElementById('tabUp');
-const authBack = document.getElementById('authBack');
-const backToTaste = document.getElementById('backToTaste');
+
 const forgotWrap = document.getElementById('forgotWrap');
 const backSigninWrap = document.getElementById('backSigninWrap');
 const acctEmail = document.getElementById('acctEmail');
@@ -790,7 +791,7 @@ async function signOut() {
 }
 
 /* ---------- Views & modes ---------- */
-function showAuth() { authEl.style.display = 'flex'; appEl.style.display = 'none'; if (dailyEl) dailyEl.style.display = 'none'; if (landingEl) landingEl.style.display = 'none'; }
+function showAuth() { authEl.style.display = 'flex'; appEl.style.display = 'none'; if (dailyEl) dailyEl.style.display = 'none'; if (landingEl) landingEl.style.display = 'none'; const lpNav = document.getElementById('lpNav'); if (lpNav) lpNav.classList.remove('lpnav-visible'); }
 function showApp() { authEl.style.display = 'none'; appEl.style.display = 'flex'; }
 
 function setAcct() {
@@ -841,7 +842,6 @@ function enterAuth(preferSignup) {
   setMode(preferSignup ? 'signup' : 'signin');
   setMsg('');
   /* offer a way back into the taste only if it hasn't been used up */
-  authBack.style.display = localStorage.getItem('sq_tasted') ? 'none' : 'block';
   showAuth();
 }
 
@@ -861,18 +861,7 @@ document.getElementById('backSigninBtn').addEventListener('click', () => setMode
 authBtn.addEventListener('click', doAuth);
 pwEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doAuth(); } });
 emailEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); pwEl.focus(); } });
-backToTaste.addEventListener('click', () => {
-  if (!localStorage.getItem('sq_tasted')) {
-    if (_fromDaily && dailyEl) {
-      // Return to the daily conversation they just had
-      _fromDaily = false;
-      authEl.style.display = 'none';
-      dailyEl.style.display = 'flex';
-    } else {
-      enterTaste();
-    }
-  }
-});
+
 
 if (sb) {
   sb.auth.onAuthStateChange((event, session) => {
@@ -1056,6 +1045,8 @@ function showLanding() {
   authEl.style.display = 'none';
   appEl.style.display = 'none';
   if (dailyEl) dailyEl.style.display = 'none';
+  const lpNav = document.getElementById('lpNav');
+  if (lpNav) lpNav.classList.remove('lpnav-visible');
   initLandingQuestion();
   initLandingNav();
 }
@@ -1065,18 +1056,78 @@ function showLpAuth() {
   enterAuth(true);
 }
 
+
+const SOCRATES_GREETINGS = [
+  "Welcome. I cannot tell you how to live. But together, we may discover what you already believe—and whether it is true.",
+  "Welcome. What shall we examine today?",
+  "You have come with your own thoughts. Let us see where they lead.",
+  "I promise no answers. Only honest questions.",
+  "Perhaps today’s conversation will change neither of us. Or perhaps it will.",
+  "A conversation begins with two people willing to wonder.",
+  "Ah. You came. What have you brought?",
+  "I do not teach. I ask. The rest is up to you.",
+  "In Athens I accosted strangers. Here, you found me.",
+  "I know only that I know nothing—which turns out to be a fine place to start.",
+  "You have arrived. That already tells me something.",
+  "I am not wise. I am merely unwilling to pretend otherwise.",
+  "The unexamined life, they say, is not worth living. You are here. That suggests you agree.",
+  "Let us begin with what you think you know.",
+  "Most people I have met are confident in their beliefs. That is usually where the conversation gets interesting.",
+  "I will not flatter you. Flattery is for those who do not respect the person they are speaking to.",
+  "Bring your most comfortable belief. Those are the most interesting to examine.",
+  "I find that the simplest questions are usually the hardest. Shall we try one?",
+  "Welcome. I have been waiting—not for you specifically, but for anyone willing to think carefully.",
+  "You have a question, I suspect. And I have one for you. Let us see which is harder.",
+  "They called me the gadfly of Athens. I prefer to think of myself as a conversationalist.",
+  "My mother was a midwife. I have the same trade—only with thoughts.",
+  "Nothing I say today will be true unless you also find it true. That is the agreement.",
+  "I begin every conversation the same way: curious. I recommend it.",
+  "Whatever you have come here to resolve, I suspect it will become more complicated before it becomes clearer. You are welcome.",
+  "The Delphic oracle called me the wisest man in Athens. I thought it was a joke. Perhaps it still is.",
+  "Some days the question finds you before you find it. Perhaps that is what happened today.",
+  "I have been doing this for a long time. I still find every question new.",
+  "You are not the first to sit with this kind of question. You are, however, the only one here today.",
+  "Think of me less as a teacher and more as someone equally confused, but willing to say so.",
+  "A good conversation requires two things: honesty and patience. I have an endless supply of patience.",
+  "I once spent an afternoon asking a general what courage was. We both left less certain. It was a fine afternoon.",
+  "Do not worry if you do not have a question ready. Most people find one soon enough.",
+  "I have examined generals, poets, craftsmen, and politicians. None of them knew what I thought they knew. You may fare better.",
+  "Begin wherever you like. The thread will appear.",
+  "I should warn you: I have a habit of asking follow-up questions.",
+  "Welcome. Whatever brought you here—curiosity, doubt, a restless morning—it is enough.",
+  "Philosophy is not something one studies. It is something one does. You are already doing it.",
+  "I do not know what we will discover today. That is precisely why it is worth beginning.",
+  "The trouble with quick answers is that they stop the conversation. I prefer slow ones.",
+  "In Athens, people sometimes crossed the street to avoid me. Here you came of your own will. I am touched.",
+  "I am told I am difficult to talk to. I prefer to think of it as thorough.",
+  "Every question is a beginning. Let us begin.",
+  "You are here because something is unresolved. Good. Unresolved things are where thinking lives.",
+  "I have no doctrine. No method, really. Only a preference for honesty and a weakness for interesting questions.",
+  "The examined life does not promise happiness. It promises something rarer: clarity about what you actually believe.",
+  "I was put to death for asking questions. I consider this proof that questions matter.",
+  "Welcome. You may leave whenever you like. Most people stay longer than they planned.",
+  "Bring whatever is on your mind. I am patient.",
+  "Today’s question is already waiting. Whether it is the right question—that we will discover together."
+];
+
+function pickGreeting() {
+  return SOCRATES_GREETINGS[Math.floor(Math.random() * SOCRATES_GREETINGS.length)];
+}
+
 function initLandingQuestion() {
   const qEl = document.getElementById('lpQuestion');
   if (qEl) qEl.textContent = getTodayQuestion();
+  const grEl = document.getElementById('lpGreeting');
+  if (grEl) grEl.textContent = pickGreeting();
 }
 
 function initLandingNav() {
-  const nav = document.getElementById('lpNav');
+  const nav  = document.getElementById('lpNav');
   const hero = document.getElementById('lpHero');
   const hint = document.getElementById('lpScrollHint');
   if (!nav || !hero) return;
   const obs = new IntersectionObserver(([e]) => {
-    nav.style.display = e.isIntersecting ? 'none' : 'block';
+    nav.classList.toggle('lpnav-visible', !e.isIntersecting);
     if (hint) hint.style.opacity = e.isIntersecting ? '1' : '0';
   }, { threshold: 0.1 });
   obs.observe(hero);
