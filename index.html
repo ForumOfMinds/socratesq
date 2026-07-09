@@ -67,6 +67,11 @@
 
   #app { position: relative; overflow: hidden; min-height: 100vh; }
   #app > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas) { position: relative; z-index: 2; }
+  .lp-hero > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas) { position: relative; z-index: 2; }
+  #landing .lp-section, #landing .lp-rule { position: relative; z-index: 2; }
+  /* When the running app is active, the shared marketing nav/footer must stay hidden
+     regardless of nav.js re-renders. The app has its own account bar. */
+  body.sq-app-active #sq-header, body.sq-app-active #sq-footer { display: none !important; }
 
   /* === Digital hero — animated background === */
   .digital-hero-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
@@ -251,11 +256,10 @@
 </style>
 </head>
 <body>
+<!-- ═══ Shared header (outside wrap, fixed) ═══ -->
+<div id="sq-header"></div>
+
 <div class="wrap">
-
-
-  <!-- ═══ Shared header ═══ -->
-  <div id="sq-header"></div>
 
   <!-- ═══ LANDING PAGE (short) ═══ -->
   <div id="landing">
@@ -371,9 +375,6 @@
 
   </div>
   <!-- ═══ END LANDING PAGE ═══ -->
-
-  <!-- ═══ Shared footer ═══ -->
-  <div id="sq-footer"></div>
 
   <!-- ===== The threshold (sign in / create account) ===== -->
   <div id="auth" class="authwrap" style="display:none">
@@ -664,7 +665,7 @@ async function signOut() {
 }
 
 /* ---------- Views & modes ---------- */
-function showAuth() { authEl.style.display = 'flex'; appEl.style.display = 'none'; if (dailyEl) dailyEl.style.display = 'none'; if (landingEl) landingEl.style.display = 'none'; const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = 'none'; const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = 'none'; }
+function showAuth() { document.body.classList.add('sq-app-active'); authEl.style.display = 'flex'; appEl.style.display = 'none'; if (dailyEl) dailyEl.style.display = 'none'; if (landingEl) landingEl.style.display = 'none'; const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = 'none'; const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = 'none'; }
 function showApp() { authEl.style.display = 'none'; appEl.style.display = 'flex'; }
 
 function setAcct() {
@@ -680,6 +681,7 @@ function enterMember(session) {
   setTimeout(redeemInviteIfNeeded, 1000);
   const hdrEl = document.getElementById('sq-header'); if (hdrEl) hdrEl.style.display = 'none';
   const ftrEl = document.getElementById('sq-footer'); if (ftrEl) ftrEl.style.display = 'none';
+  document.body.classList.add('sq-app-active');
   setAcct();
   if (window._paymentSuccess) {
     const type = window._paymentSuccess;
@@ -921,6 +923,7 @@ function saveAsPDF() {
 const landingEl = document.getElementById('landing');
 
 function showLanding() {
+  document.body.classList.remove('sq-app-active');
   if (landingEl) landingEl.style.display = 'block';
   authEl.style.display = 'none';
   appEl.style.display = 'none';
@@ -1665,5 +1668,7 @@ document.querySelectorAll('[data-digital-hero]').forEach(function(canvas) {
   draw();
 });
 </script>
+<!-- ═══ Shared footer (outside wrap) ═══ -->
+<div id="sq-footer"></div>
 </body>
 </html>
