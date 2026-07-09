@@ -699,6 +699,14 @@ function enterMember(session) {
       bannerEl.style.display = 'block';
       setTimeout(() => { bannerEl.style.display = 'none'; }, 6000);
     }
+    // The Stripe webhook writes to the database asynchronously and may land a
+    // moment after this redirect. Refresh the account view after a short delay
+    // so the new balance is reflected once the webhook has completed.
+    setTimeout(() => {
+      if (document.getElementById('accountModal').style.display === 'flex') {
+        loadAccountStatus();
+      }
+    }, 2500);
   }
   if (!localStorage.getItem(todayKey())) {
     showDaily();
@@ -1305,7 +1313,7 @@ async function loadAccountStatus() {
   const token = await getToken();
   if (!token) { closeAccount(); enterAuth(false); return; }
   try {
-    const res  = await fetch('/api/get-status', { headers: { 'Authorization': 'Bearer ' + token } });
+    const res  = await fetch('/api/get-status?t=' + Date.now(), { headers: { 'Authorization': 'Bearer ' + token }, cache: 'no-store' });
     const data = await res.json();
     renderAccountStatus(data);
   } catch (e) {
