@@ -176,7 +176,8 @@
 
 
   /* ═══ Landing page ═══ */
-  #landing { display:none; }
+  #landing { display:none; width:100%; }
+  #landing .lp-section { max-width:720px; margin:0 auto; }
   .lp-hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:100px 24px 40px; position:relative; overflow:hidden; }
   .lp-label { font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
   .lp-question { font-family:'EB Garamond',serif; font-size:clamp(22px,4vw,34px); color:var(--parchment); line-height:1.38; max-width:600px; margin:0 auto 32px; }
@@ -202,7 +203,7 @@
   .lp-close-btn { background:var(--gold); color:#20180a; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:15px; padding:13px 30px; border-radius:12px; cursor:pointer; transition:background .2s; }
   .lp-close-btn:hover { background:var(--gold-soft); }
   .lp-close-note { font-family:'Inter',sans-serif; font-size:12px; color:var(--dim); margin-top:10px; }
-  .lp-scroll-hint { position:absolute; bottom:28px; left:50%; transform:translateX(-50%); font-family:'Inter',sans-serif; font-size:12px; color:var(--dim); letter-spacing:.1em; text-transform:uppercase; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .lp-scroll-hint { margin-top:48px; font-family:'Inter',sans-serif; font-size:12px; color:var(--dim); letter-spacing:.1em; text-transform:uppercase; display:flex; flex-direction:column; align-items:center; gap:6px; }
   .lp-scroll-hint::after { content:''; width:1px; height:24px; background:var(--surface-edge); }
   /* Sticky nav */
   /* Content sections */
@@ -259,10 +260,8 @@
 <!-- ═══ Shared header (outside wrap, fixed) ═══ -->
 <div id="sq-header"></div>
 
-<div class="wrap">
-
-  <!-- ═══ LANDING PAGE (short) ═══ -->
-  <div id="landing">
+<!-- ═══ LANDING PAGE (short) — full width, outside .wrap ═══ -->
+<div id="landing">
 
     <!-- Hero -->
     <div class="lp-hero" id="lpHero">
@@ -373,8 +372,10 @@
       <p style="font-size:17px;color:var(--parchment-dim);">Nothing you say here is stored, shared, or sold. <a href="disclaimer.html" style="color:var(--gold);border-bottom:1px solid rgba(201,162,75,.3);">Our word on privacy &rarr;</a></p>
     </div>
 
-  </div>
-  <!-- ═══ END LANDING PAGE ═══ -->
+</div>
+<!-- ═══ END LANDING PAGE ═══ -->
+
+<div class="wrap">
 
   <!-- ===== The threshold (sign in / create account) ===== -->
   <div id="auth" class="authwrap" style="display:none">
@@ -550,6 +551,9 @@ const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE
 window.supabaseClient = sb;  // let shared nav.js detect signed-in state
 
 const authEl = document.getElementById('auth');
+let _fromDaily = false;  // tracks whether auth was entered from the daily question (declared early to avoid TDZ)
+const landingEl = document.getElementById('landing');
+const dailyEl = document.getElementById('daily');
 const appEl = document.getElementById('app');
 const emailEl = document.getElementById('email');
 const pwEl = document.getElementById('pw');
@@ -740,29 +744,6 @@ pwEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefaul
 emailEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); pwEl.focus(); } });
 
 
-if (sb) {
-  sb.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN' && session && session.user) enterMember(session);
-    else if (event === 'PASSWORD_RECOVERY') {
-      showAuth();
-      setMode('newpw');
-      setMsg('Enter a new password for your account.');
-    }
-    else if (event === 'SIGNED_OUT') enterAuth(false);
-  });
-  (async () => {
-    const { data } = await sb.auth.getSession();
-    if (data.session && data.session.user) {
-      enterMember(data.session);
-    } else {
-      const h = (location.hash || '').toLowerCase();
-      if (h === '#signin') { showLanding(); showLpAuth(); }
-      else showLanding();  // everyone without a session sees the landing page
-    }
-  })();
-} else {
-  enterTaste();
-}
 
 /* ---------- The dialogue ---------- */
 const API = '/api/socrates';
@@ -822,7 +803,6 @@ function todayKey() {
 
 let dailyContextForServer = null;
 let dailyContinuationPending = false;
-let _fromDaily = false;  // tracks whether auth was entered from the daily question
 const GREETING = "Welcome. I am Socrates — an AI reconstruction shaped by the dialogues of Plato, Xenophon, and other sources. I make no claim to be the man himself. My purpose is to help you examine your own thinking, by asking. So — where shall we begin?";
 const ARC_TICKS = 8;
 
@@ -920,7 +900,6 @@ function saveAsPDF() {
 
 
 /* ═══ Landing page ═══ */
-const landingEl = document.getElementById('landing');
 
 function showLanding() {
   document.body.classList.remove('sq-app-active');
@@ -1176,7 +1155,6 @@ function copyInviteLink(link) {
 if (pdfBtn) pdfBtn.addEventListener('click', saveAsPDF);
 
 /* ---------- Daily view ---------- */
-const dailyEl = document.getElementById('daily');
 const dailyGreetingEl = document.getElementById('dailyGreetingEl');
 const dailyQEl = document.getElementById('dailyQEl');
 const dailyBtnsEl = document.getElementById('dailyBtnsEl');
@@ -1667,6 +1645,32 @@ document.querySelectorAll('[data-digital-hero]').forEach(function(canvas) {
   }
   draw();
 });
+
+/* ---------- INIT (moved to end so all declarations exist) ---------- */
+if (sb) {
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session && session.user) enterMember(session);
+    else if (event === 'PASSWORD_RECOVERY') {
+      showAuth();
+      setMode('newpw');
+      setMsg('Enter a new password for your account.');
+    }
+    else if (event === 'SIGNED_OUT') enterAuth(false);
+  });
+  (async () => {
+    const { data } = await sb.auth.getSession();
+    if (data.session && data.session.user) {
+      enterMember(data.session);
+    } else {
+      const h = (location.hash || '').toLowerCase();
+      if (h === '#signin') { showLanding(); showLpAuth(); }
+      else showLanding();  // everyone without a session sees the landing page
+    }
+  })();
+} else {
+  enterTaste();
+}
+
 </script>
 <!-- ═══ Shared footer (outside wrap) ═══ -->
 <div id="sq-footer"></div>

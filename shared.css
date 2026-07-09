@@ -174,6 +174,7 @@ body.sq-no-scroll { overflow: hidden; }
   opacity: 0;
   transition: opacity 0.25s ease;
 }
+.sq-overlay[hidden] { display: none !important; }
 .sq-overlay.is-open { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .sq-overlay { transition: none; } }
 
