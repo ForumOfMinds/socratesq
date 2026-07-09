@@ -1,0 +1,251 @@
+/* ============================================================
+   SocratesQ — shared.css
+   Styles for the shared header/footer (nav.js) + site-wide rules.
+   All selectors are prefixed sq- so nothing collides with
+   existing page styles.
+
+   STEP 1 — align the tokens below with your existing palette.
+   The defaults approximate the site's dark, cinematic tone;
+   replace with your exact values.
+   ============================================================ */
+
+:root {
+  --sq-ink:        #14120f;   /* page background (warm near-black) */
+  --sq-ink-soft:   #1d1a15;   /* raised surfaces */
+  --sq-parchment:  #eae3d2;   /* primary text */
+  --sq-parchment-dim: #b6ad97;/* secondary text */
+  --sq-gold:       #c9a45c;   /* accent — links, logo, CTA */
+  --sq-gold-deep:  #a9863f;
+
+  --sq-font-display: 'Cormorant Garamond', Georgia, serif; /* ← swap to your display face */
+  --sq-font-body:    'EB Garamond', Georgia, serif;        /* ← swap to your body face   */
+  --sq-font-hand:    'Patrick Hand', cursive;
+}
+
+/* ============================================================
+   SITE-WIDE RULE — Socrates speaks in his own hand.
+   Patrick Hand has no italic variant; font-style:normal prevents
+   the browser from synthesizing a blurry fake slant (the likely
+   cause of the current mobile italics looking poor).
+   Apply .sq-hand to any element in Socrates' voice
+   (rotating greeting, daily question, his replies).
+   ============================================================ */
+em, i, blockquote, .sq-hand {
+  font-family: var(--sq-font-hand);
+  font-style: normal;
+  font-size: 1.06em;           /* Patrick Hand runs small; tune by eye */
+  letter-spacing: 0.01em;
+}
+/* If a specific element must remain a true italic serif, opt out with: */
+.sq-serif-italic { font-family: inherit; font-style: italic; font-size: 1em; }
+
+body.sq-no-scroll { overflow: hidden; }
+
+/* ---------------- HEADER ---------------- */
+
+.sq-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+  background: color-mix(in srgb, var(--sq-ink) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--sq-gold) 22%, transparent);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Logo — draws itself once on load, then rests */
+.sq-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--sq-gold);
+  text-decoration: none;
+  margin-right: auto;
+}
+.sq-logo-word {
+  font-family: var(--sq-font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+  color: var(--sq-parchment);
+}
+.sq-logo-word-q { color: var(--sq-gold); }
+
+.sq-logo-ring {
+  stroke-dasharray: 132;
+  stroke-dashoffset: 132;
+  animation: sq-draw 1.4s ease-out forwards;
+}
+.sq-logo-q {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: sq-draw 1.1s ease-out 0.5s forwards;
+}
+.sq-logo-dot {
+  opacity: 0;
+  animation: sq-appear 0.4s ease-out 1.5s forwards;
+}
+@keyframes sq-draw   { to { stroke-dashoffset: 0; } }
+@keyframes sq-appear { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .sq-logo-ring, .sq-logo-q { animation: none; stroke-dashoffset: 0; }
+  .sq-logo-dot { animation: none; opacity: 1; }
+}
+
+/* Desktop links */
+.sq-nav-links { display: flex; align-items: center; gap: 1.4rem; }
+.sq-nav-link {
+  font-family: var(--sq-font-body);
+  font-size: 1rem;
+  color: var(--sq-parchment-dim);
+  text-decoration: none;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.sq-nav-link:hover  { color: var(--sq-parchment); }
+.sq-nav-link.is-active { color: var(--sq-gold); border-bottom-color: var(--sq-gold); }
+
+/* Primary action */
+.sq-cta {
+  font-family: var(--sq-font-body);
+  font-size: 1rem;
+  color: var(--sq-ink);
+  background: var(--sq-gold);
+  border: 1px solid var(--sq-gold-deep);
+  border-radius: 999px;
+  padding: 0.5rem 1.15rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.15s;
+}
+.sq-cta:hover { background: var(--sq-gold-deep); transform: translateY(-1px); }
+.sq-cta:focus-visible,
+.sq-nav-link:focus-visible,
+.sq-burger:focus-visible { outline: 2px solid var(--sq-gold); outline-offset: 3px; }
+
+/* Hamburger — hidden on desktop */
+.sq-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px; height: 44px;
+  background: none; border: none; cursor: pointer;
+  padding: 10px;
+}
+.sq-burger span {
+  display: block; height: 1.5px; width: 100%;
+  background: var(--sq-parchment);
+}
+
+/* ---------------- MOBILE ---------------- */
+
+@media (max-width: 768px) {
+  .sq-nav { gap: 0.75rem; }
+  .sq-nav-links { display: none; }
+  .sq-burger { display: flex; }
+  .sq-cta { font-size: 0.92rem; padding: 0.45rem 0.95rem; }
+}
+
+/* Full-screen overlay menu — a deliberate pause, not a drawer */
+.sq-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: color-mix(in srgb, var(--sq-ink) 96%, transparent);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.sq-overlay.is-open { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .sq-overlay { transition: none; } }
+
+.sq-overlay-close {
+  position: absolute; top: 0.9rem; right: 1.2rem;
+  font-size: 2.4rem; line-height: 1;
+  color: var(--sq-parchment-dim);
+  background: none; border: none; cursor: pointer;
+  width: 48px; height: 48px;
+}
+.sq-overlay-links {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.4rem; text-align: center;
+}
+.sq-overlay-link {
+  font-family: var(--sq-font-display);
+  font-size: 1.7rem;
+  color: var(--sq-parchment);
+  text-decoration: none;
+  padding: 0.55rem 1rem;       /* comfortable thumb targets */
+}
+.sq-overlay-link.is-active { color: var(--sq-gold); }
+.sq-overlay-auth { color: var(--sq-parchment-dim); font-size: 1.35rem; }
+.sq-overlay-cta { margin-top: 1.4rem; font-size: 1.05rem; }
+
+/* ---------------- FOOTER ---------------- */
+
+.sq-footer {
+  margin-top: clamp(3rem, 8vw, 6rem);
+  padding: 2rem clamp(1rem, 4vw, 2.5rem) 2.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--sq-gold) 18%, transparent);
+  text-align: center;
+}
+.sq-footer-links {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 0.6rem; align-items: baseline;
+}
+.sq-footer-links a {
+  font-family: var(--sq-font-body);
+  color: var(--sq-parchment-dim);
+  text-decoration: none;
+}
+.sq-footer-links a:hover { color: var(--sq-gold); }
+.sq-footer-dot { color: var(--sq-gold-deep); }
+.sq-footer-note {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--sq-parchment-dim) 70%, transparent);
+}
+
+/* ---------------- SMALL PAGE HELPERS (used by new pages) ---------------- */
+
+.sq-page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 4rem) 1.25rem 0;
+  font-family: var(--sq-font-body);
+  color: var(--sq-parchment);
+  line-height: 1.65;
+}
+.sq-page h1 {
+  font-family: var(--sq-font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: var(--sq-parchment);
+  margin-bottom: 0.4em;
+}
+.sq-page h2 {
+  font-family: var(--sq-font-display);
+  font-weight: 500;
+  font-size: 1.45rem;
+  color: var(--sq-gold);
+  margin: 2.2em 0 0.5em;
+}
+.sq-page a { color: var(--sq-gold); }
+
+.sq-tier {
+  border: 1px solid color-mix(in srgb, var(--sq-gold) 25%, transparent);
+  border-radius: 10px;
+  background: var(--sq-ink-soft);
+  padding: 1.4rem 1.5rem;
+  margin: 1.2rem 0;
+}
+.sq-tier h2 { margin: 0 0 0.35em; }
+.sq-tier .sq-price {
+  font-family: var(--sq-font-body);
+  color: var(--sq-parchment-dim);
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
