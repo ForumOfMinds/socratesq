@@ -44,7 +44,7 @@
      Method page hero), with the circle-Q fallback if the image
      is missing. Sized for the 48px bar. */
   var LOGO_SVG =
-    '<img class="sq-logo-img" src="SocratesQ%20logo.png" alt="" aria-hidden="true" ' +
+    '<img class="sq-logo-img" src="https://socratesq.app/SocratesQ%20logo.png" alt="" aria-hidden="true" ' +
       'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';" />' +
     '<span class="sq-logo-fallback" style="display:none;"><span>Q</span></span>';
   /* LOGO-END */

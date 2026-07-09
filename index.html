@@ -1377,7 +1377,7 @@ function renderAccountStatus(d) {
       <div class="acct-what">
         <div class="acct-what-row"><span>Free</span><span>3 dialogues / month</span></div>
         <div class="acct-what-row"><span>Member</span><span>30 dialogues / month</span></div>
-        <div class="acct-what-row"><span>Credits</span><span>7 dialogues, never expire</span></div>
+        <div class="acct-what-row"><span>Credits</span><span>${credits > 0 ? credits + ' remaining, never expire' : '7 dialogues, never expire'}</span></div>
         <div class="acct-what-row"><span>Daily question</span><span>always free</span></div>
         <div class="acct-what-row"><span>PDF keepsake</span><span>always free</span></div>
       </div>
