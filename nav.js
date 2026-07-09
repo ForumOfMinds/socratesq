@@ -1,12 +1,14 @@
 /* ============================================================
-   SocratesQ — shared header & footer (nav.js)
+   SocratesQ — shared header & footer (nav.js)  v2
    One source of truth for navigation on every page.
 
    USAGE — on each page:
-     1. Add  <div id="sq-header"></div>  right after <body>
-     2. Add  <div id="sq-footer"></div>  right before </body>
-     3. Add  <script src="/nav.js" defer></script>  in <head>
-     4. Make sure /shared.css is linked in <head>
+     1. <div id="sq-header"></div>  right after <body>
+     2. <div id="sq-footer"></div>  right before </body>
+     3. In <head>:
+        <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/shared.css">
+        <script src="/nav.js" defer></script>
    ============================================================ */
 
 (function () {
@@ -15,34 +17,32 @@
   /* ---------- 1. CONFIG ---------- */
 
   var LINKS = [
-    { href: "/about",      label: "About" },
-    { href: "/socrates",   label: "The Socratic Method" },
-    { href: "/dialogues",  label: "Sample Dialogues" },
-    { href: "/membership", label: "Membership" }
+    { href: "about.html",      label: "About" },
+    { href: "socrates.html",   label: "The Socratic Method" },
+    { href: "dialogues.html",  label: "Sample Dialogues" },
+    { href: "membership.html", label: "Membership" }
   ];
 
-  // Where the two primary actions lead.
-  // ADJUST these two paths if your app uses different entry URLs.
+  // Primary action by auth state. ADJUST if your routes differ.
   var CTA_SIGNED_OUT = { href: "/#today",        label: "Answer today\u2019s question" };
   var CTA_SIGNED_IN  = { href: "/?dialogue=new", label: "Enter a dialogue \u2192" };
 
-  var ACCOUNT_LINK = { href: "/account", label: "Account" };
-  var SIGNIN_LINK  = { href: "/#signin", label: "Sign in" };
-  // If your sign-in is a modal on the landing page, "/#signin" can be
-  // intercepted there; on other pages it simply routes home.
+  var ACCOUNT_LINK = { href: "account.html", label: "Account" };  // ← adjust to your Account page path
+  var SIGNIN_LINK  = { href: "/#signin",     label: "Sign in" };  // ← lands on the index sign-in modal
+
+  var FORUM_URL = "https://www.forumofminds.com";
 
   /* ---------- 2. ANIMATED LOGO ----------
-     Self-contained placeholder: a laurel-ringed question mark whose
-     stroke draws itself on page load, then rests (no perpetual motion,
-     so it never competes with reading).
-
-     TO USE YOUR EXISTING LOGO from the Socratic Method page instead:
-     replace everything between LOGO-START and LOGO-END with the markup
-     copied from socrates.html, and move its @keyframes into shared.css.
+     Placeholder mark: a ringed question mark that draws itself
+     once on page load, then rests.
+     TO USE THE EXISTING ANIMATED LOGO from the Socratic Method
+     page instead: replace the markup between LOGO-START and
+     LOGO-END with that logo's markup, and move its @keyframes
+     into shared.css.
   ------------------------------------------------------------ */
   /* LOGO-START */
   var LOGO_SVG =
-    '<svg class="sq-logo-mark" viewBox="0 0 48 48" width="34" height="34" aria-hidden="true">' +
+    '<svg class="sq-logo-mark" viewBox="0 0 48 48" width="28" height="28" aria-hidden="true">' +
       '<circle class="sq-logo-ring" cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
       '<path class="sq-logo-q" d="M18 19 q0-7 6.5-7 q6.5 0 6.5 6.2 q0 4.4-4.2 6.4 q-2.6 1.3-2.6 4.4" ' +
         'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>' +
@@ -66,9 +66,7 @@
   }
 
   function getAuthState() {
-    // Manual override hook: set  window.sqAuth = true/false  before nav.js
     if (typeof window.sqAuth === "boolean") return Promise.resolve(window.sqAuth);
-
     var sb = window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
     if (sb && sb.auth && typeof sb.auth.getSession === "function") {
       return sb.auth.getSession()
@@ -82,10 +80,13 @@
 
   function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
 
+  function pageKey(path) {
+    var seg = path.split("/").pop() || "index.html";
+    return seg.replace(/\.html$/, "") || "index";
+  }
   function isActive(href) {
-    var p = location.pathname.replace(/\/+$/, "") || "/";
-    var h = href.replace(/\/+$/, "") || "/";
-    return p === h || p === h + ".html";
+    if (href.indexOf("http") === 0) return false;
+    return pageKey(location.pathname) === pageKey(href);
   }
 
   function linkList(cls) {
@@ -101,20 +102,23 @@
 
     return '' +
     '<header class="sq-nav" role="banner">' +
-      '<a class="sq-logo" href="/" aria-label="SocratesQ home">' +
-        LOGO_SVG +
-        '<span class="sq-logo-word">Socrates<span class="sq-logo-word-q">Q</span></span>' +
-      '</a>' +
-      '<nav class="sq-nav-links" aria-label="Main">' +
-        linkList("sq-nav-link") +
-        '<a class="sq-nav-link sq-nav-auth' + (isActive(auth.href) ? " is-active" : "") +
-          '" href="' + auth.href + '">' + esc(auth.label) + "</a>" +
-      '</nav>' +
-      '<a class="sq-cta" href="' + cta.href + '">' + esc(cta.label) + "</a>" +
-      '<button class="sq-burger" aria-label="Open menu" aria-expanded="false" aria-controls="sq-overlay">' +
-        '<span></span><span></span><span></span>' +
-      '</button>' +
+      '<div class="sq-nav-inner">' +
+        '<a class="sq-logo" href="/" aria-label="SocratesQ home">' +
+          LOGO_SVG +
+          '<span class="sq-logo-word">Socrates<span class="sq-logo-word-q">Q</span></span>' +
+        '</a>' +
+        '<nav class="sq-nav-links" aria-label="Main">' +
+          linkList("sq-nav-link") +
+          '<a class="sq-nav-link' + (isActive(auth.href) ? " is-active" : "") +
+            '" href="' + auth.href + '">' + esc(auth.label) + "</a>" +
+        '</nav>' +
+        '<a class="sq-cta" href="' + cta.href + '">' + esc(cta.label) + "</a>" +
+        '<button class="sq-burger" aria-label="Open menu" aria-expanded="false" aria-controls="sq-overlay">' +
+          '<span></span><span></span><span></span>' +
+        '</button>' +
+      '</div>' +
     '</header>' +
+    '<div class="sq-nav-spacer"></div>' +
     '<div class="sq-overlay" id="sq-overlay" hidden>' +
       '<button class="sq-overlay-close" aria-label="Close menu">&times;</button>' +
       '<nav class="sq-overlay-links" aria-label="Main menu">' +
@@ -126,17 +130,18 @@
   }
 
   function renderFooter() {
+    var f = LINKS.map(function (l) {
+      return '<a href="' + l.href + '"' + (isActive(l.href) ? ' class="is-active"' : '') + '>' + esc(l.label) + "</a>";
+    }).join(" &nbsp;&middot;&nbsp; ");
+
     return '' +
     '<footer class="sq-footer" role="contentinfo">' +
-      '<nav class="sq-footer-links" aria-label="Footer">' +
-        '<a href="/disclaimer">Before We Begin</a>' +
-        '<span class="sq-footer-dot">\u00B7</span>' +
-        '<a href="https://forumofminds.com" rel="noopener">Forum of Minds</a>' +
-        '<span class="sq-footer-dot">\u00B7</span>' +
-        '<a href="mailto:help@socratesq.app">help@socratesq.app</a>' +
-      '</nav>' +
-      '<p class="sq-footer-note">&copy; ' + new Date().getFullYear() +
-        ' SocratesQ \u00B7 Nothing you say here is stored, shared, or sold.</p>' +
+      '<a href="/">SocratesQ</a> &nbsp;&middot;&nbsp; ' + f + ' &nbsp;&middot;&nbsp; ' +
+      '<a href="disclaimer.html"' + (isActive("disclaimer.html") ? ' class="is-active"' : '') + '>Before We Begin</a> &nbsp;&middot;&nbsp; ' +
+      '<a href="' + FORUM_URL + '" target="_blank" rel="noopener">forumofminds.com</a>' +
+      '<div class="sq-footer-note">A project of The Forum of Minds Society &nbsp;&middot;&nbsp; ' +
+        '<a href="mailto:help@socratesq.app">help@socratesq.app</a> &nbsp;&middot;&nbsp; &copy; ' +
+        new Date().getFullYear() + '</div>' +
     '</footer>';
   }
 
@@ -162,7 +167,6 @@
     var headerSlot = document.getElementById("sq-header");
     var footerSlot = document.getElementById("sq-footer");
 
-    // Render immediately as signed-out (no layout flash), upgrade if session found.
     if (headerSlot) { headerSlot.innerHTML = renderHeader(false); wireOverlay(headerSlot); }
     if (footerSlot) { footerSlot.innerHTML = renderFooter(); }
 
