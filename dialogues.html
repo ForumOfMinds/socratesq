@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sample Dialogues — SocratesQ</title>
+  <meta name="description" content="Real examples of the Socratic method at work: full sample dialogues with SocratesQ.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/shared.css">
+  <script src="/nav.js" defer></script>
+  <style>
+    body { margin:0; background:radial-gradient(1200px 700px at 50% -8%,#1c2326 0%,var(--sq-ink) 60%) fixed; min-height:100vh; }
+
+    /* Accordion — mirrors the landing-page pattern */
+    .sq-acc {
+      border: 1px solid color-mix(in srgb, var(--sq-gold) 25%, transparent);
+      border-radius: 10px;
+      background: var(--sq-surface);
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+    .sq-acc summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 1.1rem 1.4rem;
+      font-family: var(--sq-font-serif);
+      font-size: 1.25rem;
+      color: var(--sq-parchment);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sq-acc summary::-webkit-details-marker { display: none; }
+    .sq-acc summary::after { content: "+"; color: var(--sq-gold); font-family: var(--sq-font-ui); }
+    .sq-acc[open] summary::after { content: "\2212"; }
+    .sq-acc[open] summary { border-bottom: 1px solid var(--sq-surface-edge); }
+    .sq-acc-body { padding: 1.3rem 1.4rem; display: flex; flex-direction: column; gap: 1.1rem; }
+
+    /* Socrates speaks in his own hand; the visitor in the body face */
+    .sq-acc-body .sq-socrates-label { font-family: var(--sq-font-ui); font-size: 10px; letter-spacing:.14em; text-transform:uppercase; color: var(--sq-gold); margin-bottom: 4px; }
+    .sq-acc-body .sq-socrates { font-family: var(--sq-font-serif); font-size: 1.05em; line-height: 1.65; color: var(--sq-parchment); }
+    .sq-acc-body .sq-visitor  { text-align: right; }
+    .sq-acc-body .sq-visitor-body { display:inline-block; text-align:left; background: var(--sq-ink); border:1px solid var(--sq-surface-edge); border-radius:12px 12px 3px 12px; padding:9px 14px; font-family: var(--sq-font-ui); font-size:0.92em; line-height:1.55; color: var(--sq-parchment-dim); max-width:85%; }
+    .sq-turn { }
+  </style>
+</head>
+<body>
+
+  <div id="sq-header"></div>
+
+  <main class="sq-page">
+    <h1>Sample Dialogues</h1>
+    <p>The method is better shown than described. These are complete
+    exchanges, written to show how a SocratesQ conversation actually unfolds.
+    Expect to be questioned, not answered.</p>
+
+    <details class="sq-acc" open>
+      <summary>Should I change careers?</summary>
+      <div class="sq-acc-body">
+        <div class="sq-visitor"><div class="sq-visitor-body">I&rsquo;ve been in finance for eleven years. Stable, well-paid, respected. But I feel like I&rsquo;m slowly disappearing. I think I should leave and do something more meaningful. Should I?</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">Before we decide whether you should leave, I want to understand what you meant when you said you were slowly disappearing. Disappearing from what, exactly? You are still there, presumably, doing the work, collecting the recognition. Yet something is absent. Is it that the work no longer reflects who you are &mdash; or that it is actively making you into someone you do not wish to become?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">That&rsquo;s a harder question than I expected. I think both. I used to believe what I was doing mattered. I don&rsquo;t anymore.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">That distinction matters enormously. It suggests the problem is not the career itself, but the belief you once carried into it &mdash; which has, quietly, changed. A person can do the same work in two entirely different spirits: one as an act of genuine conviction, and one as a kind of going through the motions. You have moved from the first to the second, and the work has not changed &mdash; you have. What I want to know is this: what did you once believe, when you believed it mattered, that you no longer believe now?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">That growing wealth was a kind of contribution. That efficient markets meant something. I&rsquo;m not sure I believe that anymore.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">So the belief that sustained you was essentially philosophical &mdash; a conviction about how the world works and where your role fit within it. And that conviction has eroded, not through any failure, but perhaps through experience, or thought, or the kind of honest attention that time brings. Tell me: what kind of work would allow you to believe again?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">Something with more direct impact. Teaching, maybe. Or nonprofit work. Something where I can see what I&rsquo;ve changed.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">You are describing work where the effect is visible and personal. That is a genuine need, and I do not dismiss it. But I want to press on one thing before you decide to leave: is it possible that the belief you are looking for is something you would need to carry with you, rather than something the new work would supply? Teachers lose their faith in teaching. Aid workers lose their faith in aid. The conviction that what you do matters &mdash; is it in the work, or is it in you?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">I don&rsquo;t know. That&rsquo;s unsettling.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">Most honest answers are. You came asking whether to change careers. I wonder if the more urgent question is whether you have examined what you actually believe work is for &mdash; because that question will follow you wherever you go.</div></div>
+      </div>
+    </details>
+
+    <details class="sq-acc">
+      <summary>Is ambition a virtue?</summary>
+      <div class="sq-acc-body">
+        <div class="sq-visitor"><div class="sq-visitor-body">I&rsquo;ve always been ambitious. I work harder than most people around me, and I want to succeed. But lately I wonder if ambition is actually a virtue, or just a dressed-up form of vanity.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">Before we determine whether ambition is a virtue or a vice, I want to understand what it actually is in your particular case. When you imagine yourself having succeeded at what you are pursuing, what precisely is it you see? Not in general terms, but the specific picture: what does having arrived look like?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">Building something lasting. Being recognized for it. Knowing I didn&rsquo;t waste my potential.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">You have offered me three distinct things, and I want to hold them separately for a moment rather than fold them back together too quickly. Building something lasting is a desire about the world. Being recognized is a desire about others. And knowing you did not waste your potential is a desire about yourself. These can align, but they need not always. Which of the three would you be willing to have without the others?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">Honestly? Probably none of them alone. That bothers me a little.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">It is worth sitting with rather than resolving too quickly. The fact that you need the recognition alongside the lasting work suggests there is an audience you are working for &mdash; someone whose good opinion you want to earn. I would like to know who that audience is. When you imagine being recognized, who precisely is doing the recognizing?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">My father, partly. And people whose judgment I respect in my field.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">That is a more honest answer than most people arrive at this quickly, and it changes everything about the question you asked. Ambition shaped by love and by the desire to belong to a tradition of excellence is a very different thing from ambition shaped purely by the need to dominate or to be seen to win. If your father had already given you his full recognition, and your peers already regarded you as one of their best &mdash; would you still want to build the lasting thing?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">I&rsquo;d like to think I still would. But I genuinely don&rsquo;t know.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">That uncertainty is precisely where the examination becomes interesting. You asked whether ambition is a virtue. I suspect the answer depends entirely on whose recognition you are working to earn &mdash; and whether you have ever looked at that person clearly.</div></div>
+      </div>
+    </details>
+
+    <details class="sq-acc">
+      <summary>Why do I procrastinate?</summary>
+      <div class="sq-acc-body">
+        <div class="sq-visitor"><div class="sq-visitor-body">I&rsquo;ve been putting off finishing a project for three months. I know how to do it. I want to finish it. But I keep not finishing it. Why do people do this?</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">Let us begin with your particular case rather than people in general. When you sit down to work on it and then find yourself stopping &mdash; what happens in the moment just before you stop? Not the distraction you reach for afterward, but the moment just before, when something in you decides to leave. What does that moment feel like?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">A kind of restlessness. Like the work suddenly becomes too loud. I&rsquo;ll check my phone, make coffee, remember an email I urgently need to write.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">That is a precise description &mdash; the work becomes too loud. That is not laziness; lazy people feel nothing in particular and simply do not begin. You begin, and then something becomes uncomfortable enough that you leave. Imagine sitting at the desk and doing nothing &mdash; not working, but not escaping either. What do you think you would find, if you stayed there long enough to find out?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">Anxiety, I suppose. The thought that when it&rsquo;s finished it still might not be good enough.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">So the procrastination is not avoiding the work &mdash; it is avoiding the verdict. As long as the project is unfinished, it exists in a protected state: it could still be good, the possibility remains alive. What you may be protecting is not yourself, exactly, but the dream of what the thing might still be. Is that close to what is happening?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">Uncomfortably close. When I say it out loud it almost sounds absurd.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">It does not sound absurd to me at all. It sounds like the condition of almost everyone who makes something they care about. Here is what I want to press on: if you knew with certainty that the finished thing would be imperfect &mdash; that it would fall short in some ways of what you imagined &mdash; would you still want it done?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">No, I still want it done. An imperfect finished thing is better than a perfect unfinished one.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">You know that clearly and you believe it. What you are describing is not a mystery about human nature so much as a decision that recurs every time you sit down &mdash; the decision whether to let the thing be finished, and imperfect, and yours. You already understand the mechanism. What you have not yet fully decided is whether you are willing to pay that price.</div></div>
+      </div>
+    </details>
+
+    <details class="sq-acc">
+      <summary>Can friendship survive politics?</summary>
+      <div class="sq-acc-body">
+        <div class="sq-visitor"><div class="sq-visitor-body">I&rsquo;ve had a friend for twenty years. We&rsquo;ve disagreed about things before and survived it. But lately the political differences feel different &mdash; like we&rsquo;re not just seeing the world differently, we&rsquo;re in completely different worlds. Can friendships actually survive this?</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">Before I say anything about friendships in general, I want to understand what is actually at stake in this particular one. Tell me what you think the friendship actually is &mdash; not the word, which is very loose and covers everything from pleasant acquaintances to the deepest bonds &mdash; but what this friendship has consisted of, between the two of you specifically.</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">Shared history. Being known by someone through a lot of change. A kind of ease that comes from being known over a long time. Real affection.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">All of that, as far as I can tell, is still present. The history has not changed, the ease has not disappeared, the affection is presumably intact. Something has been threatened, but it is not those things. So what is it, exactly, that the political difference is threatening? What is it that you are afraid of losing?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">I think the sense that we want the same world. That we&rsquo;re working toward the same things for our families, for the future.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">That is a significant thing to lose &mdash; not the friendship itself, but the premise you thought the friendship rested on. When you disagree with your friend about politics, is the disagreement about facts &mdash; about what is actually true &mdash; or about values &mdash; about what matters, and how much, and to whom?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">Mostly values, I think. He prioritizes security over openness. He&rsquo;s more suspicious of change, more protective of what already exists.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">Those do not sound like the values of a stranger. A preference for security, a suspicion of rapid change, a protectiveness toward what already exists &mdash; these are coherent values, held by thoughtful people who have a particular sense of what can go wrong. Do you think he became a different person through all of this, or do you think you are simply seeing, more clearly now than before, something that was always there?</div></div>
+        <div class="sq-visitor"><div class="sq-visitor-body">Probably the latter. I think I just didn&rsquo;t notice it, or it didn&rsquo;t matter as much before.</div></div>
+        <div class="sq-turn"><div class="sq-socrates-label">Socrates</div><div class="sq-socrates">So the friendship has not changed so much as your knowledge of it has deepened. What I would leave you with is this: you came asking whether friendship can survive politics. I think the more interesting question is whether you want to know your friend more fully &mdash; including the parts of him that trouble you. A friendship that can only survive agreement is a pleasant thing, but it may not be what Aristotle had in mind when he said a friend is another self.</div></div>
+      </div>
+    </details>
+
+    <p style="margin-top:2.5rem">Ready to be examined yourself?
+    <a href="/#today">Answer today&rsquo;s question</a> &mdash; free, no account required.</p>
+  </main>
+
+  <div id="sq-footer"></div>
+
+</body>
+</html>

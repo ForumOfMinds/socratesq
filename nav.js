@@ -27,8 +27,8 @@
   var CTA_SIGNED_OUT = { href: "/#today",        label: "Answer today\u2019s question" };
   var CTA_SIGNED_IN  = { href: "/?dialogue=new", label: "Enter a dialogue \u2192" };
 
-  var ACCOUNT_LINK = { href: "account.html", label: "Account" };  // ← adjust to your Account page path
-  var SIGNIN_LINK  = { href: "/#signin",     label: "Sign in" };  // ← lands on the index sign-in modal
+  var ACCOUNT_LINK = { href: "/#account", label: "Account" };  // opens the account modal on index
+  var SIGNIN_LINK  = { href: "/#signin",  label: "Sign in" };  // lands on the index sign-in modal
 
   var FORUM_URL = "https://www.forumofminds.com";
 
