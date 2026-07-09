@@ -203,7 +203,7 @@ exports.handler = async (event) => {
   // ---- Conversation meter ----
   // Fires only on the first turn of a new conversation, for signed-in members.
   // Anonymous tasters are already limited via localStorage; no server meter needed.
-  const FREE_LIMIT = 5;
+  const FREE_LIMIT = 3;
   const PAID_LIMIT = 30;
   const SB_URL = 'https://lhreleeqqchskicxgocc.supabase.co';
   const sbKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

@@ -46,7 +46,7 @@ exports.handler = async (event) => {
     const subscriptionEnd = row.subscription_end || null;
     const hasCustomer     = !!row.stripe_customer_id;
     const used            = (row.period === currentPeriod) ? (row.conversations_used || 0) : 0;
-    const limit           = plan === 'paid' ? 30 : 5;
+    const limit           = plan === 'paid' ? 30 : 3;
 
     return {
       statusCode: 200,
