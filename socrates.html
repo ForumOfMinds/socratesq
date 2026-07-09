@@ -4,6 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>The Socratic Method — SocratesQ</title>
+
+<!-- Shared site components -->
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<script src="/nav.js" defer></script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&family=Patrick+Hand&display=swap');
 
@@ -32,73 +38,39 @@
 
   .wrap { max-width: 680px; margin: 0 auto; padding: 52px 24px 80px; }
 
-  nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 0 18px; border-bottom: 1px solid var(--surface-edge);
-  }
-  .mark { font-size: 22px; font-weight: 500; letter-spacing: .04em; color: var(--parchment); text-decoration: none; }
-  .mark span { color: var(--gold); }
-  nav a.enter { font-family: 'Inter', sans-serif; font-size: 13px; color: var(--gold); text-decoration: none; border: 1px solid rgba(201,162,75,.35); padding: 6px 14px; border-radius: 20px; transition: border-color .2s, background .2s; }
-  nav a.enter:hover { border-color: var(--gold); background: rgba(201,162,75,.08); }
-
   .hero { padding: 56px 0 10px; text-align: center; perspective: 900px; }
   .logo-rotate { width: 96px; height: auto; display: block; margin: 0 auto 24px; animation: logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
   @keyframes logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
   .logo-fallback { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; animation: logo-spin-y 14s linear infinite; }
   .logo-fallback span { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
   .hero h1 { font-size: 34px; font-weight: 500; color: var(--parchment); line-height: 1.25; margin-bottom: 16px; }
-  .hero .lead { font-family: 'Patrick Hand', cursive; font-style: italic; font-size: 19px; color: var(--parchment-dim); max-width: 500px; margin: 0 auto; line-height: 1.6; }
+  .hero .lead { font-family: 'Patrick Hand', cursive; font-style: normal; font-size: 19px; color: var(--parchment-dim); max-width: 500px; margin: 0 auto; line-height: 1.6; }
 
   .rule { border: none; border-top: 1px solid var(--surface-edge); margin: 44px 0; }
   section { margin-bottom: 44px; }
   h2 { font-size: 13px; font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
   p { margin-bottom: 1.1em; color: var(--parchment); }
   p:last-child { margin-bottom: 0; }
-  em, i { font-family: 'Patrick Hand', cursive; font-style: italic; color: var(--parchment-dim); }
+  em, i { font-family: 'Patrick Hand', cursive; font-style: normal; color: var(--parchment-dim); }
   strong { color: var(--parchment); font-weight: 500; }
 
-  blockquote { border-left: 2px solid var(--gold); margin: 28px 0; padding: 2px 0 2px 22px; font-family: 'Patrick Hand', cursive; font-style: italic; font-size: 20px; color: var(--parchment-dim); line-height: 1.6; }
+  blockquote { border-left: 2px solid var(--gold); margin: 28px 0; padding: 2px 0 2px 22px; font-family: 'Patrick Hand', cursive; font-style: normal; font-size: 20px; color: var(--parchment-dim); line-height: 1.6; }
 
   .back-wrap { text-align: center; margin: 48px 0 8px; }
   .back-link { font-family: 'EB Garamond', Georgia, serif; font-size: 16px; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,162,75,.35); padding-bottom: 3px; transition: border-color .2s; }
   .back-link:hover { border-color: var(--gold); }
 
-  .disc { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--surface-edge); font-size: 12px; font-family: 'Inter', sans-serif; color: var(--dim); line-height: 1.7; text-align: center; }
-  .disc a { color: var(--dim); text-decoration: none; }
-  .disc a:hover { color: var(--gold); }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
-
-  /* ---- Site-wide top nav ---- */
-  .site-topnav { position:fixed; top:0; left:0; right:0; z-index:200; background:rgba(20,24,26,.97); backdrop-filter:blur(8px); border-bottom:1px solid #2a3236; }
-  .site-topnav-inner { max-width:900px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:48px; gap:12px; }
-  .site-topnav-mark { font-family:'EB Garamond',serif; font-size:20px; font-weight:500; letter-spacing:.04em; color:#ece5d4; text-decoration:none; white-space:nowrap; flex-shrink:0; }
-  .site-topnav-mark span { color:#c9a24b; }
-  .site-topnav-links { display:flex; overflow-x:auto; scrollbar-width:none; flex:1; }
-  .site-topnav-links::-webkit-scrollbar { display:none; }
-  .site-topnav-links a { font-family:'Inter',sans-serif; font-size:12px; color:#b9b3a3; text-decoration:none; padding:0 10px; white-space:nowrap; transition:color .2s; }
-  .site-topnav-links a:hover { color:#c9a24b; }
-  .site-topnav-links a.active { color:#c9a24b; }
-  .site-topnav-cta { font-family:'Inter',sans-serif; font-size:12px; color:#c9a24b; text-decoration:none; border:1px solid rgba(201,162,75,.35); padding:6px 14px; border-radius:20px; white-space:nowrap; flex-shrink:0; transition:border-color .2s,background .2s; }
-  .site-topnav-cta:hover { border-color:#c9a24b; background:rgba(201,162,75,.08); }
-  @media (max-width:600px) { .site-topnav-links a { padding:0 8px; font-size:11px; } .site-topnav-cta { display:none; } }
   @media (max-width: 520px) { html, body { font-size: 18px; } .hero h1 { font-size: 26px; } .logo-rotate { width: 80px; } blockquote { font-size: 18px; } }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <nav class="site-topnav">
-  <div class="site-topnav-inner">
-    <a class="site-topnav-mark" href="/">Socrates<span>Q</span></a>
-    <div class="site-topnav-links">
-      <a href="about.html">About SocratesQ</a>
-        <a href="socrates.html" class="active">The Socratic Method</a>
-        <a href="disclaimer.html">Before We Begin</a>
-        <a href="https://www.forumofminds.com" target="_blank" rel="noopener">Forum of Minds</a>
-    </div>
-    <a href="/" class="site-topnav-cta">Enter a dialogue &rarr;</a>
-  </div>
-</nav>
+<div id="sq-header"></div>
+
+<div class="wrap">
 
   <div class="hero">
     <img class="logo-rotate" src="SocratesQ%20logo.png" alt="SocratesQ"
@@ -158,17 +130,9 @@
     <a class="back-link" href="about.html">&larr; Back to About</a>
   </div>
 
-  <div class="disc">
-    <a href="/">SocratesQ</a>
-    &nbsp;&middot;&nbsp;
-    <a href="about.html">About</a>
-    &nbsp;&middot;&nbsp;
-    <a href="disclaimer.html">Before We Begin</a>
-    &nbsp;&middot;&nbsp;
-    <a href="https://www.forumofminds.com" target="_blank" rel="noopener" style="color:var(--gold);">forumofminds.com</a><br/><br/>
-    A project of The Forum of Minds Society
-  </div>
-
 </div>
+
+<div id="sq-footer"></div>
+
 </body>
 </html>

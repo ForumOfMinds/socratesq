@@ -40,14 +40,13 @@
      LOGO-END with that logo's markup, and move its @keyframes
      into shared.css.
   ------------------------------------------------------------ */
-  /* LOGO-START */
+  /* LOGO-START — the site's rotating logo (same as the Socratic
+     Method page hero), with the circle-Q fallback if the image
+     is missing. Sized for the 48px bar. */
   var LOGO_SVG =
-    '<svg class="sq-logo-mark" viewBox="0 0 48 48" width="28" height="28" aria-hidden="true">' +
-      '<circle class="sq-logo-ring" cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
-      '<path class="sq-logo-q" d="M18 19 q0-7 6.5-7 q6.5 0 6.5 6.2 q0 4.4-4.2 6.4 q-2.6 1.3-2.6 4.4" ' +
-        'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>' +
-      '<circle class="sq-logo-dot" cx="24.2" cy="35.5" r="1.9" fill="currentColor" stroke="none"/>' +
-    '</svg>';
+    '<img class="sq-logo-img" src="/SocratesQ%20logo.png" alt="" aria-hidden="true" ' +
+      'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';" />' +
+    '<span class="sq-logo-fallback" style="display:none;"><span>Q</span></span>';
   /* LOGO-END */
 
   /* ---------- 3. AUTH STATE (Supabase-aware, defensive) ---------- */

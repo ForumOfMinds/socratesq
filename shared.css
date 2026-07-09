@@ -87,24 +87,28 @@ body.sq-no-scroll { overflow: hidden; }
   white-space: nowrap;
 }
 .sq-logo-word-q { color: var(--sq-gold); }
-.sq-logo-mark { color: var(--sq-gold); display: block; }
 
-.sq-logo-ring {
-  stroke-dasharray: 132;
-  stroke-dashoffset: 132;
-  animation: sq-draw 1.4s ease-out forwards;
+/* The site's rotating logo — same animation as the Socratic Method
+   page hero (logo-spin-y), sized for the 48px bar */
+.sq-logo-img {
+  width: 30px; height: auto; display: block;
+  animation: sq-logo-spin-y 14s linear infinite;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
 }
-.sq-logo-q {
-  stroke-dasharray: 60;
-  stroke-dashoffset: 60;
-  animation: sq-draw 1.1s ease-out 0.5s forwards;
+.sq-logo-fallback {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--sq-gold);
+  align-items: center; justify-content: center;
+  animation: sq-logo-spin-y 14s linear infinite;
 }
-.sq-logo-dot { opacity: 0; animation: sq-appear 0.4s ease-out 1.5s forwards; }
-@keyframes sq-draw   { to { stroke-dashoffset: 0; } }
-@keyframes sq-appear { to { opacity: 1; } }
+.sq-logo-fallback span {
+  font-family: var(--sq-font-serif);
+  font-size: 17px; color: var(--sq-gold); line-height: 1;
+}
+@keyframes sq-logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 @media (prefers-reduced-motion: reduce) {
-  .sq-logo-ring, .sq-logo-q { animation: none; stroke-dashoffset: 0; }
-  .sq-logo-dot { animation: none; opacity: 1; }
+  .sq-logo-img, .sq-logo-fallback { animation: none; }
 }
 
 /* Desktop links */
