@@ -9,7 +9,7 @@
   :root { --ink:#14181a; --surface:#1d2326; --surface-edge:#2a3236; --parchment:#ece5d4; --parchment-dim:#b9b3a3; --gold:#c9a24b; --gold-soft:#d9bd7e; --dim:#676d68; }
   * { box-sizing:border-box; margin:0; padding:0; }
   html,body { background:radial-gradient(1200px 700px at 50% -8%,#1c2326 0%,var(--ink) 60%) fixed; color:var(--parchment); font-family:'EB Garamond',Georgia,serif; font-size:19px; line-height:1.75; -webkit-font-smoothing:antialiased; min-height:100vh; }
-  .wrap { max-width:680px; margin:0 auto; padding:0 24px 80px; }
+  .wrap { max-width:680px; margin:0 auto; padding:52px 24px 80px; }
   nav { display:flex; align-items:center; justify-content:space-between; padding:20px 0 18px; border-bottom:1px solid var(--surface-edge); }
   .mark { font-size:22px; font-weight:500; letter-spacing:.04em; color:var(--parchment); text-decoration:none; }
   .mark span { color:var(--gold); }
@@ -40,15 +40,37 @@
   .disc { margin-top:52px; padding-top:24px; border-top:1px solid var(--surface-edge); font-family:'Inter',sans-serif; font-size:12px; color:var(--dim); line-height:1.7; text-align:center; }
   .disc a { color:var(--dim); }
   .disc a:hover { color:var(--gold); }
+
+  /* ---- Site-wide top nav ---- */
+  .site-topnav { position:fixed; top:0; left:0; right:0; z-index:200; background:rgba(20,24,26,.97); backdrop-filter:blur(8px); border-bottom:1px solid #2a3236; }
+  .site-topnav-inner { max-width:900px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:48px; gap:12px; }
+  .site-topnav-mark { font-family:'EB Garamond',serif; font-size:20px; font-weight:500; letter-spacing:.04em; color:#ece5d4; text-decoration:none; white-space:nowrap; flex-shrink:0; }
+  .site-topnav-mark span { color:#c9a24b; }
+  .site-topnav-links { display:flex; overflow-x:auto; scrollbar-width:none; flex:1; }
+  .site-topnav-links::-webkit-scrollbar { display:none; }
+  .site-topnav-links a { font-family:'Inter',sans-serif; font-size:12px; color:#b9b3a3; text-decoration:none; padding:0 10px; white-space:nowrap; transition:color .2s; }
+  .site-topnav-links a:hover { color:#c9a24b; }
+  .site-topnav-links a.active { color:#c9a24b; }
+  .site-topnav-cta { font-family:'Inter',sans-serif; font-size:12px; color:#c9a24b; text-decoration:none; border:1px solid rgba(201,162,75,.35); padding:6px 14px; border-radius:20px; white-space:nowrap; flex-shrink:0; transition:border-color .2s,background .2s; }
+  .site-topnav-cta:hover { border-color:#c9a24b; background:rgba(201,162,75,.08); }
+  @media (max-width:600px) { .site-topnav-links a { padding:0 8px; font-size:11px; } .site-topnav-cta { display:none; } }
   @media (max-width:520px) { html,body { font-size:17px; } .hero h1 { font-size:26px; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <nav>
-    <a class="mark" href="/">Socrates<span>Q</span></a>
-    <a class="enter" href="/">Enter a dialogue &rarr;</a>
-  </nav>
+  <nav class="site-topnav">
+  <div class="site-topnav-inner">
+    <a class="site-topnav-mark" href="/">Socrates<span>Q</span></a>
+    <div class="site-topnav-links">
+      <a href="about.html" class="active">About SocratesQ</a>
+        <a href="socrates.html">The Socratic Method</a>
+        <a href="disclaimer.html">Before We Begin</a>
+        <a href="https://www.forumofminds.com" target="_blank" rel="noopener">Forum of Minds</a>
+    </div>
+    <a href="/" class="site-topnav-cta">Enter a dialogue &rarr;</a>
+  </div>
+</nav>
 
   <div class="hero">
     <h1>About SocratesQ</h1>
