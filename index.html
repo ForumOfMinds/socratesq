@@ -714,6 +714,10 @@ function enterMember(session) {
     showApp();
     resetConversation(); inputEl.focus();
   }
+  // If the person arrived via the nav "Account" link (/#account), open the modal now
+  if ((location.hash || '').toLowerCase() === '#account') {
+    openAccount();
+  }
 }
 function enterTaste() {
   member = false; taster = true; currentEmail = '';
@@ -932,7 +936,7 @@ function handleLandingHash() {
 }
 window.addEventListener('hashchange', function () {
   const h = (location.hash || '').toLowerCase();
-  if (h === '#account' && member) { openAccount(); }
+  if (h === '#account') { if (member) openAccount(); else showLpAuth(); }
   else if (h === '#signin' && !member) { showLpAuth(); }
 });
 
