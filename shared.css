@@ -112,6 +112,14 @@ body.sq-no-scroll { overflow: hidden; }
   .sq-logo-img, .sq-logo-fallback { animation: none; }
 }
 
+/* Page hero logo — the large spinning mark at the top of each page */
+.sq-page-logo-wrap { perspective: 900px; text-align: center; padding-top: 24px; margin-bottom: 6px; }
+.sq-page-logo { width: 84px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
+.sq-page-logo-fallback { width: 68px; height: 68px; border-radius: 50%; border: 1px solid var(--sq-gold); display: none; align-items: center; justify-content: center; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; }
+.sq-page-logo-fallback span { font-family: var(--sq-font-serif); font-size: 38px; color: var(--sq-gold); line-height: 1; }
+@media (prefers-reduced-motion: reduce) { .sq-page-logo, .sq-page-logo-fallback { animation: none; } }
+@media (max-width: 520px) { .sq-page-logo { width: 68px; } }
+
 /* Desktop links */
 .sq-nav-links { display: flex; align-items: center; flex: 1; justify-content: center; }
 .sq-nav-link {
