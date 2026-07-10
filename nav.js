@@ -162,15 +162,41 @@
 
   /* ---------- 6. BOOT ---------- */
 
+  // Update only the auth-dependent bits (CTA + account/sign-in link) without
+  // rebuilding the whole header. Rebuilding would recreate the logo <img> and
+  // cause it to flash and disappear on the second render.
+  function applyAuthState(root, signedIn) {
+    var cta  = signedIn ? CTA_SIGNED_IN : CTA_SIGNED_OUT;
+    var auth = signedIn ? ACCOUNT_LINK : SIGNIN_LINK;
+
+    // The desktop auth link is the last .sq-nav-link inside .sq-nav-links
+    var navLinks = root.querySelector(".sq-nav-links");
+    if (navLinks) {
+      var authLink = navLinks.querySelector(".sq-nav-link:last-child");
+      if (authLink) { authLink.setAttribute("href", auth.href); authLink.textContent = auth.label; authLink.classList.toggle("is-active", isActive(auth.href)); }
+    }
+    // Desktop CTA
+    var ctaEl = root.querySelector(".sq-nav .sq-cta");
+    if (ctaEl) { ctaEl.setAttribute("href", cta.href); ctaEl.textContent = cta.label; }
+    // Overlay auth link
+    var ovAuth = root.querySelector(".sq-overlay-auth");
+    if (ovAuth) { ovAuth.setAttribute("href", auth.href); ovAuth.textContent = auth.label; }
+    // Overlay CTA
+    var ovCta = root.querySelector(".sq-overlay-cta");
+    if (ovCta) { ovCta.setAttribute("href", cta.href); ovCta.textContent = cta.label; }
+  }
+
   function boot() {
     var headerSlot = document.getElementById("sq-header");
     var footerSlot = document.getElementById("sq-footer");
 
+    // Render ONCE. The logo is built here and never rebuilt.
     if (headerSlot) { headerSlot.innerHTML = renderHeader(false); wireOverlay(headerSlot); }
     if (footerSlot) { footerSlot.innerHTML = renderFooter(); }
 
+    // On auth resolution, patch only the parts that change — never the logo.
     getAuthState().then(function (signedIn) {
-      if (signedIn && headerSlot) { headerSlot.innerHTML = renderHeader(true); wireOverlay(headerSlot); }
+      if (signedIn && headerSlot) { applyAuthState(headerSlot, true); }
     });
   }
 
