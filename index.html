@@ -179,6 +179,13 @@
   #landing { display:none; width:100%; }
   #landing .lp-section { max-width:720px; margin:0 auto; }
   .lp-hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:100px 24px 40px; position:relative; overflow:hidden; }
+  .lp-hero-logo-wrap { perspective: 900px; margin-bottom: 22px; }
+  .lp-hero-logo { width: 96px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
+  .lp-hero-logo-fallback { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; }
+  .lp-hero-logo-fallback span { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
+  @keyframes sq-logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .lp-hero-logo, .lp-hero-logo-fallback { animation: none; } }
+  @media (max-width:600px) { .lp-hero-logo { width: 78px; } }
   .lp-label { font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
   .lp-question { font-family:'EB Garamond',serif; font-size:clamp(22px,4vw,34px); color:var(--parchment); line-height:1.38; max-width:600px; margin:0 auto 32px; }
   .lp-begin { background:var(--gold); color:#20180a; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:15px; padding:14px 32px; border-radius:12px; cursor:pointer; transition:background .2s; }
@@ -270,6 +277,12 @@
       <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
 
       <div style="position:relative;z-index:2;width:100%;max-width:680px;">
+        <!-- Hero logo — the brand's full-size moment, spinning with depth -->
+        <div class="lp-hero-logo-wrap">
+          <img class="lp-hero-logo" src="https://socratesq.app/SocratesQ%20logo.png" alt="SocratesQ"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="lp-hero-logo-fallback" style="display:none;"><span>Q</span></div>
+        </div>
         <div style="font-family:'EB Garamond',serif;font-size:30px;font-weight:500;letter-spacing:.04em;color:var(--parchment);margin-bottom:20px;">Socrates<span style="color:var(--gold);">Q</span></div>
 
         <!-- Rotating greeting — Socrates receiving you, in his own hand -->
