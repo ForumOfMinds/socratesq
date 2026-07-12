@@ -39,6 +39,10 @@
   .authwrap { position: relative; overflow: hidden; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 18px; min-height: 100vh; }
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
+  .auth-logo-wrap { perspective: 900px; margin-bottom: 20px; }
+  .auth-logo { width: 84px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
+  @keyframes sq-logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .auth-logo { animation: none; } }
   .authmark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .authmark span { color: var(--gold); }
   .thresh { font-family: 'EB Garamond', serif; font-size: 28px; color: var(--parchment); margin: 16px 0 12px; }
@@ -62,6 +66,7 @@
 
   /* Elevate sign-in content above animation layers */
   .authwrap > .seal, .authwrap > .authmark, .authwrap > .thresh,
+  .authwrap > .auth-logo-wrap,
   .authwrap > .threshsub, .authwrap > .authcard, .authwrap > .authback,
   .authwrap > .authdisc { position: relative; z-index: 2; }
 
@@ -395,7 +400,11 @@
     <div class="digital-hero-overlay" aria-hidden="true"></div>
     <div class="digital-hero-grid" aria-hidden="true"></div>
     <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
-    <div class="seal"><span class="q">Q</span></div>
+    <div class="auth-logo-wrap">
+      <img class="auth-logo" src="https://socratesq.app/SocratesQ%20logo.png" alt="SocratesQ"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div class="seal" style="display:none;"><span class="q">Q</span></div>
+    </div>
     <div class="authmark">Socrates<span>Q</span></div>
     <div class="thresh">What would Socrates say?</div>
     <div class="threshsub">Ask him about your life, the modern world, a decision that keeps you up at night, or anything else you actually need to think through. Three free conversations a month — nothing stored, nothing shared.</div>
@@ -677,6 +686,7 @@ async function doAuth() {
 }
 
 async function signOut() {
+  clearSavedConvo();
   if (sb) await sb.auth.signOut();
   /* SIGNED_OUT -> enterAuth */
 }
@@ -725,7 +735,9 @@ function enterMember(session) {
     showDaily();
   } else {
     showApp();
-    resetConversation(); inputEl.focus();
+    // If a dialogue was interrupted (e.g. the phone screen locked), bring it back.
+    if (restoreConvoIfPresent()) { inputEl.focus(); }
+    else { resetConversation(); inputEl.focus(); }
   }
   // If the person arrived via the nav "Account" link (/#account), open the modal now
   if ((location.hash || '').toLowerCase() === '#account') {
@@ -834,6 +846,47 @@ const ARC_TICKS = 8;
 let convo = [];
 let busy = false;
 let closed = false;
+
+/* ---------- Resilience: keep the in-progress dialogue alive across a
+   mobile screen-lock or tab suspension. Stored ONLY in the browser's own
+   sessionStorage (on the user's device) — never sent to our servers. It is
+   cleared when the dialogue ends, on sign-out, or when the browser closes. ---------- */
+const SQ_CONVO_KEY = 'sq_active_dialogue';
+
+function saveConvo() {
+  try {
+    if (convo && convo.length > 0 && !closed) {
+      sessionStorage.setItem(SQ_CONVO_KEY, JSON.stringify({ convo: convo, closed: closed, ts: Date.now() }));
+    } else {
+      sessionStorage.removeItem(SQ_CONVO_KEY);
+    }
+  } catch (e) { /* storage unavailable — nothing to do */ }
+}
+
+function clearSavedConvo() {
+  try { sessionStorage.removeItem(SQ_CONVO_KEY); } catch (e) {}
+}
+
+function restoreConvoIfPresent() {
+  try {
+    const raw = sessionStorage.getItem(SQ_CONVO_KEY);
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+    if (saved && Array.isArray(saved.convo) && saved.convo.length > 0) {
+      convo = saved.convo;
+      closed = !!saved.closed;
+      render();
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+// Save the moment the page is hidden (screen lock, app switch) or unloaded.
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'hidden') saveConvo();
+});
+window.addEventListener('pagehide', saveConvo);
 
 const streamEl = document.getElementById('stream');
 const inputEl = document.getElementById('input');
@@ -1521,6 +1574,7 @@ async function send() {
   if (!text || busy || closed) return;
   errEl.style.display = 'none';
   convo.push({ role: 'user', text });
+  saveConvo();
   inputEl.value = ''; inputEl.style.height = 'auto';
   busy = true; render(); sendEl.disabled = true;
 
@@ -1544,6 +1598,7 @@ async function send() {
     if (res.status === 429) {
       convo.pop();
       closed = true;
+    clearSavedConvo();
       const limitData = await res.json().catch(() => ({}));
       const limitMsgEl = document.getElementById('limitMsg');
       if (limitMsgEl) {
@@ -1564,6 +1619,7 @@ async function send() {
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
     convo.push({ role: 'assistant', text: (data.text || '\u2026') });
+    saveConvo();
     if (n === 1 && data.remaining !== undefined) showRemaining(data.remaining, data.plan, data.credits);
     if (dailyContinuationPending && n === 2) { dailyContinuationPending = false; if (data.remaining !== undefined) showRemaining(data.remaining, data.plan, data.credits); }
     if (n >= 7) closed = true;
@@ -1594,7 +1650,9 @@ async function endConversation() {
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
     convo.push({ role: 'assistant', text: (data.text || '\u2026') });
+    saveConvo();
     closed = true;
+    clearSavedConvo();
   } catch (e) {
     errEl.textContent = 'The line to Socrates faltered. Give it another try in a moment.';
     errEl.style.display = 'block';
@@ -1605,6 +1663,7 @@ async function endConversation() {
 
 function resetConversation() {
   convo = []; closed = false;
+  clearSavedConvo();
   errEl.style.display = 'none';
   if (limitEl) limitEl.style.display = 'none';
   if (forumLinkEl) forumLinkEl.style.display = 'none';
