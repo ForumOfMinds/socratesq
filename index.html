@@ -1473,8 +1473,21 @@ document.getElementById('dailySignoutBtn').addEventListener('click', signOut);
 async function getToken() {
   if (!member || !sb) return null;
   try {
-    const { data } = await sb.auth.getSession();
-    return (data && data.session && data.session.access_token) ? data.session.access_token : null;
+    let { data } = await sb.auth.getSession();
+    let session = data && data.session;
+    // If the token is missing or within 60s of expiry (or already expired),
+    // force a refresh so we never send a stale token to the server. A stale
+    // token was causing the app to fall back to "free / 3 of 3" after a refresh.
+    const now = Math.floor(Date.now() / 1000);
+    if (!session || !session.access_token || (session.expires_at && session.expires_at - now < 60)) {
+      try {
+        const refreshed = await sb.auth.refreshSession();
+        if (refreshed && refreshed.data && refreshed.data.session) {
+          session = refreshed.data.session;
+        }
+      } catch (e) { /* keep whatever we had */ }
+    }
+    return (session && session.access_token) ? session.access_token : null;
   } catch (e) { return null; }
 }
 
@@ -1488,19 +1501,25 @@ function closeAccount() {
 }
 
 // Populate the nav conversation-count immediately on entry (without opening the modal).
-async function refreshNavCount() {
+// Retries once if the first attempt fails (e.g. a briefly-stale token right after a
+// browser refresh), so the count doesn't get stuck showing wrong free-tier defaults.
+async function refreshNavCount(attempt) {
   if (!member) return;
+  attempt = attempt || 1;
   try {
     const token = await getToken();
-    if (!token) return;
+    if (!token) { if (attempt < 2) setTimeout(() => refreshNavCount(2), 1200); return; }
     const res = await fetch('/api/get-status?t=' + Date.now(), { headers: { 'Authorization': 'Bearer ' + token }, cache: 'no-store' });
+    if (!res.ok) { if (attempt < 2) setTimeout(() => refreshNavCount(2), 1200); return; }
     const d = await res.json();
     const plan = d.plan || 'free';
     const limit = d.limit || (plan === 'paid' ? 30 : 3);
     const used = d.used || 0;
     const credits = d.credits || 0;
     showRemaining(limit - used, plan, credits);
-  } catch (e) { /* leave count blank on failure */ }
+  } catch (e) {
+    if (attempt < 2) setTimeout(() => refreshNavCount(2), 1200);
+  }
 }
 
 async function loadAccountStatus() {
