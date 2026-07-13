@@ -1885,6 +1885,9 @@ if (sb) {
     if (data.session && data.session.user) {
       enterMember(data.session);
     } else {
+      // Arrived from a Membership CTA wanting to buy, but not signed in →
+      // send them to create an account; the purchase resumes after sign-in.
+      if (window._pendingBuy) { showLanding(); showLpAuth(); return; }
       const h = (location.hash || '').toLowerCase();
       if (h === '#signin') { showLanding(); showLpAuth(); }
       else showLanding();  // everyone without a session sees the landing page
