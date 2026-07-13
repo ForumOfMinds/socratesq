@@ -82,14 +82,14 @@
   body.sq-immersive #sq-header, body.sq-immersive #sq-footer { display: none !important; }
 
   /* App hero — rotating logo + member greeting, replacing the old flat header */
-  .app-hero { text-align:center; padding: 8px 24px 4px; }
-  .app-hero-logo-wrap { perspective: 900px; margin-bottom: 14px; }
-  .app-hero-logo { width: 72px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
-  .app-hero-logo-fallback { width: 60px; height: 60px; border-radius: 50%; border: 1px solid var(--gold); display: none; align-items: center; justify-content: center; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; }
-  .app-hero-logo-fallback span { font-family: 'EB Garamond', serif; font-size: 34px; color: var(--gold); line-height: 1; }
+  .app-hero { text-align:center; padding: 32px 24px 4px; }
+  .app-hero-logo-wrap { perspective: 900px; margin-bottom: 18px; }
+  .app-hero-logo { width: 88px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
+  .app-hero-logo-fallback { width: 70px; height: 70px; border-radius: 50%; border: 1px solid var(--gold); display: none; align-items: center; justify-content: center; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; }
+  .app-hero-logo-fallback span { font-family: 'EB Garamond', serif; font-size: 40px; color: var(--gold); line-height: 1; }
   .app-hero-greeting { font-size: 20px; color: var(--gold-soft); max-width: 540px; margin: 0 auto; line-height: 1.55; }
   @media (prefers-reduced-motion: reduce) { .app-hero-logo, .app-hero-logo-fallback { animation: none; } }
-  @media (max-width:520px) { .app-hero-logo { width: 60px; } .app-hero-greeting { font-size: 18px; } }
+  @media (max-width:520px) { .app-hero { padding-top: 24px; } .app-hero-logo { width: 72px; } .app-hero-greeting { font-size: 18px; } }
 
   /* === Digital hero — animated background === */
   .digital-hero-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
