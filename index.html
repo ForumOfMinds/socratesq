@@ -731,7 +731,26 @@ function enterMember(session) {
       }
     }, 2500);
   }
-  if (!localStorage.getItem(todayKey())) {
+  // If the person came here by choosing to continue their daily-question exchange
+  // into a full dialogue, resume that exchange with its context — don't send them
+  // back to the daily question they just answered.
+  if (_fromDaily) {
+    _fromDaily = false;
+    showApp();
+    if (dailyUserAnswer && dailySocratesReply) {
+      dailyContextForServer = 'You asked: "' + dailyQuestion + '" — They answered: "' + dailyUserAnswer + '" — You replied: "' + dailySocratesReply + '"';
+      dailyContinuationPending = true;
+      convo = [
+        { role: 'user', text: dailyUserAnswer },
+        { role: 'assistant', text: dailySocratesReply }
+      ];
+      closed = false;
+      render();
+    } else {
+      resetConversation();
+    }
+    inputEl.focus();
+  } else if (!localStorage.getItem(todayKey())) {
     showDaily();
   } else {
     showApp();
@@ -1004,6 +1023,7 @@ window.addEventListener('hashchange', function () {
   const h = (location.hash || '').toLowerCase();
   if (h === '#account') { if (member) openAccount(); else showLpAuth(); }
   else if (h === '#signin' && !member) { showLpAuth(); }
+  else if (h === '#today' && member) { showDaily(); }
 });
 
 function showLpAuth() {
@@ -1114,6 +1134,10 @@ async function sendLanding() {
   // Thinking
   document.getElementById('lpThinking').style.display = 'flex';
 
+  // On the final round (the 2nd for an unsigned visitor), ask Socrates to close
+  // warmly rather than end on another question.
+  const isFinalLandingRound = (lpConvo.filter(m => m.role === 'user').length >= 2);
+
   try {
     const res = await fetch('/api/socrates', {
       method: 'POST',
@@ -1121,6 +1145,7 @@ async function sendLanding() {
       body: JSON.stringify({
         daily: true,
         landing: true,
+        landingClose: isFinalLandingRound,
         dailyQuestion: getTodayQuestion(),
         userTurns: lpConvo.filter(m => m.role === 'user').length,
         messages: lpConvo
@@ -1445,7 +1470,7 @@ function renderAccountStatus(d) {
     <div class="acct-section">
       <div class="acct-label">What&rsquo;s included</div>
       <div class="acct-what">
-        <div class="acct-what-row"><span>Free</span><span>3 dialogues / month</span></div>
+        ${plan === 'paid' ? '' : '<div class="acct-what-row"><span>Free</span><span>3 dialogues / month</span></div>'}
         <div class="acct-what-row"><span>Member</span><span>30 dialogues / month</span></div>
         <div class="acct-what-row"><span>Credits</span><span>${credits > 0 ? credits + ' remaining, never expire' : '7 dialogues, never expire'}</span></div>
         <div class="acct-what-row"><span>Daily question</span><span>always free</span></div>

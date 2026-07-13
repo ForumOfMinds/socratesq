@@ -23,9 +23,13 @@
     { href: "membership.html", label: "Membership" }
   ];
 
-  // Primary action by auth state. ADJUST if your routes differ.
-  var CTA_SIGNED_OUT = { href: "/#today",        label: "Answer today\u2019s question" };
-  var CTA_SIGNED_IN  = { href: "/?dialogue=new", label: "Enter a dialogue \u2192" };
+  // Primary action by auth state.
+  // Signed OUT: the daily question is already the centrepiece of the landing page,
+  // and "Sign in" is already a nav link — so the CTA drives the primary conversion,
+  // creating an account. (Returning users use the Sign in link; new users use this.)
+  // Signed IN: they land on the full dialogue, so the daily question lives here as their CTA.
+  var CTA_SIGNED_OUT = { href: "/#signin",         label: "Create an account" };
+  var CTA_SIGNED_IN  = { href: "/#today",          label: "Answer today\u2019s question" };
 
   var ACCOUNT_LINK = { href: "/#account", label: "Account" };  // opens the account modal on index
   var SIGNIN_LINK  = { href: "/#signin",  label: "Sign in" };  // lands on the index sign-in modal
