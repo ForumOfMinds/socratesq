@@ -724,8 +724,13 @@ function showApp() {
   appEl.style.display = 'flex';
   const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = '';
   const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = '';
+  // Guarantee the shared nav shows the signed-in items (Account, Enter the Forum,
+  // Sign out) — don't rely on nav.js's own async auth check having resolved yet.
+  window.sqAuth = true;
+  if (window.sqNavSetSignedIn) window.sqNavSetSignedIn(true);
   const g = document.getElementById('memberGreeting');
   if (g && !g.textContent) g.textContent = pickMemberGreeting();
+  if (member) refreshNavCount();
 }
 
 function setAcct() {
@@ -794,10 +799,19 @@ function enterMember(session) {
   if ((location.hash || '').toLowerCase() === '#account') {
     openAccount();
   }
+  // If they arrived from a Membership CTA (/?buy=…), start checkout now that they're a member.
+  if (window._pendingBuy) {
+    const bt = window._pendingBuy;
+    window._pendingBuy = null;
+    setTimeout(() => { startCheckout(bt); }, 400);
+  }
 }
 function enterTaste() {
   member = false; taster = true; currentEmail = '';
   setAcct();
+  // Not signed in but a purchase was requested from the Membership page:
+  // send them to create an account first; the intent resumes after sign-in.
+  if (window._pendingBuy) { enterAuth(true); return; }
   if (!localStorage.getItem(todayKey())) {
     showDaily();                              // daily question first — always
   } else if (localStorage.getItem('sq_tasted')) {
@@ -1473,6 +1487,22 @@ function closeAccount() {
   document.getElementById('accountModal').style.display = 'none';
 }
 
+// Populate the nav conversation-count immediately on entry (without opening the modal).
+async function refreshNavCount() {
+  if (!member) return;
+  try {
+    const token = await getToken();
+    if (!token) return;
+    const res = await fetch('/api/get-status?t=' + Date.now(), { headers: { 'Authorization': 'Bearer ' + token }, cache: 'no-store' });
+    const d = await res.json();
+    const plan = d.plan || 'free';
+    const limit = d.limit || (plan === 'paid' ? 30 : 3);
+    const used = d.used || 0;
+    const credits = d.credits || 0;
+    showRemaining(limit - used, plan, credits);
+  } catch (e) { /* leave count blank on failure */ }
+}
+
 async function loadAccountStatus() {
   const contentEl = document.getElementById('accountContent');
   contentEl.innerHTML = '<div style="text-align:center;padding:28px 0;font-family:Inter,sans-serif;font-size:13px;color:var(--dim);">Loading…</div>';
@@ -1492,7 +1522,7 @@ function renderAccountStatus(d) {
   const contentEl = document.getElementById('accountContent');
   const plan      = d.plan    || 'free';
   const used      = d.used    || 0;
-  const limit     = d.limit   || 5;
+  const limit     = d.limit   || 3;
   const credits   = d.credits || 0;
   const remaining = limit - used;
 
@@ -1572,6 +1602,13 @@ const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('payment') === 'success') {
   window.history.replaceState({}, '', window.location.pathname);
   window._paymentSuccess = urlParams.get('type') || 'subscription';
+}
+// Arriving from the Membership page CTAs: /?buy=credits or /?buy=subscription.
+// Remember the intent; once the person is a signed-in member, start checkout.
+if (urlParams.get('buy')) {
+  const buyType = urlParams.get('buy') === 'credits' ? 'credits' : 'subscription';
+  window.history.replaceState({}, '', window.location.pathname);
+  window._pendingBuy = buyType;
 }
 
 /* ---------- Stripe checkout ---------- */

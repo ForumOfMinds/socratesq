@@ -250,6 +250,13 @@
     getAuthState().then(function (signedIn) {
       if (signedIn && headerSlot) { applyAuthState(headerSlot, true); }
     });
+
+    // Expose a hook so the app (index.html) can force the signed-in nav state the
+    // moment it confirms a member, rather than waiting on nav.js's own auth check.
+    window.sqNavSetSignedIn = function (signedIn) {
+      var slot = document.getElementById("sq-header");
+      if (slot) applyAuthState(slot, !!signedIn);
+    };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
