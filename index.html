@@ -76,7 +76,20 @@
   #landing .lp-section, #landing .lp-rule { position: relative; z-index: 2; }
   /* When the running app is active, the shared marketing nav/footer must stay hidden
      regardless of nav.js re-renders. The app has its own account bar. */
-  body.sq-app-active #sq-header, body.sq-app-active #sq-footer { display: none !important; }
+  /* The shared marketing nav is hidden only on the fully immersive screens
+     (the sign-in threshold and the daily-question view). The running dialogue
+     app DOES show the shared nav now, so members have consistent navigation. */
+  body.sq-immersive #sq-header, body.sq-immersive #sq-footer { display: none !important; }
+
+  /* App hero — rotating logo + member greeting, replacing the old flat header */
+  .app-hero { text-align:center; padding: 8px 24px 4px; }
+  .app-hero-logo-wrap { perspective: 900px; margin-bottom: 14px; }
+  .app-hero-logo { width: 72px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
+  .app-hero-logo-fallback { width: 60px; height: 60px; border-radius: 50%; border: 1px solid var(--gold); display: none; align-items: center; justify-content: center; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; }
+  .app-hero-logo-fallback span { font-family: 'EB Garamond', serif; font-size: 34px; color: var(--gold); line-height: 1; }
+  .app-hero-greeting { font-size: 20px; color: var(--gold-soft); max-width: 540px; margin: 0 auto; line-height: 1.55; }
+  @media (prefers-reduced-motion: reduce) { .app-hero-logo, .app-hero-logo-fallback { animation: none; } }
+  @media (max-width:520px) { .app-hero-logo { width: 60px; } .app-hero-greeting { font-size: 18px; } }
 
   /* === Digital hero — animated background === */
   .digital-hero-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
@@ -496,13 +509,25 @@
     <div class="digital-hero-overlay" aria-hidden="true"></div>
     <div class="digital-hero-grid" aria-hidden="true"></div>
     <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
-    <div class="acct"><span id="remaining" style="color:var(--gold);font-size:11px;"></span><button id="acctPageBtn" style="background:transparent;border:none;color:var(--parchment-dim);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline;">Account</button><span id="acctEmail"></span><button id="acctBtn">Sign out</button></div>
-    <header>
-      <div class="mark">Socrates<span>Q</span></div>
-      <a class="origin-link" href="about.html">Where this comes from &rarr;</a>
-      <div class="sub">the question beneath the question</div>
-      <div class="disclaimer">A philosophical reconstruction — not the historical man, and not advice.</div>
-      <div class="invitation">Bring a question. Leave with a better one.</div>
+
+    <!-- Hidden stubs: these IDs are still referenced by app logic, but their
+         functions now live in the shared nav (Account, Sign out, remaining count,
+         Today's question). Kept present-but-hidden so nothing breaks. -->
+    <div style="display:none;">
+      <span id="remaining"></span>
+      <button id="dailyLinkBtn"></button>
+      <button id="acctPageBtn"></button>
+      <span id="acctEmail"></span>
+      <button id="acctBtn"></button>
+    </div>
+
+    <header class="app-hero">
+      <div class="app-hero-logo-wrap">
+        <img class="app-hero-logo" src="https://socratesq.app/SocratesQ%20logo.png" alt="SocratesQ"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="app-hero-logo-fallback" style="display:none;"><span>Q</span></div>
+      </div>
+      <div class="app-hero-greeting sq-hand" id="memberGreeting"></div>
     </header>
 
     <div class="arc" id="arc"></div>
@@ -692,8 +717,16 @@ async function signOut() {
 }
 
 /* ---------- Views & modes ---------- */
-function showAuth() { document.body.classList.add('sq-app-active'); authEl.style.display = 'flex'; appEl.style.display = 'none'; if (dailyEl) dailyEl.style.display = 'none'; if (landingEl) landingEl.style.display = 'none'; const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = 'none'; const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = 'none'; }
-function showApp() { authEl.style.display = 'none'; appEl.style.display = 'flex'; }
+function showAuth() { document.body.classList.add('sq-immersive'); authEl.style.display = 'flex'; appEl.style.display = 'none'; if (dailyEl) dailyEl.style.display = 'none'; if (landingEl) landingEl.style.display = 'none'; const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = 'none'; const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = 'none'; }
+function showApp() {
+  document.body.classList.remove('sq-immersive');
+  authEl.style.display = 'none';
+  appEl.style.display = 'flex';
+  const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = '';
+  const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = '';
+  const g = document.getElementById('memberGreeting');
+  if (g && !g.textContent) g.textContent = pickMemberGreeting();
+}
 
 function setAcct() {
   if (member) { acctEmail.textContent = currentEmail; acctBtn.textContent = 'Sign out'; }
@@ -706,9 +739,8 @@ function enterMember(session) {
   currentEmail = (session && session.user && session.user.email) || '';
   localStorage.setItem('sq_has_account', '1');
   setTimeout(redeemInviteIfNeeded, 1000);
-  const hdrEl = document.getElementById('sq-header'); if (hdrEl) hdrEl.style.display = 'none';
-  const ftrEl = document.getElementById('sq-footer'); if (ftrEl) ftrEl.style.display = 'none';
-  document.body.classList.add('sq-app-active');
+  const hdrEl = document.getElementById('sq-header'); if (hdrEl) hdrEl.style.display = '';
+  const ftrEl = document.getElementById('sq-footer'); if (ftrEl) ftrEl.style.display = '';
   setAcct();
   if (window._paymentSuccess) {
     const type = window._paymentSuccess;
@@ -784,6 +816,7 @@ function enterAuth(preferSignup) {
 
 acctBtn.addEventListener('click', () => { if (member) signOut(); else enterAuth(false); });
 document.getElementById('acctPageBtn').addEventListener('click', openAccount);
+document.getElementById('dailyLinkBtn').addEventListener('click', function () { showDaily(); });
 tabIn.addEventListener('click', () => setMode('signin'));
 tabUp.addEventListener('click', () => setMode('signup'));
 document.getElementById('forgotBtn').addEventListener('click', () => { emailEl.value = ''; setMode('reset'); setMsg('Enter your email and we\u2019ll send a reset link.'); });
@@ -999,7 +1032,7 @@ function saveAsPDF() {
 /* ═══ Landing page ═══ */
 
 function showLanding() {
-  document.body.classList.remove('sq-app-active');
+  document.body.classList.remove('sq-immersive');
   if (landingEl) landingEl.style.display = 'block';
   authEl.style.display = 'none';
   appEl.style.display = 'none';
@@ -1087,6 +1120,42 @@ const SOCRATES_GREETINGS = [
 
 function pickGreeting() {
   return SOCRATES_GREETINGS[Math.floor(Math.random() * SOCRATES_GREETINGS.length)];
+}
+
+// Member greetings — a distinct register from the visitor set above.
+// Where the visitor greetings are about arrival and first meeting, these are
+// about return, continuation, and the ongoing work between two people who
+// already know the shape of the practice.
+const MEMBER_GREETINGS = [
+  "You have returned. Good — the examined life is not examined once, but daily.",
+  "Back again. Whatever you left unfinished last time has, I suspect, been waiting.",
+  "Welcome back. Shall we pick up the work, or has a new question found you?",
+  "Here you are once more. That you keep returning tells me the questions are doing their work.",
+  "Good to see you again. Bring me what has been turning over in your mind.",
+  "You have come back. Few do the examining twice — fewer still make a habit of it.",
+  "Again we meet. I have no memory of our last talk, and yet the questions do not forget.",
+  "Welcome back to the bench. Sit. What are we thinking about today?",
+  "You return. Whatever certainty you carried out last time — let us see if it survived the week.",
+  "Here again. The unexamined life, it seems, holds no appeal for you. I am glad of it.",
+  "Back so soon? Or has it been long? The questions keep their own time.",
+  "Welcome. Let us not waste the greeting — you did not come here for pleasantries, but to think.",
+  "You have made your way back. Tell me what has refused to leave you alone.",
+  "Again. There is a kind of courage in returning to be questioned. Most people avoid it.",
+  "Welcome back. Somewhere between last time and now, a new question has been forming. Let us find it.",
+  "You return to the work. Good. A belief examined once is rarely examined enough.",
+  "Here you are. Whatever you thought you had settled — shall we test whether it holds?",
+  "Back again, and welcome. The examined life is less a destination than a habit. You are building one.",
+  "Good — you came back. What we begin here is never quite finished, and I suspect you have felt that.",
+  "Welcome. Somewhere a question has been waiting for you to have time for it. Now you do.",
+  "You return. I ask nothing of you but honesty — and that you have always brought.",
+  "Again we sit down together. What is it that you cannot stop thinking about?",
+  "Welcome back. Let us begin where all real thinking begins — with something you are not yet sure of.",
+  "Here once more. The world has been busy handing you answers. Let us slow down and question a few.",
+  "You have returned, and I am glad. Bring me the question that would not let you rest."
+];
+
+function pickMemberGreeting() {
+  return MEMBER_GREETINGS[Math.floor(Math.random() * MEMBER_GREETINGS.length)];
 }
 
 function initLandingQuestion() {
@@ -1276,6 +1345,9 @@ let dailySocratesReply = '';
 
 function showDaily() {
   _fromDaily = false;
+  document.body.classList.add('sq-immersive');
+  const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = 'none';
+  const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = 'none';
   authEl.style.display = 'none';
   appEl.style.display = 'none';
   dailyEl.style.display = 'flex';
@@ -1527,14 +1599,19 @@ async function startCheckout(type) {
 }
 
 function showRemaining(n, plan, credits) {
-  if (!member || n === null || n === undefined) { remainingEl.textContent = ''; return; }
-  if (plan === 'paid') {
-    remainingEl.textContent = n + ' of 30 left this month  ';
-  } else if (typeof credits === 'number' && credits > 0) {
-    remainingEl.textContent = n + ' conversation credit' + (n === 1 ? '' : 's') + ' remaining  ';
-  } else {
-    remainingEl.textContent = n + ' of 3 left this month  ';
+  let txt = '';
+  if (member && n !== null && n !== undefined) {
+    if (plan === 'paid') {
+      txt = n + ' of 30 this month';
+    } else if (typeof credits === 'number' && credits > 0) {
+      txt = n + ' credit' + (n === 1 ? '' : 's') + ' left';
+    } else {
+      txt = n + ' of 3 this month';
+    }
   }
+  remainingEl.textContent = txt ? txt + '  ' : '';
+  const navCount = document.getElementById('sqNavCount');
+  if (navCount) navCount.textContent = txt;
 }
 
 for (let i = 0; i < ARC_TICKS; i++) { const t = document.createElement('div'); t.className = 'tick'; arcEl.appendChild(t); }

@@ -79,6 +79,31 @@
     return Promise.resolve(authFromLocalStorage());
   }
 
+  // Cross-page sign-out. On the app page the Supabase client exists and its
+  // signOut() cleanly ends the session; on satellite pages (About, Membership,
+  // etc.) there is no client, so we clear the Supabase auth token from
+  // localStorage directly. Either way we then return the person to the home page.
+  function sqNavSignOut() {
+    var sb = window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
+    var done = function () { window.location.href = "/"; };
+    try {
+      if (sb && sb.auth && typeof sb.auth.signOut === "function") {
+        sb.auth.signOut().then(done).catch(done);
+        return;
+      }
+    } catch (e) { /* fall through to manual clear */ }
+    try {
+      var keys = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf("sb-") === 0 && k.indexOf("-auth-token") > -1) keys.push(k);
+      }
+      keys.forEach(function (k) { localStorage.removeItem(k); });
+    } catch (e) { /* ignore */ }
+    done();
+  }
+  window.sqNavSignOut = sqNavSignOut;
+
   /* ---------- 4. RENDER ---------- */
 
   function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
@@ -103,6 +128,12 @@
     var cta  = signedIn ? CTA_SIGNED_IN : CTA_SIGNED_OUT;
     var auth = signedIn ? ACCOUNT_LINK : SIGNIN_LINK;
 
+    // Forum link shows for everyone; Sign out only when signed in.
+    var forumLink = '<a class="sq-nav-link" href="' + FORUM_URL + '" target="_blank" rel="noopener">Enter the Forum</a>';
+    var signOutLink = signedIn
+      ? '<a class="sq-nav-link sq-signout-link" href="#" onclick="window.sqNavSignOut&&window.sqNavSignOut();return false;">Sign out</a>'
+      : '';
+
     return '' +
     '<header class="sq-nav" role="banner">' +
       '<div class="sq-nav-inner">' +
@@ -112,9 +143,12 @@
         '</a>' +
         '<nav class="sq-nav-links" aria-label="Main">' +
           linkList("sq-nav-link") +
-          '<a class="sq-nav-link' + (isActive(auth.href) ? " is-active" : "") +
+          '<a class="sq-nav-link sq-auth-link' + (isActive(auth.href) ? " is-active" : "") +
             '" href="' + auth.href + '">' + esc(auth.label) + "</a>" +
+          forumLink +
+          signOutLink +
         '</nav>' +
+        '<span class="sq-nav-count" id="sqNavCount" aria-live="polite"></span>' +
         '<a class="sq-cta" href="' + cta.href + '">' + esc(cta.label) + "</a>" +
         '<button class="sq-burger" aria-label="Open menu" aria-expanded="false" aria-controls="sq-overlay">' +
           '<span></span><span></span><span></span>' +
@@ -127,6 +161,8 @@
       '<nav class="sq-overlay-links" aria-label="Main menu">' +
         linkList("sq-overlay-link") +
         '<a class="sq-overlay-link sq-overlay-auth" href="' + auth.href + '">' + esc(auth.label) + "</a>" +
+        '<a class="sq-overlay-link sq-overlay-auth" href="' + FORUM_URL + '" target="_blank" rel="noopener">Enter the Forum</a>' +
+        (signedIn ? '<a class="sq-overlay-link sq-overlay-auth" href="#" onclick="window.sqNavSignOut&&window.sqNavSignOut();return false;">Sign out</a>' : '') +
         '<a class="sq-cta sq-overlay-cta" href="' + cta.href + '">' + esc(cta.label) + "</a>" +
       '</nav>' +
     '</div>';
@@ -173,11 +209,23 @@
     var cta  = signedIn ? CTA_SIGNED_IN : CTA_SIGNED_OUT;
     var auth = signedIn ? ACCOUNT_LINK : SIGNIN_LINK;
 
-    // The desktop auth link is the last .sq-nav-link inside .sq-nav-links
     var navLinks = root.querySelector(".sq-nav-links");
     if (navLinks) {
-      var authLink = navLinks.querySelector(".sq-nav-link:last-child");
+      // Update the auth link (Sign in ↔ Account) by its stable class.
+      var authLink = navLinks.querySelector(".sq-auth-link");
       if (authLink) { authLink.setAttribute("href", auth.href); authLink.textContent = auth.label; authLink.classList.toggle("is-active", isActive(auth.href)); }
+      // Add a Sign out link when signed in (if not already present); remove when signed out.
+      var signOut = navLinks.querySelector(".sq-signout-link");
+      if (signedIn && !signOut) {
+        var a = document.createElement("a");
+        a.className = "sq-nav-link sq-signout-link";
+        a.href = "#";
+        a.textContent = "Sign out";
+        a.onclick = function () { if (window.sqNavSignOut) window.sqNavSignOut(); return false; };
+        navLinks.appendChild(a);  // after the Forum link, at the end
+      } else if (!signedIn && signOut) {
+        signOut.remove();
+      }
     }
     // Desktop CTA
     var ctaEl = root.querySelector(".sq-nav .sq-cta");

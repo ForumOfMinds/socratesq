@@ -136,6 +136,15 @@ body.sq-no-scroll { overflow: hidden; }
 .sq-nav-link.is-active { color: var(--sq-gold); border-bottom-color: var(--sq-gold); }
 
 /* Gold pill CTA — same as the current .site-topnav-cta */
+.sq-nav-count {
+  font-family: var(--sq-font-ui);
+  font-size: 11px;
+  color: var(--sq-gold);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+.sq-nav-count:empty { display: none; }
 .sq-cta {
   font-family: var(--sq-font-ui);
   font-size: 12px;
