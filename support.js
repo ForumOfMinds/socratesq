@@ -49,11 +49,24 @@
 
   function esc(s){ return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  // Best-effort: the signed-in email, if the app exposes it. On static pages this
-  // is usually blank, which is fine — the message still reaches us.
+  // Best-effort: the signed-in email. On the app page it's exposed as
+  // window.currentEmail. On static pages the app isn't running, but the Supabase
+  // session (with the user's email) is still in localStorage — dig it out of there.
   function currentEmailForSupport(){
     try { if (typeof window.currentEmail === 'string' && window.currentEmail) return window.currentEmail; } catch(e){}
     try { if (typeof currentEmail === 'string' && currentEmail) return currentEmail; } catch(e){}
+    // Fall back to the Supabase auth token stored in localStorage.
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('sb-') === 0 && k.indexOf('-auth-token') > -1) {
+          var v = JSON.parse(localStorage.getItem(k));
+          if (!v) continue;
+          var u = v.user || (v.currentSession && v.currentSession.user);
+          if (u && u.email) return u.email;
+        }
+      }
+    } catch (e) {}
     return '';
   }
 
