@@ -154,7 +154,8 @@
   .err { color: #d98c6a; font-size: 14px; font-family: 'Inter', sans-serif; text-align: center; padding: 6px 0; }
 
   /* ---- Daily question ---- */
-  .daily-wrap { max-width:520px; width:100%; margin:0 auto; padding:40px 0 36px; display:flex; flex-direction:column; align-items:center; text-align:center; }
+  .daily-wrap { max-width:520px; width:100%; margin:0 auto; padding:64px 0 36px; display:flex; flex-direction:column; align-items:center; text-align:center; }
+  @media (max-width:600px) { .daily-wrap { padding-top:80px; } }
   .daily-hero-logo { width:80px; height:auto; display:block; margin:0 auto; animation:sq-logo-spin-y 14s linear infinite; transform-style:preserve-3d; backface-visibility:visible; }
   .daily-hero-logo-fallback { width:66px; height:66px; border-radius:50%; border:1px solid var(--gold); display:none; align-items:center; justify-content:center; margin:0 auto; animation:sq-logo-spin-y 14s linear infinite; }
   .daily-hero-logo-fallback span { font-family:'EB Garamond',serif; font-size:36px; color:var(--gold); line-height:1; }
