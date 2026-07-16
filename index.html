@@ -156,8 +156,8 @@
   /* ---- Daily question ---- */
   .daily-wrap { max-width:520px; width:100%; margin:0 auto; padding:40px 0 36px; display:flex; flex-direction:column; align-items:center; text-align:center; }
   .daily-greeting { font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim); margin-bottom:8px; }
-  .daily-intro { font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:var(--parchment-dim); margin-bottom:24px; }
-  .daily-q { font-family:'EB Garamond',serif; font-size:26px; color:var(--parchment); line-height:1.45; margin-bottom:30px; max-width:460px; }
+  .daily-intro { font-family:'EB Garamond',serif; font-style:italic; font-size:19px; color:var(--parchment); margin-bottom:26px; line-height:1.5; max-width:480px; }
+  .daily-q { font-family:'EB Garamond',serif; font-size:31px; color:var(--parchment); line-height:1.4; margin-bottom:30px; max-width:480px; }
   .daily-btns { display:flex; flex-direction:column; gap:10px; width:100%; max-width:270px; }
   .daily-primary { background:var(--gold); color:#20180a; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:14px; padding:12px; border-radius:12px; cursor:pointer; transition:background .2s; }
   .daily-primary:hover { background:var(--gold-soft); }
@@ -499,6 +499,7 @@
 
       <div id="dailyContArea" style="display:none; flex-direction:column; gap:10px; width:100%; max-width:270px;">
         <button id="dailyContBtn" class="daily-primary">Continue this dialogue →</button>
+        <div id="dailyContNote" style="display:none; font-family:'EB Garamond',serif; font-style:italic; font-size:13px; color:var(--parchment-dim); line-height:1.5; text-align:center;"></div>
         <button id="dailyTmrwBtn" class="daily-ghost">Perhaps tomorrow</button>
       </div>
     </div>
@@ -853,36 +854,46 @@ const API = '/api/socrates';
 
 /* ---------- Daily questions ---------- */
 const DAILY_QUESTIONS = [
-  "What does it mean to live well?",
-  "Which is more important: being right or being fair?",
-  "Can kindness ever cause harm?",
-  "Can courage exist without fear?",
-  "Which requires more strength: admitting you\u2019re wrong, or forgiving someone else?",
-  "Is honesty always the best choice?",
+  "What makes a life well lived?",
+  "Which is more important: being right or being fair \u2014 and why?",
+  "When does kindness begin to cause harm?",
+  "What role does fear play in courage?",
+  "Which requires greater strength: admitting you\u2019re wrong, or forgiving someone else \u2014 and why?",
+  "What limits, if any, should honesty have?",
   "When does loyalty become blindness?",
-  "Can breaking a promise ever be the right thing to do?",
-  "Which is more dangerous: ignorance or certainty?",
-  "Does having more choices always make us freer?",
-  "Can technology make us wiser?",
-  "Which matters more: intelligence or good judgment?",
-  "Is failure a better teacher than success?",
-  "Can a selfish act also be generous?",
-  "When does confidence become arrogance?",
-  "Can two honest people disagree without either being wrong?",
-  "Is hope a form of strength, or a form of illusion?",
-  "Which shapes a person more: success or failure?",
-  "Does experience always lead to wisdom?",
-  "Is happiness something we pursue \u2014 or something we recognize?",
-  "Which is harder: changing your opinion, or changing your habits?",
-  "Can justice exist without mercy?",
+  "What circumstances can justify breaking a promise?",
+  "When does certainty become dangerous?",
+  "How do more choices affect our freedom?",
+  "What, if anything, can technology teach us about wisdom?",
+  "What is the difference between intelligence and wisdom?",
+  "What makes failure a better teacher than success?",
+  "What makes an act truly generous?",
+  "What is the difference between confidence and arrogance?",
+  "How can two honest people reach different conclusions?",
+  "What role should hope play when facing uncertainty?",
+  "Which shapes a person more: success or failure \u2014 and why?",
+  "What transforms experience into wisdom?",
+  "What role should happiness play in a meaningful life?",
+  "Which is harder to change: your opinions or your habits \u2014 and why?",
+  "How should justice and mercy be balanced?",
   "What makes an apology sincere?",
-  "Can a question be more valuable than an answer?",
-  "Does power reveal character \u2014 or change it?",
-  "Which matters more in friendship: honesty or loyalty?",
-  "Can doing nothing ever be the right thing to do?",
+  "What makes a question worth asking?",
+  "How does power influence character?",
+  "Which matters more in friendship: honesty or loyalty \u2014 and why?",
+  "When is doing nothing the wisest choice?",
   "What makes someone worthy of trust?",
-  "Which is more valuable: curiosity or confidence?",
-  "What is one belief you think every thoughtful person should question?"
+  "Which is more valuable: curiosity or confidence \u2014 and why?",
+  "Which is the greater achievement: improving yourself or helping others improve \u2014 and why?",
+  "What is the difference between knowledge and understanding?",
+  "What is the difference between freedom and independence?",
+  "What makes a disagreement worth continuing?",
+  "When does helping someone become controlling them?",
+  "What makes advice worth following?",
+  "Why do intelligent people sometimes make poor decisions?",
+  "What makes an opinion worth changing?",
+  "What is the difference between success and fulfillment?",
+  "Which deserves greater admiration: talent or perseverance \u2014 and why?",
+  "What makes a person wise?"
 ];
 
 function getTodayQuestion() {
@@ -1415,7 +1426,15 @@ async function sendDailyAnswer() {
     dailyThinkEl.style.display = 'none';
     dailyReplyEl.textContent = dailySocratesReply;
     dailyContArea.style.display = 'flex';
-    dailyContBtn.textContent = member ? 'Continue this dialogue →' : 'Create an account to continue';
+    dailyContBtn.textContent = member ? 'Take this into a full dialogue \u2192' : 'Create an account to continue';
+    // For members, be transparent that continuing starts (and counts) a real conversation.
+    var contNote = document.getElementById('dailyContNote');
+    if (contNote) {
+      contNote.textContent = member
+        ? 'Today\u2019s question is free. Carrying it into a full dialogue uses one of your conversations.'
+        : '';
+      contNote.style.display = member ? 'block' : 'none';
+    }
     localStorage.setItem(todayKey(), 'answered');
   } catch (e) {
     dailyThinkEl.style.display = 'none';
