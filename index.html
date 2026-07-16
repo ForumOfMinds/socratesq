@@ -155,8 +155,12 @@
 
   /* ---- Daily question ---- */
   .daily-wrap { max-width:520px; width:100%; margin:0 auto; padding:40px 0 36px; display:flex; flex-direction:column; align-items:center; text-align:center; }
-  .daily-greeting { font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim); margin-bottom:8px; }
-  .daily-intro { font-family:'EB Garamond',serif; font-style:italic; font-size:19px; color:var(--parchment); margin-bottom:26px; line-height:1.5; max-width:480px; }
+  .daily-hero-logo { width:80px; height:auto; display:block; margin:0 auto; animation:sq-logo-spin-y 14s linear infinite; transform-style:preserve-3d; backface-visibility:visible; }
+  .daily-hero-logo-fallback { width:66px; height:66px; border-radius:50%; border:1px solid var(--gold); display:none; align-items:center; justify-content:center; margin:0 auto; animation:sq-logo-spin-y 14s linear infinite; }
+  .daily-hero-logo-fallback span { font-family:'EB Garamond',serif; font-size:36px; color:var(--gold); line-height:1; }
+  @media (prefers-reduced-motion: reduce) { .daily-hero-logo, .daily-hero-logo-fallback { animation:none; } }
+  .daily-greeting { font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .daily-intro { font-family:'Patrick Hand', cursive; font-size:22px; color:var(--gold-soft, #d9bd7e); margin-bottom:26px; line-height:1.5; max-width:480px; }
   .daily-q { font-family:'EB Garamond',serif; font-size:31px; color:var(--parchment); line-height:1.4; margin-bottom:30px; max-width:480px; }
   .daily-btns { display:flex; flex-direction:column; gap:10px; width:100%; max-width:270px; }
   .daily-primary { background:var(--gold); color:#20180a; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:14px; padding:12px; border-radius:12px; cursor:pointer; transition:background .2s; }
@@ -468,6 +472,12 @@
   <div id="daily" style="display:none; flex:1; flex-direction:column;">
     <div class="acct"><span id="dailyEmail"></span><button id="dailySignoutBtn">Sign out</button></div>
     <div class="daily-wrap">
+      <!-- Rotating logo for members (anonymous visitors get the taster intro below instead) -->
+      <div id="dailyMemberLogo" style="display:none; perspective:900px; margin-bottom:20px;">
+        <img class="daily-hero-logo" src="https://socratesq.app/SocratesQ%20logo.png" alt="SocratesQ"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="daily-hero-logo-fallback" style="display:none;"><span>Q</span></div>
+      </div>
       <!-- Shown only to anonymous visitors — orientation before the question -->
       <div id="dailyTasterIntro" style="display:none; text-align:center; margin-bottom:28px; padding-bottom:28px; border-bottom:1px solid var(--surface-edge); width:100%; max-width:460px;">
         <div class="seal" style="margin:0 auto 16px;"><span class="q">Q</span></div>
@@ -1380,11 +1390,13 @@ function showDaily() {
   dailyGreetingEl.textContent = dailyGreetingText();
   dailyQEl.textContent = dailyQuestion;
   dailyEmailEl.textContent = currentEmail;
-  // show intro card only for anonymous visitors
+  // show intro card only for anonymous visitors; members get the rotating logo instead
   const introEl = document.getElementById('dailyTasterIntro');
   const introText = document.getElementById('dailyIntroText');
+  const memberLogo = document.getElementById('dailyMemberLogo');
   if (introEl) introEl.style.display = member ? 'none' : 'block';
   if (introText) introText.style.display = member ? 'block' : 'none';
+  if (memberLogo) memberLogo.style.display = member ? 'block' : 'none';
   // reset state
   dailyBtnsEl.style.display = 'flex';
   dailyInputArea.style.display = 'none';
