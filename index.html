@@ -70,8 +70,12 @@
   .authwrap > .threshsub, .authwrap > .authcard, .authwrap > .authback,
   .authwrap > .authdisc { position: relative; z-index: 2; }
 
-  #app { position: relative; overflow: hidden; min-height: 100vh; }
-  #app > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas) { position: relative; z-index: 2; }
+  /* overflow:clip clips exactly like hidden but does NOT create a scroll
+     container, so the sticky round-counter below can actually stick.
+     Older browsers fall back to hidden (the counter simply scrolls, as before). */
+  #app { position: relative; overflow: hidden; overflow: clip; min-height: 100vh; }
+  /* .arc is excluded so it can keep position:sticky (it sets its own z-index). */
+  #app > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas):not(.arc) { position: relative; z-index: 2; }
   .lp-hero > *:not(.digital-hero-overlay):not(.digital-hero-grid):not(.digital-hero-canvas) { position: relative; z-index: 2; }
   #landing .lp-section, #landing .lp-rule { position: relative; z-index: 2; }
   /* When the running app is active, the shared marketing nav/footer must stay hidden
@@ -115,7 +119,16 @@
   .origin-link { display: inline-block; margin-top: 6px; font-family: 'EB Garamond', serif; font-size: 16px; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,162,75,0.35); padding-bottom: 2px; letter-spacing: .02em; transition: color .2s ease, border-color .2s ease; }
   .origin-link:hover { color: var(--gold-soft); border-bottom-color: var(--gold); }
 
-  .arc { display: flex; align-items: center; justify-content: center; gap: 11px; padding: 16px 0 6px; }
+  /* The round counter follows you down the page, so you can always see how many
+     rounds of the dialogue remain — rather than it scrolling away at the top. */
+  .arc {
+    display: flex; align-items: center; justify-content: center; gap: 11px;
+    padding: 16px 0 10px;
+    position: sticky; top: var(--sq-nav-h, 48px); z-index: 60;
+    background: rgba(20, 24, 26, .93);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  }
+  @media (max-width: 600px) { .arc { gap: 9px; padding: 12px 0 8px; } }
   .arc .tick { width: 3px; height: 17px; background: var(--surface-edge); border-radius: 2px; transition: background .6s ease, height .6s ease, box-shadow .6s ease; }
   .arc .tick.lit { background: var(--gold); box-shadow: 0 0 10px rgba(201,162,75,.55); }
   .arc .tick.closing { height: 22px; background: var(--gold-soft); }
@@ -732,7 +745,12 @@ async function signOut() {
 function showAuth() { document.body.classList.add('sq-immersive'); authEl.style.display = 'flex'; appEl.style.display = 'none'; if (dailyEl) dailyEl.style.display = 'none'; if (landingEl) landingEl.style.display = 'none'; const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = 'none'; const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = 'none'; }
 function showApp() {
   document.body.classList.remove('sq-immersive');
+  // Only the dialogue should be visible. Without this, entering the app while the
+  // daily view was open left it stacked above — pushing the hero and the round
+  // counter far down the page (very noticeable on mobile).
   authEl.style.display = 'none';
+  if (dailyEl) dailyEl.style.display = 'none';
+  if (landingEl) landingEl.style.display = 'none';
   appEl.style.display = 'flex';
   const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = '';
   const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = '';
@@ -1054,7 +1072,7 @@ function saveAsPDF() {
   doc.setFont('helvetica', 'italic');
   doc.setFontSize(11);
   doc.setTextColor(158, 128, 52);
-  doc.text('Bring your question to the Council — forumofminds.com', ML, y);
+  doc.text('This dialogue took place at socratesq.app — continue it whenever you wish.', ML, y);
   y += 18;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
