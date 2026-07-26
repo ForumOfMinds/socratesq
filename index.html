@@ -506,8 +506,7 @@
 
       <div class="daily-btns" id="dailyBtnsEl">
         <button id="dailyAnswerBtn" class="daily-primary">Answer</button>
-        <button id="dailySwitchBtn" class="daily-secondary">Ask me something instead</button>
-        <button id="dailySkipBtn" class="daily-ghost">Not today</button>
+        <button id="dailySwitchBtn" class="daily-secondary">Ask Socrates something instead</button>
       </div>
 
       <div id="dailyInputArea" style="display:none; flex-direction:column; align-items:center; width:100%;">
@@ -1422,23 +1421,35 @@ function showDaily() {
   dailyResponseArea.style.display = 'none';
   dailyContArea.style.display = 'none';
   dailyTextarea.value = '';
+  dailyTextarea.placeholder = 'Your answer\u2026';
   dailyReplyEl.textContent = '';
   dailyContextForServer = null;
+  dailyRound = 0;
+  window._dailyMsgs = [];
 }
 
+let dailyRound = 0;
 async function sendDailyAnswer() {
   const text = dailyTextarea.value.trim();
   if (!text) return;
-  dailyUserAnswer = text;
+  dailyRound++;
+  // Keep the first answer for carrying context into a full dialogue later.
+  if (dailyRound === 1) dailyUserAnswer = text;
   dailySendBtn.disabled = true;
   dailyTextarea.disabled = true;
   dailyResponseArea.style.display = 'flex';
   dailyThinkEl.style.display = 'flex';
   dailyReplyEl.textContent = '';
 
+  // Build the running message list for this short exchange.
+  if (!window._dailyMsgs) window._dailyMsgs = [];
+  window._dailyMsgs.push({ role: 'user', content: text });
+
   const token = await getToken();
   const hdrs = { 'Content-Type': 'application/json' };
   if (token) hdrs['Authorization'] = 'Bearer ' + token;
+
+  const isFinalDailyRound = dailyRound >= 2;  // two rounds, then wrap up
 
   try {
     const res = await fetch(API, {
@@ -1446,32 +1457,47 @@ async function sendDailyAnswer() {
       headers: hdrs,
       body: JSON.stringify({
         daily: true,
+        dailyClose: isFinalDailyRound,
         dailyQuestion,
-        userTurns: 1,
-        messages: [{ role: 'user', content: text }]
+        userTurns: dailyRound,
+        messages: window._dailyMsgs
       })
     });
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    dailySocratesReply = data.text || '…';
+    const reply = data.text || '\u2026';
+    window._dailyMsgs.push({ role: 'assistant', content: reply });
+    if (dailyRound === 1) dailySocratesReply = reply;
     dailyThinkEl.style.display = 'none';
-    dailyReplyEl.textContent = dailySocratesReply;
-    dailyContArea.style.display = 'flex';
-    dailyContBtn.textContent = member ? 'Take this into a full dialogue \u2192' : 'Create an account to continue';
-    // For members, be transparent that continuing starts (and counts) a real conversation.
-    var contNote = document.getElementById('dailyContNote');
-    if (contNote) {
-      contNote.textContent = member
-        ? 'Today\u2019s question is free. Carrying it into a full dialogue uses one of your conversations.'
-        : '';
-      contNote.style.display = member ? 'block' : 'none';
+    dailyReplyEl.textContent = reply;
+
+    if (!isFinalDailyRound) {
+      // Round 1 done — invite a second exchange before offering continuation.
+      dailyTextarea.value = '';
+      dailyTextarea.disabled = false;
+      dailySendBtn.disabled = false;
+      dailyTextarea.placeholder = 'Say more, or press on\u2026';
+      dailyTextarea.focus();
+    } else {
+      // Round 2 done — now offer continuation (or account creation).
+      dailyContArea.style.display = 'flex';
+      dailyContBtn.textContent = member ? 'Take this into a full dialogue \u2192' : 'Create an account to continue';
+      var contNote = document.getElementById('dailyContNote');
+      if (contNote) {
+        contNote.textContent = member
+          ? 'Today\u2019s question is free. Carrying it into a full dialogue uses one of your conversations.'
+          : '';
+        contNote.style.display = member ? 'block' : 'none';
+      }
+      localStorage.setItem(todayKey(), 'answered');
     }
-    localStorage.setItem(todayKey(), 'answered');
   } catch (e) {
     dailyThinkEl.style.display = 'none';
     dailyReplyEl.textContent = 'The line to Socrates faltered. Give it another try in a moment.';
     dailySendBtn.disabled = false;
     dailyTextarea.disabled = false;
+    dailyRound--;  // let them retry this round
+    if (window._dailyMsgs && window._dailyMsgs.length) window._dailyMsgs.pop();
   }
 }
 
@@ -1510,7 +1536,6 @@ document.getElementById('dailyAnswerBtn').addEventListener('click', () => {
   dailyTextarea.focus();
 });
 document.getElementById('dailySwitchBtn').addEventListener('click', () => enterAppFromDaily(false));
-document.getElementById('dailySkipBtn').addEventListener('click', () => enterAppFromDaily(false));
 document.getElementById('dailySendBtn').addEventListener('click', sendDailyAnswer);
 document.getElementById('dailyTextarea').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendDailyAnswer(); } });
 document.getElementById('dailyContBtn').addEventListener('click', () => {

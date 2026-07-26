@@ -160,9 +160,9 @@
       '<button class="sq-overlay-close" aria-label="Close menu">&times;</button>' +
       '<nav class="sq-overlay-links" aria-label="Main menu">' +
         linkList("sq-overlay-link") +
-        '<a class="sq-overlay-link sq-overlay-auth" href="' + auth.href + '">' + esc(auth.label) + "</a>" +
-        '<a class="sq-overlay-link sq-overlay-auth" href="' + FORUM_URL + '" target="_blank" rel="noopener">Enter the Forum</a>' +
-        (signedIn ? '<a class="sq-overlay-link sq-overlay-auth" href="#" onclick="window.sqNavSignOut&&window.sqNavSignOut();return false;">Sign out</a>' : '') +
+        '<a class="sq-overlay-link sq-overlay-authlink" href="' + auth.href + '">' + esc(auth.label) + "</a>" +
+        '<a class="sq-overlay-link sq-overlay-forum" href="' + FORUM_URL + '" target="_blank" rel="noopener">Enter the Forum</a>' +
+        '<a class="sq-overlay-link sq-overlay-signout" href="#" onclick="window.sqNavSignOut&&window.sqNavSignOut();return false;"' + (signedIn ? '' : ' style="display:none;"') + '>Sign out</a>' +
         '<a class="sq-cta sq-overlay-cta" href="' + cta.href + '">' + esc(cta.label) + "</a>" +
       '</nav>' +
     '</div>';
@@ -230,9 +230,12 @@
     // Desktop CTA
     var ctaEl = root.querySelector(".sq-nav .sq-cta");
     if (ctaEl) { ctaEl.setAttribute("href", cta.href); ctaEl.textContent = cta.label; }
-    // Overlay auth link
-    var ovAuth = root.querySelector(".sq-overlay-auth");
+    // Overlay auth link (Sign in ↔ Account) — unique class, so this updates correctly.
+    var ovAuth = root.querySelector(".sq-overlay-authlink");
     if (ovAuth) { ovAuth.setAttribute("href", auth.href); ovAuth.textContent = auth.label; }
+    // Overlay Sign out — show only when signed in.
+    var ovSignout = root.querySelector(".sq-overlay-signout");
+    if (ovSignout) { ovSignout.style.display = signedIn ? "" : "none"; }
     // Overlay CTA
     var ovCta = root.querySelector(".sq-overlay-cta");
     if (ovCta) { ovCta.setAttribute("href", cta.href); ovCta.textContent = cta.label; }
