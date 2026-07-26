@@ -126,9 +126,12 @@ function detectLang(messages) {
 }
 
 function arcNote(n) {
-  if (n <= 3) return '';
-  if (n <= 5) return '\n\n[Dialogue state: maturing. Begin drawing the threads together — but keep it compact, a few sentences. Avoid opening wholly new lines of inquiry.]';
-  if (n === 6) return '\n\n[Dialogue state: nearing the close. After this exchange, prepare to round it off. Stay compact.]';
+  // A standing brevity reminder applies to every turn — Socrates tends to grow
+  // wordy, and short, pointed exchanges are more faithful to him and easier to read.
+  const brevity = '\n\n[LENGTH: Keep replies short — usually three to five sentences, rarely more. One clear question or observation per turn, not several. No preamble, no lists, no restating what the person already said. Socrates was concise and pointed; long paragraphs are not his manner.]';
+  if (n <= 3) return brevity;
+  if (n <= 5) return brevity + '\n\n[Dialogue state: maturing. Begin drawing the threads together — but keep it compact, a few sentences. Avoid opening wholly new lines of inquiry.]';
+  if (n === 6) return brevity + '\n\n[Dialogue state: nearing the close. After this exchange, prepare to round it off. Stay compact.]';
   return '\n\n[Dialogue state: THIS IS THE CLOSE. A conversation should arrive somewhere, not wander forever — a maze is not midwifery. In a few sentences (no more), offer to gather what you found ("we have wandered a while — shall I tell you what I think you have discovered?") and give back, in their own words, what they worked out, leaving one thought to carry away. No verdict, no new questions, no paragraphs.]';
 }
 
@@ -142,7 +145,7 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: 'Server is missing its API key.' }) };
   }
 
-  let messages, userTurns, ending, daily, dailyQuestion, dailyContext, fromDaily, landing, landingClose;
+  let messages, userTurns, ending, daily, dailyQuestion, dailyContext, fromDaily, landing, landingClose, dailyClose;
   try {
     const parsed = JSON.parse(event.body || '{}');
     messages = parsed.messages;
@@ -151,6 +154,7 @@ exports.handler = async (event) => {
     daily = parsed.daily;
     landing = parsed.landing;
     landingClose = parsed.landingClose;
+    dailyClose = parsed.dailyClose;
     dailyQuestion = parsed.dailyQuestion;
     dailyContext = parsed.dailyContext;
     fromDaily = parsed.fromDaily;
@@ -185,9 +189,15 @@ exports.handler = async (event) => {
     ? `\n\n[ЗАВЕРШЕНИЕ ЗНАКОМСТВА: Это последний ответ в кратком пробном обмене с новым посетителем. Твоя задача — дать завершённое, удовлетворяющее заключение, а НЕ задать очередной вопрос. Категорически никаких новых вопросов. В четырёх-пяти фразах: (1) искренне отзовись на то, к чему вы вместе пришли; (2) назови одну конкретную мысль или различие, которое вы обнаружили в этом обмене — что-то содержательное, к чему пришли именно вы двое, а не общую банальность; (3) заверши одной запоминающейся прощальной строкой, которая оставляет человеку ясное ощущение завершённости. Пусть последняя фраза звучит как настоящее завершение — как будто разговор пришёл к своему естественному концу, а не оборвался. Без давления, без рекламы, без вопросов. Ты просто хорошо завершаешь хороший разговор.]`
     : `\n\n[CLOSING THE INTRODUCTION: This is the FINAL reply in a brief taste of dialogue with a new visitor. Your task is to deliver a complete, satisfying conclusion — NOT to ask another question. Absolutely no new questions of any kind. In four to five sentences: (1) sincerely acknowledge where the two of you arrived together; (2) name one specific insight or distinction the exchange actually uncovered — something substantive that the two of you reached, not a generic platitude; (3) end on a single memorable parting line that gives the person a clear sense of completion. The last sentence must feel like a genuine ending — as though the conversation reached its natural close, not as though it was cut off. No pressure, no salesmanship, no questions. You are simply ending a good conversation well, landing the thought rather than leaving it hanging.]`;
 
-  const dailyNote = lang === 'ru'
-    ? `\n\n[ЕЖЕДНЕВНЫЙ ОБМЕН: Это краткий ежедневный обмен — не полный диалог. Ты задал человеку сегодняшний вопрос: "${ dailyQuestion || 'вопрос' }". Он только что ответил. Ответь в три-четыре фразы: (1) искренне отзовись на сказанное; (2) предложи одно наблюдение, которое углубляет его мысль — заметь скрытое напряжение, слово, взятое без проверки, или следствие, которое он мог не увидеть; (3) заверши УТВЕРЖДЕНИЕМ, а не вопросом — законченной мыслью, которая оставляет ощущение цельности. НЕ заканчивай вопросом. Пусть последняя фраза звучит как мягкое приземление, а не как повисший в воздухе вопрос. Можешь по-прежнему указать на нечто нерешённое, но сформулируй это как наблюдение, а не как требование ответа. Приглашение продолжить разговор появится отдельно, кнопкой, — тебе не нужно провоцировать продолжение. Просто заверши хороший маленький обмен хорошо.]`
-    : `\n\n[DAILY EXCHANGE: This is a brief daily exchange, not a full dialogue. You posed today's question: "${ dailyQuestion || 'a question' }". The person has just answered. Respond in three to four sentences: (1) sincerely acknowledge what they said; (2) offer one observation that takes their thought a little deeper — a tension they may not have noticed, a word they used without examining it, or an implication they may not have seen; (3) end on a STATEMENT, not a question — a settled, complete thought that gives a sense of closure. Do NOT end on a question. The last sentence should feel like a gentle landing, not a question left hanging in the air. You may still point to something unresolved, but frame it as an observation to carry away, not as a demand for an answer. The invitation to continue the conversation appears separately, as a button — you do not need to provoke continuation. Simply end a good small exchange well. If a graceful closing line helps, you may draw on the spirit of these:\n• "Go about your day — but notice what it confirms, or quietly contradicts, in what you just said."\n• "The thought will follow you now. That is simply what real questions do."\n• "You have given it a beginning, and a beginning is not nothing."\n• "Most people walk past that question every day without stopping. You stopped — and that is where thinking starts."\n• "We have not settled it. But a question well-begun is already half-examined."\n• "There is more in what you said than you may have meant. It will keep."\nWeave any such line naturally into your closing — do not label or separate it. Keep the whole reply to three or four sentences, and let it land.]`;
+  // Round 1 of the daily exchange: a SHORT probing reply that invites one more round.
+  const dailyProbeNote = lang === 'ru'
+    ? `\n\n[ЕЖЕДНЕВНЫЙ ОБМЕН — ПЕРВЫЙ КРУГ: Это краткий ежедневный обмен, не полный диалог. Ты задал вопрос: "${ dailyQuestion || 'вопрос' }". Человек ответил. Будь КРАТОК — не более двух-трёх коротких фраз. Отзовись одной фразой на сказанное, затем задай ОДИН точный вопрос, который вскрывает скрытое допущение или напряжение в его ответе. Никаких вступлений, никаких длинных рассуждений. Коротко и остро, как Сократ на площади. Вопрос — это конец твоей реплики.]`
+    : `\n\n[DAILY EXCHANGE — FIRST ROUND: This is a brief daily exchange, not a full dialogue. You posed: "${ dailyQuestion || 'a question' }". The person has answered. Be BRIEF — no more than two or three short sentences. Acknowledge their answer in a line, then ask ONE precise question that exposes a hidden assumption or tension in what they said. No preamble, no lengthy reflection, no lists. Short and sharp, as Socrates was in the marketplace. The question is the end of your reply.]`;
+
+  // Round 2 of the daily exchange: a SHORT conclusive close, no new question.
+  const dailyCloseNote = lang === 'ru'
+    ? `\n\n[ЕЖЕДНЕВНЫЙ ОБМЕН — ЗАВЕРШЕНИЕ: Это последняя реплика краткого ежедневного обмена. Будь КРАТОК — не более трёх коротких фраз. Отзовись на то, к чему вы пришли, и заверши УТВЕРЖДЕНИЕМ, а не вопросом — законченной мыслью, дающей ощущение цельности. НЕ задавай новых вопросов. Пусть последняя фраза звучит как настоящее завершение, а не оборванный разговор. Без давления и без рекламы — приглашение продолжить появится отдельно, кнопкой.]`
+    : `\n\n[DAILY EXCHANGE — CLOSING: This is the final reply in a brief daily exchange. Be BRIEF — no more than three short sentences. Respond to where the two of you arrived, and end on a STATEMENT, not a question — a complete thought that gives a sense of closure. Do NOT ask a new question. The last sentence should feel like a genuine ending, not a conversation cut off. No pressure, no salesmanship — the invitation to continue appears separately, as a button. Simply end a good small exchange well, and keep it short.]`;
 
   const contextNote = dailyContext
     ? (lang === 'ru'
@@ -195,7 +205,8 @@ exports.handler = async (event) => {
       : '\n\n[CONTEXT: Earlier today you had a brief exchange with this person: ' + dailyContext + '. They have chosen to continue. Pick up naturally from where you left off, without restating what was said.]')
     : '';
 
-  const system = constitution + greetedNote + contextNote + (landingClose ? landingCloseNote : daily ? dailyNote : ending ? closeNote : arcNote(turns));
+  const dailyInstruction = dailyClose ? dailyCloseNote : dailyProbeNote;
+  const system = constitution + greetedNote + contextNote + (landingClose ? landingCloseNote : daily ? dailyInstruction : ending ? closeNote : arcNote(turns));
 
   let finalMessages = messages;
   if (ending) {
