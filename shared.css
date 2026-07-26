@@ -180,7 +180,9 @@ body.sq-no-scroll { overflow: hidden; }
 @media (max-width: 640px) {
   .sq-nav-links { display: none; }
   .sq-burger { display: flex; }
-  .sq-cta { font-size: 11px; padding: 5px 12px; }
+  /* Hide the top-bar CTA on mobile — it crowds and covers the burger.
+     The same action still lives inside the burger overlay (.sq-overlay-cta). */
+  .sq-nav .sq-cta { display: none; }
 }
 
 /* Full-screen overlay — a deliberate pause, not a drawer */

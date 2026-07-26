@@ -31,6 +31,19 @@
   var CTA_SIGNED_OUT = { href: "/#signin",         label: "Create an account" };
   var CTA_SIGNED_IN  = { href: "/#today",          label: "Answer today\u2019s question" };
 
+  // Whether the member has already done today's daily question — mirrors the
+  // localStorage key index.html writes. When done, the "Answer today's question"
+  // CTA is redundant and is hidden.
+  function dailyDoneToday() {
+    try {
+      var d = new Date();
+      var key = 'sq_daily_' + d.getFullYear() + '-' +
+        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d.getDate()).padStart(2, '0');
+      return !!localStorage.getItem(key);
+    } catch (e) { return false; }
+  }
+
   var ACCOUNT_LINK = { href: "/#account", label: "Account" };  // opens the account modal on index
   var SIGNIN_LINK  = { href: "/#signin",  label: "Sign in" };  // lands on the index sign-in modal
 
@@ -227,18 +240,25 @@
         signOut.remove();
       }
     }
-    // Desktop CTA
+    // Desktop CTA — hidden once a signed-in member has done today's question.
+    var hideCta = signedIn && dailyDoneToday();
     var ctaEl = root.querySelector(".sq-nav .sq-cta");
-    if (ctaEl) { ctaEl.setAttribute("href", cta.href); ctaEl.textContent = cta.label; }
+    if (ctaEl) {
+      ctaEl.setAttribute("href", cta.href); ctaEl.textContent = cta.label;
+      ctaEl.style.display = hideCta ? "none" : "";
+    }
     // Overlay auth link (Sign in ↔ Account) — unique class, so this updates correctly.
     var ovAuth = root.querySelector(".sq-overlay-authlink");
     if (ovAuth) { ovAuth.setAttribute("href", auth.href); ovAuth.textContent = auth.label; }
     // Overlay Sign out — show only when signed in.
     var ovSignout = root.querySelector(".sq-overlay-signout");
     if (ovSignout) { ovSignout.style.display = signedIn ? "" : "none"; }
-    // Overlay CTA
+    // Overlay CTA — same rule as the desktop CTA.
     var ovCta = root.querySelector(".sq-overlay-cta");
-    if (ovCta) { ovCta.setAttribute("href", cta.href); ovCta.textContent = cta.label; }
+    if (ovCta) {
+      ovCta.setAttribute("href", cta.href); ovCta.textContent = cta.label;
+      ovCta.style.display = hideCta ? "none" : "";
+    }
   }
 
   function boot() {
