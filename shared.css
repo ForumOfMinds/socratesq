@@ -216,7 +216,7 @@ body.sq-no-scroll { overflow: hidden; }
   padding: 9px 16px;          /* comfortable thumb targets */
 }
 .sq-overlay-link.is-active { color: var(--sq-gold); }
-.sq-overlay-auth { color: var(--sq-parchment-dim); font-size: 21px; }
+.sq-overlay-authlink, .sq-overlay-forum, .sq-overlay-signout { color: var(--sq-parchment-dim); font-size: 21px; }
 .sq-overlay-cta { margin-top: 22px; font-size: 14px; padding: 9px 22px; }
 
 /* ---------------- FOOTER — same voice as the current .disc ---------------- */
