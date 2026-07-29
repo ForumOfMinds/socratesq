@@ -45,7 +45,7 @@
   @media (prefers-reduced-motion: reduce) { .auth-logo { animation: none; } }
   .authmark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .authmark span { color: var(--gold); }
-  .thresh { font-family: 'EB Garamond', serif; font-size: 28px; color: var(--parchment); margin: 16px 0 12px; }
+  .thresh { font-family: 'EB Garamond', serif; font-style: italic; font-size: 19px; color: var(--parchment-dim); margin: 10px 0 14px; }
   .threshsub { font-size: 15px; color: var(--parchment-dim); line-height: 1.65; max-width: 340px; margin: 0 auto 26px; }
   .authcard { width: 100%; max-width: 330px; display: flex; flex-direction: column; gap: 10px; }
   .tabs { display: flex; gap: 6px; margin-bottom: 4px; }
@@ -321,11 +321,16 @@
         </div>
         <div style="font-family:'EB Garamond',serif;font-size:30px;font-weight:500;letter-spacing:.04em;color:var(--parchment);margin-bottom:20px;">Socrates<span style="color:var(--gold);">Q</span></div>
 
-        <!-- Rotating greeting — Socrates receiving you, in his own hand -->
-        <div id="lpGreeting" class="sq-hand" style="font-size:22px;color:var(--gold-soft);margin-bottom:40px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.55;"></div>
+        <!-- Fixed welcome for first-time / anonymous visitors -->
+        <div class="sq-hand" style="font-size:20px;color:var(--gold-soft);margin:0 auto 16px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.6;">
+          Welcome. Every meaningful dialogue begins with a question. Bring yours &mdash; about your life, a decision you&rsquo;re facing, a relationship, your work, or anything else on your mind &mdash; and explore it with Socrates in complete privacy. <a href="/privacy.html" style="color:var(--gold-soft);text-decoration:none;border-bottom:1px solid rgba(201,162,75,.4);">Nothing you say is stored.</a>
+        </div>
+        <div class="sq-hand" style="font-size:20px;color:var(--gold-soft);margin:0 auto 34px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.6;">
+          To complement your own reflections, Socrates offers one free Daily Question each day. Today&rsquo;s is below. No account required.
+        </div>
 
         <!-- Today's question — Socrates engaging you -->
-        <div class="lp-label" id="today">Socrates asks &mdash; free every morning, no account required</div>
+        <div class="lp-label" id="today">Today&rsquo;s question</div>
         <div class="lp-question sq-hand" id="lpQuestion"></div>
 
         <!-- Initial buttons -->
@@ -418,7 +423,7 @@
     <!-- ── Closing ── -->
     <hr class="lp-rule" /><div class="lp-section" id="closing" style="padding-bottom:72px;">
       <p style="font-size:19px;">SocratesQ is the doorway to the <strong style="color:var(--parchment);">Forum of Minds</strong> &mdash; a community for those who find that the questions do not end. <a href="about.html" style="color:var(--gold);border-bottom:1px solid rgba(201,162,75,.3);">Who we are &rarr;</a></p>
-      <p style="font-size:17px;color:var(--parchment-dim);">Nothing you say here is stored, shared, or sold. <a href="disclaimer.html" style="color:var(--gold);border-bottom:1px solid rgba(201,162,75,.3);">Our word on privacy &rarr;</a></p>
+      <p style="font-size:17px;color:var(--parchment-dim);">Nothing you say here is stored, shared, or sold. <a href="privacy.html" style="color:var(--gold);border-bottom:1px solid rgba(201,162,75,.3);">Our word on privacy &rarr;</a></p>
     </div>
 
 </div>
@@ -438,7 +443,7 @@
     </div>
     <div class="authmark">Socrates<span>Q</span></div>
     <div class="thresh">What would Socrates say?</div>
-    <div class="threshsub">Ask him about your life, the modern world, a decision that keeps you up at night, or anything else you actually need to think through. Three free conversations a month — nothing stored, nothing shared.</div>
+    <div class="threshsub">Ask him about your life, the modern world, a decision that keeps you up at night, or anything else you actually need to think through. Three free conversations a month &mdash; <a href="/privacy.html" style="color:var(--parchment-dim);border-bottom:1px solid rgba(201,162,75,.4);text-decoration:none;">nothing stored, nothing shared</a>.</div>
     <div class="authcard">
       <div class="tabs">
         <button id="tabIn" class="active">Sign in</button>
@@ -478,7 +483,7 @@
         <button id="backSigninBtn" style="background:transparent;border:none;color:var(--dim);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline;">&larr; Back to sign in</button>
       </div>
     </div>
-    <div class="authdisc">A philosophical reconstruction, not the historical figure — and not advice.<br/><a href="/disclaimer.html" style="color:var(--dim);font-size:11px;">Before We Begin — Terms &amp; Disclaimers</a></div>
+    <div class="authdisc">A philosophical reconstruction, not the historical figure — and not advice.<br/>By creating an account, you confirm you are 18 or older and agree to our <a href="/disclaimer.html" style="color:var(--dim);">Terms</a> and <a href="/privacy.html" style="color:var(--dim);">Privacy Promise</a>.</div>
   </div>
 
 
@@ -496,10 +501,10 @@
       <div id="dailyTasterIntro" style="display:none; text-align:center; margin-bottom:28px; padding-bottom:28px; border-bottom:1px solid var(--surface-edge); width:100%; max-width:480px;">
         <div class="seal" style="margin:0 auto 16px;"><span class="q">Q</span></div>
         <div style="font-family:'EB Garamond',serif; font-size:22px; font-weight:500; letter-spacing:.04em; color:var(--parchment);">Welcome to Socrates<span style="color:var(--gold);">Q</span></div>
-        <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:17px; color:var(--parchment-dim); margin-top:14px; line-height:1.7; max-width:410px; margin-left:auto; margin-right:auto;">
-          This is a place to bring your own questions &mdash; whatever you&rsquo;re turning over in your mind &mdash; to Socrates. Not the historical man, but an AI reconstruction of his way of thinking. He doesn&rsquo;t hand you answers; he examines the question with you, until you see it more clearly yourself.
+        <div class="sq-hand" style="font-size:19px; color:var(--gold-soft); margin-top:14px; line-height:1.6; max-width:410px; margin-left:auto; margin-right:auto;">
+          This is a place to bring your own questions &mdash; whatever you&rsquo;re turning over in your mind &mdash; to Socrates. Not the historical man, but an AI reconstruction of his way of thinking.
         </div>
-        <div style="font-family:'Inter',sans-serif; font-size:14px; color:var(--parchment-dim); margin-top:18px; line-height:1.6; max-width:410px; margin-left:auto; margin-right:auto;">
+        <div class="sq-hand" style="font-size:19px; color:var(--gold-soft); margin-top:14px; line-height:1.6; max-width:410px; margin-left:auto; margin-right:auto;">
           And each day, he turns it around and asks <em>you</em> one &mdash; sometimes for fun, sometimes to provoke a thought. Here is today&rsquo;s. Answer it, and see where it leads.
         </div>
       </div>
@@ -1217,8 +1222,6 @@ function pickMemberGreeting() {
 function initLandingQuestion() {
   const qEl = document.getElementById('lpQuestion');
   if (qEl) qEl.textContent = getTodayQuestion();
-  const grEl = document.getElementById('lpGreeting');
-  if (grEl) grEl.textContent = pickGreeting();
 }
 
 

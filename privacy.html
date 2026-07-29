@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nothing You Say Is Stored — SocratesQ</title>
+
+<!-- Shared site components -->
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<script src="/nav.js" defer></script>
+<script src="/support.js" defer></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&display=swap');
+
+  :root {
+    --ink:          #14181a;
+    --surface:      #1d2326;
+    --surface-edge: #2a3236;
+    --parchment:    #ece5d4;
+    --parchment-dim:#b9b3a3;
+    --gold:         #c9a24b;
+    --gold-soft:    #d9bd7e;
+    --dim:          #676d68;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: radial-gradient(1200px 700px at 50% -8%, #1c2326 0%, var(--ink) 60%) fixed;
+    color: var(--parchment);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ---- Hero ---- */
+  .hero { padding: 52px 0 4px; }
+  .hero .eyebrow { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .hero h1 { font-size: 36px; font-weight: 500; color: var(--parchment); line-height: 1.2; margin-bottom: 14px; }
+  .hero .subtitle { font-family: 'Patrick Hand', cursive; font-style: normal; font-size: 18px; color: var(--gold-soft); margin-bottom: 10px; }
+  .hero .updated { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--dim); letter-spacing: .08em; }
+
+  /* ---- Rules ---- */
+  .rule { border: none; border-top: 1px solid var(--surface-edge); margin: 40px 0; }
+
+  /* ---- Intro block ---- */
+  .intro { padding: 28px 0 4px; }
+  .intro p { font-size: 19px; color: var(--parchment-dim); line-height: 1.7; margin-bottom: 1em; }
+
+  /* ---- Sections ---- */
+  section { margin-bottom: 38px; }
+  h2 { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  p { margin-bottom: 1em; color: var(--parchment); }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 500; color: var(--parchment); }
+  em { font-style: normal; color: var(--gold-soft); }
+
+  /* ---- Final word ---- */
+  .final {
+    background: var(--surface); border: 1px solid var(--surface-edge);
+    border-radius: 12px; padding: 28px 30px; margin-top: 44px;
+    text-align: center;
+  }
+  .final p { font-family: 'Patrick Hand', cursive; font-style: normal; font-size: 20px; color: var(--parchment-dim); line-height: 1.65; margin-bottom: 1em; }
+  .final p:last-child { margin-bottom: 0; font-family: 'EB Garamond', Georgia, serif; font-size: 16px; color: var(--dim); font-style: normal; }
+
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  @media (max-width: 520px) { html, body { font-size: 17px; } .hero h1 { font-size: 28px; } .final p { font-size: 18px; } }
+</style>
+</head>
+<body>
+
+<div id="sq-header"></div>
+
+<div class="sq-page-logo-wrap">
+  <img class="sq-page-logo" src="https://socratesq.app/SocratesQ%20logo.png" alt="SocratesQ"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+  <div class="sq-page-logo-fallback"><span>Q</span></div>
+</div>
+
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Our Privacy Promise</div>
+    <h1>Nothing You Say Is Stored</h1>
+    <div class="subtitle">Our privacy promise, in plain language.</div>
+    <div class="updated">Last updated: July 2026</div>
+  </div>
+
+  <div class="intro">
+    <p>SocratesQ was built on a simple idea: that you should be able to think out loud &mdash; to bring a real question, however personal &mdash; without it being recorded, analyzed, or kept. So we designed the service to hold as little of you as possible. Here is exactly what that means.</p>
+  </div>
+
+  <hr class="rule" />
+
+  <section>
+    <h2>Your conversations are never stored</h2>
+    <p>When you talk with Socrates, your words travel to the service that generates his reply, and back to you. They are not written to any database, saved to any file, or kept on any server of ours. When the conversation ends, it is gone. We could not show you a transcript of your past dialogues if we wanted to &mdash; because none exists.</p>
+  </section>
+
+  <section>
+    <h2>We don&rsquo;t train anything on what you say</h2>
+    <p>Your conversations are processed through Anthropic&rsquo;s commercial API to generate Socrates&rsquo; replies. Under those commercial terms, your inputs and outputs are not used to train AI models. Your thinking is yours; it does not become fuel for a machine.</p>
+  </section>
+
+  <section>
+    <h2>The only copy that exists is the one you choose to keep</h2>
+    <p>At the end of a dialogue, you may save it as a PDF. That file is created on your own device and belongs to you alone. We keep no copy. It is the single way a conversation persists anywhere &mdash; and only because you decided it should.</p>
+  </section>
+
+  <section>
+    <h2>What your account holds &mdash; and what it doesn&rsquo;t</h2>
+    <p>We ask for as little as it is possible to ask for. To create an account, we require <em>only</em> your email address &mdash; nothing else. No name. No age, gender, location, or occupation. No demographics of any kind. We don&rsquo;t ask who you are, and we don&rsquo;t try to find out.</p>
+    <p>What we keep is only what&rsquo;s needed to run the service: your email, and a simple count of how many conversations you have left this period. That is the entire record. Your account knows <em>that you exist and how many dialogues remain</em> &mdash; not your name, not your life, and never what you said.</p>
+  </section>
+
+  <section>
+    <h2>Payments are handled by Stripe</h2>
+    <p>When you subscribe or buy credits, your payment is processed by Stripe, a dedicated payments company. We never see or store your card details.</p>
+  </section>
+
+  <section>
+    <h2>We don&rsquo;t show ads, and we don&rsquo;t sell your data</h2>
+    <p>There are no advertisers here, and nothing about you is for sale. The service is supported by memberships, not by monetizing you.</p>
+  </section>
+
+  <section>
+    <h2>A note on safety</h2>
+    <p>Socrates has built-in safeguards that work in the moment a reply is formed &mdash; he will decline to help with genuinely harmful requests. These operate as the conversation happens and require no storage and no review afterward. The protection exists; the surveillance does not.</p>
+  </section>
+
+  <div class="final">
+    <p>You should be free to bring your most difficult question and know that it stays between you and the thought itself.</p>
+    <p>Questions about any of this? Use the <strong>Help</strong> button, and your message reaches us directly.</p>
+  </div>
+
+</div>
+
+<!-- Shared footer -->
+<div id="sq-footer"></div>
+
+</body>
+</html>
