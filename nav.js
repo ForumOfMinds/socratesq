@@ -142,7 +142,9 @@
     var auth = signedIn ? ACCOUNT_LINK : SIGNIN_LINK;
 
     // Forum link shows for everyone; Sign out only when signed in.
-    var forumLink = '<a class="sq-nav-link" href="' + FORUM_URL + '" target="_blank" rel="noopener">Enter the Forum</a>';
+    // Note: this slot (historically "Enter the Forum") now shows the Privacy Promise —
+    // a more relevant link for a first-time visitor. The Forum remains in the footer.
+    var forumLink = '<a class="sq-nav-link' + (isActive("privacy.html") ? " is-active" : "") + '" href="privacy.html">Privacy Promise</a>';
     var signOutLink = signedIn
       ? '<a class="sq-nav-link sq-signout-link" href="#" onclick="window.sqNavSignOut&&window.sqNavSignOut();return false;">Sign out</a>'
       : '';
@@ -174,7 +176,7 @@
       '<nav class="sq-overlay-links" aria-label="Main menu">' +
         linkList("sq-overlay-link") +
         '<a class="sq-overlay-link sq-overlay-authlink" href="' + auth.href + '">' + esc(auth.label) + "</a>" +
-        '<a class="sq-overlay-link sq-overlay-forum" href="' + FORUM_URL + '" target="_blank" rel="noopener">Enter the Forum</a>' +
+        '<a class="sq-overlay-link sq-overlay-forum" href="privacy.html">Privacy Promise</a>' +
         '<a class="sq-overlay-link sq-overlay-signout" href="#" onclick="window.sqNavSignOut&&window.sqNavSignOut();return false;"' + (signedIn ? '' : ' style="display:none;"') + '>Sign out</a>' +
         '<a class="sq-cta sq-overlay-cta" href="' + cta.href + '">' + esc(cta.label) + "</a>" +
       '</nav>' +
@@ -190,9 +192,9 @@
     '<footer class="sq-footer" role="contentinfo">' +
       '<a href="/">SocratesQ</a> &nbsp;&middot;&nbsp; ' + f + ' &nbsp;&middot;&nbsp; ' +
       '<a href="disclaimer.html"' + (isActive("disclaimer.html") ? ' class="is-active"' : '') + '>Before We Begin</a> &nbsp;&middot;&nbsp; ' +
+      '<a href="privacy.html"' + (isActive("privacy.html") ? ' class="is-active"' : '') + '>Privacy</a> &nbsp;&middot;&nbsp; ' +
       '<a href="' + FORUM_URL + '" target="_blank" rel="noopener">forumofminds.com</a>' +
-      '<div class="sq-footer-note">A project of The Forum of Minds Society &nbsp;&middot;&nbsp; ' +
-        '<a href="mailto:help@socratesq.app">help@socratesq.app</a> &nbsp;&middot;&nbsp; &copy; ' +
+      '<div class="sq-footer-note">A project of The Forum of Minds Society &nbsp;&middot;&nbsp; &copy; ' +
         new Date().getFullYear() + '</div>' +
     '</footer>';
   }
