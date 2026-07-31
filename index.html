@@ -269,7 +269,8 @@
   .lp-dial-soc .lp-ds-body { font-family:'EB Garamond',serif; font-size:19px; line-height:1.65; color:var(--parchment); }
   /* Membership cards */
   .lp-tiers { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:24px; }
-  .lp-tier { background:var(--surface); border:1px solid var(--surface-edge); border-radius:12px; padding:22px 20px; }
+  .lp-tier { background:var(--surface); border:1px solid var(--surface-edge); border-radius:12px; padding:22px 20px; display:flex; flex-direction:column; }
+  .lp-tier .lp-tier-items { flex:1; }
   .lp-tier.featured { border-color:var(--gold); border-width:1.5px; }
   .lp-tier-badge { font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
   .lp-tier-name { font-family:'EB Garamond',serif; font-size:22px; color:var(--parchment); font-weight:500; margin-bottom:4px; }
@@ -336,7 +337,7 @@
         <!-- Initial buttons -->
         <div id="lpHeroBtns">
           <button class="lp-begin" onclick="beginLanding()">Answer today&rsquo;s question</button>
-          <button class="lp-signin" onclick="showLpAuth()">Enter a full dialogue &rarr;</button>
+          <button class="lp-signin" onclick="showLpAuth()">Ask Socrates your question &rarr;</button>
         </div>
 
         <!-- Exchange area -->
@@ -399,31 +400,39 @@
           <div class="lp-tier-name">Daily question</div>
           <div class="lp-tier-price">Free &middot; no account</div>
           <ul class="lp-tier-items"><li>One exchange every morning</li></ul>
+          <button class="lp-tier-btn outline" onclick="beginLanding()">Try today&rsquo;s question</button>
         </div>
         <div class="lp-tier">
           <div class="lp-tier-name">Free account</div>
-          <div class="lp-tier-price">Free, always</div>
+          <div class="lp-tier-price">No cost</div>
           <ul class="lp-tier-items"><li>3 conversations / month</li></ul>
+          <button class="lp-tier-btn" onclick="showLpAuth()">Create a free account</button>
         </div>
         <div class="lp-tier">
           <div class="lp-tier-name">Credits</div>
           <div class="lp-tier-price">$4.99</div>
           <ul class="lp-tier-items"><li>7 conversations, never expire</li></ul>
+          <button class="lp-tier-btn outline" onclick="location.href='/?buy=credits'">Buy credits</button>
         </div>
         <div class="lp-tier featured">
-          <div class="lp-tier-badge">&#10022;</div>
+          <div class="lp-tier-badge">&#10022; Most chosen</div>
           <div class="lp-tier-name">Membership</div>
           <div class="lp-tier-price">$12.99 / month</div>
           <ul class="lp-tier-items"><li>30 conversations / month</li><li>Forum of Minds access</li></ul>
+          <button class="lp-tier-btn" onclick="location.href='/?buy=subscription'">Become a member</button>
         </div>
       </div>
-      <p style="margin-top:20px;font-size:16px;color:var(--parchment-dim);">No advertising, no data sale, no pressure. <a href="membership.html" style="color:var(--gold);border-bottom:1px solid rgba(201,162,75,.3);">Full details &rarr;</a></p>
+      <p style="margin-top:20px;font-size:16px;color:var(--parchment-dim);">No advertising, no data sale, no pressure. <a href="membership.html" style="color:var(--gold);border-bottom:1px solid rgba(201,162,75,.3);">Compare plans in full &rarr;</a></p>
     </div>
 
     <!-- ── Closing ── -->
     <hr class="lp-rule" /><div class="lp-section" id="closing" style="padding-bottom:72px;">
       <p style="font-size:19px;">SocratesQ is the doorway to the <strong style="color:var(--parchment);">Forum of Minds</strong> &mdash; a community for those who find that the questions do not end. <a href="about.html" style="color:var(--gold);border-bottom:1px solid rgba(201,162,75,.3);">Who we are &rarr;</a></p>
       <p style="font-size:17px;color:var(--parchment-dim);">Nothing you say here is stored, shared, or sold. <a href="privacy.html" style="color:var(--gold);border-bottom:1px solid rgba(201,162,75,.3);">Our word on privacy &rarr;</a></p>
+      <div style="text-align:center;margin-top:36px;">
+        <button class="lp-begin" onclick="showLpAuth()" style="margin:0 auto;">Create a free account</button>
+        <div style="font-family:'Inter',sans-serif;font-size:13px;color:var(--dim);margin-top:12px;">Three conversations a month, free. No card required.</div>
+      </div>
     </div>
 
 </div>
