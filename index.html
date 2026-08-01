@@ -40,12 +40,14 @@
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
   .auth-logo-wrap { perspective: 900px; margin-bottom: 20px; }
+  .sq-back-home { position: absolute; top: 20px; left: 22px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--parchment-dim); text-decoration: none; border-bottom: 1px solid rgba(201,162,75,.3); z-index: 5; }
+  .sq-back-home:hover { color: var(--gold); }
   .auth-logo { width: 84px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
   @keyframes sq-logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
   @media (prefers-reduced-motion: reduce) { .auth-logo { animation: none; } }
   .authmark { font-family: 'EB Garamond', serif; font-size: 30px; letter-spacing: 0.04em; color: var(--parchment); font-weight: 500; }
   .authmark span { color: var(--gold); }
-  .thresh { font-family: 'EB Garamond', serif; font-style: italic; font-size: 19px; color: var(--parchment-dim); margin: 10px 0 14px; }
+  .thresh { font-family: 'EB Garamond', serif; font-style: normal; font-size: 19px; color: var(--gold-soft); margin: 10px 0 14px; }
   .threshsub { font-size: 15px; color: var(--parchment-dim); line-height: 1.65; max-width: 340px; margin: 0 auto 26px; }
   .authcard { width: 100%; max-width: 330px; display: flex; flex-direction: column; gap: 10px; }
   .tabs { display: flex; gap: 6px; margin-bottom: 4px; }
@@ -445,7 +447,8 @@
     <div class="digital-hero-overlay" aria-hidden="true"></div>
     <div class="digital-hero-grid" aria-hidden="true"></div>
     <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
-    <div class="auth-logo-wrap">
+    <a href="#" onclick="showLanding();return false;" class="sq-back-home" aria-label="Back to home">&larr; Home</a>
+    <div class="auth-logo-wrap" style="cursor:pointer;" onclick="showLanding()">
       <img class="auth-logo" src="https://socratesq.app/SocratesQ%20logo.png" alt="SocratesQ"
            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
       <div class="seal" style="display:none;"><span class="q">Q</span></div>
@@ -498,10 +501,10 @@
 
   <!-- ===== Daily question (shown to members on first visit of each day) ===== -->
   <div id="daily" style="display:none; flex:1; flex-direction:column;">
-    <div class="acct"><span id="dailyEmail"></span><button id="dailySignoutBtn">Sign out</button></div>
+    <div class="acct"><button id="dailyBackBtn" style="background:transparent;border:none;color:var(--parchment-dim);font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;text-decoration:underline;margin-right:auto;">&larr; Back to dialogue</button><span id="dailyEmail"></span><button id="dailySignoutBtn">Sign out</button></div>
     <div class="daily-wrap">
       <!-- Rotating logo for members (anonymous visitors get the taster intro below instead) -->
-      <div id="dailyMemberLogo" style="display:none; perspective:900px; margin-bottom:20px;">
+      <div id="dailyMemberLogo" style="display:none; perspective:900px; margin-bottom:20px; cursor:pointer;" onclick="enterAppFromDaily(false)">
         <img class="daily-hero-logo" src="https://socratesq.app/SocratesQ%20logo.png" alt="SocratesQ"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
         <div class="daily-hero-logo-fallback" style="display:none;"><span>Q</span></div>
@@ -1423,6 +1426,11 @@ function showDaily() {
   dailyGreetingEl.textContent = dailyGreetingText();
   dailyQEl.textContent = dailyQuestion;
   dailyEmailEl.textContent = currentEmail;
+  // The account bar (back-to-dialogue, email, sign out) is only for signed-in members.
+  const dailyBackBtn = document.getElementById('dailyBackBtn');
+  const dailySignoutBtn = document.getElementById('dailySignoutBtn');
+  if (dailyBackBtn) dailyBackBtn.style.display = member ? '' : 'none';
+  if (dailySignoutBtn) dailySignoutBtn.style.display = member ? '' : 'none';
   // show intro card only for anonymous visitors; members get the rotating logo instead
   const introEl = document.getElementById('dailyTasterIntro');
   const introText = document.getElementById('dailyIntroText');
@@ -1559,6 +1567,7 @@ document.getElementById('dailyContBtn').addEventListener('click', () => {
 });
 document.getElementById('dailyTmrwBtn').addEventListener('click', () => enterAppFromDaily(false));
 document.getElementById('dailySignoutBtn').addEventListener('click', signOut);
+document.getElementById('dailyBackBtn').addEventListener('click', () => enterAppFromDaily(false));
 
 async function getToken() {
   if (!member || !sb) return null;
