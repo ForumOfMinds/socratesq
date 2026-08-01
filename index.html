@@ -186,6 +186,8 @@
   .daily-secondary { background:transparent; border:1px solid var(--surface-edge); color:var(--parchment-dim); font-family:'Inter',sans-serif; font-size:13px; padding:11px; border-radius:12px; cursor:pointer; transition:border-color .2s,color .2s; }
   .daily-secondary:hover { border-color:var(--gold); color:var(--gold); }
   .daily-ghost { background:transparent; border:none; color:var(--dim); font-family:'Inter',sans-serif; font-size:12px; cursor:pointer; text-decoration:underline; }
+  .daily-fb-btn { background:transparent; border:1px solid var(--surface-edge); color:var(--parchment-dim); font-family:'EB Garamond',serif; font-size:15px; padding:11px 16px; border-radius:10px; cursor:pointer; transition:border-color .2s, color .2s; width:100%; }
+  .daily-fb-btn:hover { border-color:var(--gold); color:var(--gold-soft); }
   .daily-ghost:hover { color:var(--parchment-dim); }
   #dailyTextarea { width:100%; max-width:440px; resize:none; background:var(--ink-2); border:1px solid var(--surface-edge); color:var(--parchment); font-family:'Inter',sans-serif; font-size:15px; line-height:1.5; padding:11px 14px; border-radius:12px; outline:none; transition:border-color .2s; margin-bottom:8px; }
   #dailyTextarea:focus { border-color:var(--gold); }
@@ -539,6 +541,19 @@
         <div class="daily-who">Socrates</div>
         <div class="daily-reply-body" id="dailyReplyEl"></div>
         <div id="dailyThinkEl" class="thinking" style="display:none; margin-bottom:20px;">considers<span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      </div>
+
+      <!-- Feedback on today's question — appears after the exchange concludes -->
+      <div id="dailyFeedback" style="display:none; flex-direction:column; align-items:center; width:100%; max-width:420px; margin-bottom:22px; padding-bottom:22px; border-bottom:1px solid var(--surface-edge);">
+        <div id="dailyFbPrompt" style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:var(--parchment-dim); margin-bottom:12px;">How did today&rsquo;s question sit with you?</div>
+        <div id="dailyFbButtons" style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:340px;">
+          <button class="daily-fb-btn" data-fb="resonated">This gave me something to think about</button>
+          <button class="daily-fb-btn" data-fb="missed">This one didn&rsquo;t land for me</button>
+        </div>
+        <div id="dailyFbThanks" style="display:none; flex-direction:column; align-items:center; width:100%;">
+          <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:var(--gold-soft); margin-bottom:10px;">Thank you &mdash; noted.</div>
+          <button id="dailyFbSayMore" class="daily-ghost" style="font-size:13px;">Care to say more? &rarr;</button>
+        </div>
       </div>
 
       <div id="dailyContArea" style="display:none; flex-direction:column; gap:10px; width:100%; max-width:270px;">
@@ -1462,6 +1477,7 @@ function showDaily() {
   dailyInputArea.style.display = 'none';
   dailyResponseArea.style.display = 'none';
   dailyContArea.style.display = 'none';
+  resetDailyFeedback();
   dailyTextarea.value = '';
   dailyTextarea.placeholder = 'Your answer\u2026';
   dailyReplyEl.textContent = '';
@@ -1532,6 +1548,8 @@ async function sendDailyAnswer() {
         contNote.style.display = member ? 'block' : 'none';
       }
       localStorage.setItem(todayKey(), 'answered');
+      // Show the feedback prompt now that the exchange has concluded.
+      showDailyFeedback();
     }
   } catch (e) {
     dailyThinkEl.style.display = 'none';
@@ -1541,6 +1559,67 @@ async function sendDailyAnswer() {
     dailyRound--;  // let them retry this round
     if (window._dailyMsgs && window._dailyMsgs.length) window._dailyMsgs.pop();
   }
+}
+
+function showDailyFeedback() {
+  var fb = document.getElementById('dailyFeedback');
+  var btns = document.getElementById('dailyFbButtons');
+  var thanks = document.getElementById('dailyFbThanks');
+  var prompt = document.getElementById('dailyFbPrompt');
+  if (!fb) return;
+  // reset to the un-answered state each time
+  if (btns) btns.style.display = 'flex';
+  if (thanks) thanks.style.display = 'none';
+  if (prompt) prompt.style.display = 'block';
+  fb.style.display = 'flex';
+}
+
+function resetDailyFeedback() {
+  var fb = document.getElementById('dailyFeedback');
+  if (fb) fb.style.display = 'none';
+}
+
+// Record a one-tap reaction to today's question (feedback about the question,
+// not a private dialogue — so this is fine to send). Fire-and-forget.
+function sendDailyReaction(reaction) {
+  try {
+    var label = reaction === 'resonated' ? 'Resonated (gave them something to think about)' : 'Missed (did not land)';
+    fetch('/api/support-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Daily-question reaction: ' + label + '\nQuestion: "' + dailyQuestion + '"',
+        context: 'Daily question feedback',
+        fromEmail: (typeof currentEmail !== 'undefined' && currentEmail) ? currentEmail : ''
+      })
+    }).catch(function(){});
+  } catch (e) {}
+}
+
+// Wire the feedback interactions
+document.querySelectorAll('.daily-fb-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    sendDailyReaction(btn.getAttribute('data-fb'));
+    var btns = document.getElementById('dailyFbButtons');
+    var thanks = document.getElementById('dailyFbThanks');
+    var prompt = document.getElementById('dailyFbPrompt');
+    if (btns) btns.style.display = 'none';
+    if (prompt) prompt.style.display = 'none';
+    if (thanks) thanks.style.display = 'flex';
+  });
+});
+
+// "Say more" is a gateway to membership: elaborating belongs to having an account.
+var fbSayMore = document.getElementById('dailyFbSayMore');
+if (fbSayMore) {
+  fbSayMore.addEventListener('click', function() {
+    if (member) {
+      // A member can go straight to a full dialogue to say more.
+      enterAppFromDaily(false);
+    } else {
+      showLpAuth();
+    }
+  });
 }
 
 function enterAppFromDaily(withContext) {
