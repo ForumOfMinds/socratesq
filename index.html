@@ -40,9 +40,9 @@
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
   .auth-logo-wrap { perspective: 900px; margin-bottom: 20px; }
-  .sq-back-home { position: absolute; top: 12px; left: 10px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--parchment-dim); text-decoration: none; z-index: 20; padding: 10px 14px; border-radius: 8px; }
-  .sq-back-home:hover { color: var(--gold); }
-  .sq-back-home:active { color: var(--gold); }
+  .sq-back-home { position: absolute; top: 16px; left: 12px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--parchment-dim); text-decoration: none; z-index: 20; padding: 10px 16px; border-radius: 20px; border: 1px solid rgba(201,162,75,.3); background: rgba(20,24,26,.7); -webkit-tap-highlight-color: rgba(201,162,75,.3); }
+  .sq-back-home:hover, .sq-back-home:active { color: var(--gold); border-color: var(--gold); }
+  @media (max-width:600px) { .sq-back-home { top: 14px; left: 10px; } }
   .auth-logo { width: 84px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
   @keyframes sq-logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
   @media (prefers-reduced-motion: reduce) { .auth-logo { animation: none; } }
