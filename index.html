@@ -1059,10 +1059,29 @@ const forumLinkEl = document.getElementById('forumLink');
 const pdfBarEl = document.getElementById('pdfBar');
 const pdfBtn = document.getElementById('pdfBtn');
 
-function saveAsPDF() {
+// Load the Cyrillic-capable PDF font on demand (only when exporting a PDF),
+// so its weight isn't paid on every page load. Returns true if available.
+let _sqPdfFontLoaded = false;
+function loadPdfFont() {
+  return new Promise((resolve) => {
+    if (_sqPdfFontLoaded && window.sqRegisterPdfFont) { resolve(true); return; }
+    if (window.sqRegisterPdfFont) { _sqPdfFontLoaded = true; resolve(true); return; }
+    const s = document.createElement('script');
+    s.src = '/pdf-font.js';
+    s.onload = () => { _sqPdfFontLoaded = true; resolve(true); };
+    s.onerror = () => resolve(false); // fall back to helvetica (Latin only)
+    document.head.appendChild(s);
+  });
+}
+
+async function saveAsPDF() {
   if (!window.jspdf) { alert('PDF library not loaded. Please reload the page and try again.'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+
+  // Register the Unicode font so Cyrillic (and any non-Latin text) renders.
+  await loadPdfFont();
+  const bodyFont = (window.sqRegisterPdfFont && window.sqRegisterPdfFont(doc)) || 'helvetica';
 
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
@@ -1106,7 +1125,8 @@ function saveAsPDF() {
     y += 14;
     // Body — render line by line so a long passage flows onto new pages
     // instead of overflowing (and being cut off) at the bottom margin.
-    doc.setFont('helvetica', 'normal');
+    // Use the Unicode font (bodyFont) so Cyrillic and other non-Latin text renders.
+    doc.setFont(bodyFont, 'normal');
     doc.setFontSize(12);
     doc.setTextColor(28, 24, 14);
     const lines = doc.splitTextToSize(String(m.text || ''), TW);
