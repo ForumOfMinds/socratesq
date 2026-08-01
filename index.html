@@ -40,8 +40,9 @@
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
   .auth-logo-wrap { perspective: 900px; margin-bottom: 20px; }
-  .sq-back-home { position: absolute; top: 20px; left: 22px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--parchment-dim); text-decoration: none; border-bottom: 1px solid rgba(201,162,75,.3); z-index: 5; }
+  .sq-back-home { position: absolute; top: 12px; left: 10px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--parchment-dim); text-decoration: none; z-index: 20; padding: 10px 14px; border-radius: 8px; }
   .sq-back-home:hover { color: var(--gold); }
+  .sq-back-home:active { color: var(--gold); }
   .auth-logo { width: 84px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
   @keyframes sq-logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
   @media (prefers-reduced-motion: reduce) { .auth-logo { animation: none; } }
@@ -298,7 +299,7 @@
   .lp-footer { border-top:1px solid var(--surface-edge); padding:32px 24px; text-align:center; font-family:'Inter',sans-serif; font-size:12px; color:var(--dim); line-height:1.8; }
   .lp-footer a { color:var(--dim); text-decoration:none; }
   .lp-footer a:hover { color:var(--gold); }
-  @media (max-width:600px) { .lp-hero { padding:48px 18px 36px; } .lp-section { padding:48px 18px; } .lp-tiers { grid-template-columns:1fr; } .lp-signin { display:none; } }
+  @media (max-width:600px) { .lp-hero { padding:48px 18px 36px; } .lp-section { padding:48px 18px; } .lp-tiers { grid-template-columns:1fr; } #lpHeroBtns { display:flex; flex-direction:column; align-items:center; gap:12px; } .lp-signin { margin-left:0; } }
   @media (max-width: 520px) { .turn.soc .body { font-size: 22px; } .turn.you .body { font-size: 16px; } .mark { font-size: 30px; } .sub { font-size: 16px; } textarea { font-size: 16px; } .stream { max-height: 55vh; } }
 </style>
 </head>
@@ -447,7 +448,7 @@
     <div class="digital-hero-overlay" aria-hidden="true"></div>
     <div class="digital-hero-grid" aria-hidden="true"></div>
     <canvas class="digital-hero-canvas" data-digital-hero aria-hidden="true"></canvas>
-    <a href="#" onclick="showLanding();return false;" class="sq-back-home" aria-label="Back to home">&larr; Home</a>
+    <a href="#" onclick="showLanding();return false;" class="sq-back-home" role="button" aria-label="Back to home">&larr; Home</a>
     <div class="auth-logo-wrap" style="cursor:pointer;" onclick="showLanding()">
       <img class="auth-logo" src="https://socratesq.app/SocratesQ%20logo.png" alt="SocratesQ"
            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
