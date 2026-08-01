@@ -824,7 +824,21 @@ function enterMember(session) {
   if (_fromDaily) {
     _fromDaily = false;
     showApp();
-    if (dailyUserAnswer && dailySocratesReply) {
+    // Carry the FULL daily exchange (all rounds), not just the first — otherwise
+    // the visitor's later answers vanish when they continue into a full dialogue.
+    const dm = (window._dailyMsgs && window._dailyMsgs.length) ? window._dailyMsgs : null;
+    if (dm) {
+      // Build a readable context summary from the whole exchange.
+      let ctx = 'You asked: "' + dailyQuestion + '".';
+      dm.forEach(m => {
+        ctx += m.role === 'user' ? ' They answered: "' + m.content + '"' : ' You replied: "' + m.content + '"';
+      });
+      dailyContextForServer = ctx;
+      dailyContinuationPending = true;
+      convo = dm.map(m => ({ role: m.role, text: m.content }));
+      closed = false;
+      render();
+    } else if (dailyUserAnswer && dailySocratesReply) {
       dailyContextForServer = 'You asked: "' + dailyQuestion + '" — They answered: "' + dailyUserAnswer + '" — You replied: "' + dailySocratesReply + '"';
       dailyContinuationPending = true;
       convo = [
@@ -1075,14 +1089,18 @@ function saveAsPDF() {
     doc.text(isUser ? 'YOU' : 'SOCRATES', ML, y);
     doc.setCharSpace(0);
     y += 14;
-    // Body
+    // Body — render line by line so a long passage flows onto new pages
+    // instead of overflowing (and being cut off) at the bottom margin.
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.setTextColor(28, 24, 14);
-    const lines = doc.splitTextToSize(m.text, TW);
-    checkPage(lines.length * 17);
-    doc.text(lines, ML, y);
-    y += lines.length * 17 + 18;
+    const lines = doc.splitTextToSize(String(m.text || ''), TW);
+    for (const ln of lines) {
+      checkPage(17);
+      doc.text(ln, ML, y);
+      y += 17;
+    }
+    y += 18;
   }
 
   // Footer
@@ -1092,7 +1110,7 @@ function saveAsPDF() {
   doc.setFont('helvetica', 'italic');
   doc.setFontSize(11);
   doc.setTextColor(158, 128, 52);
-  doc.text('This dialogue took place at socratesq.app — continue it whenever you wish.', ML, y);
+  doc.text('This copy is yours to keep — we kept none. Return to socratesq.app whenever a new question finds you.', ML, y);
   y += 18;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
@@ -1473,7 +1491,7 @@ async function sendDailyAnswer() {
   const hdrs = { 'Content-Type': 'application/json' };
   if (token) hdrs['Authorization'] = 'Bearer ' + token;
 
-  const isFinalDailyRound = dailyRound >= 2;  // two rounds, then wrap up
+  const isFinalDailyRound = dailyRound >= 3;  // three rounds; the third is a summary
 
   try {
     const res = await fetch(API, {
