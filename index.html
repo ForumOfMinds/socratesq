@@ -566,6 +566,12 @@
         <div id="dailyFbThanks" style="display:none; flex-direction:column; align-items:center; width:100%;">
           <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:var(--gold-soft); margin-bottom:10px;">Thank you &mdash; noted.</div>
           <button id="dailyFbSayMore" class="daily-ghost" style="font-size:13px;">Care to say more? &rarr;</button>
+          <!-- Members: open box to elaborate on the question -->
+          <div id="dailyFbMoreBox" style="display:none; flex-direction:column; align-items:center; width:100%; max-width:360px; margin-top:12px;">
+            <textarea id="dailyFbMoreText" rows="3" placeholder="Your thoughts on today&rsquo;s question&hellip;" style="width:100%; background:var(--surface); border:1px solid var(--gold); border-radius:10px; color:var(--parchment); font-family:'EB Garamond',serif; font-size:15px; padding:10px 12px; resize:vertical;"></textarea>
+            <button id="dailyFbMoreSend" class="daily-fb-btn" style="margin-top:8px; max-width:200px;">Send</button>
+          </div>
+          <div id="dailyFbMoreDone" style="display:none; font-family:'EB Garamond',serif; font-style:italic; font-size:14px; color:var(--gold-soft); margin-top:10px;">Thank you for taking the time.</div>
         </div>
       </div>
 
@@ -1681,11 +1687,40 @@ var fbSayMore = document.getElementById('dailyFbSayMore');
 if (fbSayMore) {
   fbSayMore.addEventListener('click', function() {
     if (member) {
-      // A member can go straight to a full dialogue to say more.
-      enterAppFromDaily(false);
+      // Members get an open text box to elaborate — the actual "say more".
+      var box = document.getElementById('dailyFbMoreBox');
+      if (box) { box.style.display = 'flex'; }
+      fbSayMore.style.display = 'none';
+      var ta = document.getElementById('dailyFbMoreText');
+      if (ta) ta.focus();
     } else {
+      // Anonymous: "say more" is the gateway to creating an account.
       showLpAuth();
     }
+  });
+}
+// Submit the member's elaboration as feedback.
+var fbMoreSend = document.getElementById('dailyFbMoreSend');
+if (fbMoreSend) {
+  fbMoreSend.addEventListener('click', function() {
+    var ta = document.getElementById('dailyFbMoreText');
+    var text = ta ? ta.value.trim() : '';
+    if (!text) return;
+    try {
+      fetch('/api/support-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: 'Daily-question feedback (elaboration):\n"' + text + '"\nQuestion: "' + dailyQuestion + '"',
+          context: 'Daily question feedback',
+          fromEmail: (typeof currentEmail !== 'undefined' && currentEmail) ? currentEmail : ''
+        })
+      }).catch(function(){});
+    } catch (e) {}
+    var box = document.getElementById('dailyFbMoreBox');
+    var done = document.getElementById('dailyFbMoreDone');
+    if (box) box.style.display = 'none';
+    if (done) done.style.display = 'block';
   });
 }
 
