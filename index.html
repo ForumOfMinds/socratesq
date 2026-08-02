@@ -187,8 +187,8 @@
   .daily-secondary { background:transparent; border:1px solid var(--surface-edge); color:var(--parchment-dim); font-family:'Inter',sans-serif; font-size:13px; padding:11px; border-radius:12px; cursor:pointer; transition:border-color .2s,color .2s; }
   .daily-secondary:hover { border-color:var(--gold); color:var(--gold); }
   .daily-ghost { background:transparent; border:none; color:var(--dim); font-family:'Inter',sans-serif; font-size:12px; cursor:pointer; text-decoration:underline; }
-  .daily-fb-btn { background:transparent; border:1px solid var(--surface-edge); color:var(--parchment-dim); font-family:'EB Garamond',serif; font-size:15px; padding:11px 16px; border-radius:10px; cursor:pointer; transition:border-color .2s, color .2s; width:100%; }
-  .daily-fb-btn:hover { border-color:var(--gold); color:var(--gold-soft); }
+  .daily-fb-btn { background:transparent; border:1px solid var(--gold); color:var(--gold-soft); font-family:'EB Garamond',serif; font-size:15px; padding:12px 18px; border-radius:10px; cursor:pointer; transition:background .2s, color .2s, border-color .2s; width:100%; }
+  .daily-fb-btn:hover { background:rgba(201,162,75,.1); color:var(--gold); border-color:var(--gold-soft); }
   .daily-ghost:hover { color:var(--parchment-dim); }
   #dailyTextarea { width:100%; max-width:440px; resize:none; background:var(--ink-2); border:1px solid var(--surface-edge); color:var(--parchment); font-family:'Inter',sans-serif; font-size:15px; line-height:1.5; padding:11px 14px; border-radius:12px; outline:none; transition:border-color .2s; margin-bottom:8px; }
   #dailyTextarea:focus { border-color:var(--gold); }
@@ -361,6 +361,18 @@
         <!-- Closing card -->
         <div class="lp-close-card" id="lpCloseCard" style="display:none;">
           <div class="lp-close-complete">Today&rsquo;s inquiry is complete.</div>
+          <!-- Feedback on today's question (anonymous landing visitors) -->
+          <div id="lpFeedback" style="margin:18px 0; padding:18px 0; border-top:1px solid var(--surface-edge); border-bottom:1px solid var(--surface-edge);">
+            <div id="lpFbPrompt" style="font-family:'EB Garamond',serif; font-size:16px; color:var(--gold-soft); margin-bottom:14px;">How did today&rsquo;s question sit with you?</div>
+            <div id="lpFbButtons" style="display:flex; flex-direction:column; gap:8px; max-width:340px; margin:0 auto;">
+              <button class="daily-fb-btn" onclick="lpReact('resonated')">This gave me something to think about</button>
+              <button class="daily-fb-btn" onclick="lpReact('missed')">This one didn&rsquo;t land for me</button>
+            </div>
+            <div id="lpFbThanks" style="display:none;">
+              <div style="font-family:'EB Garamond',serif; font-size:15px; color:var(--gold-soft); margin-bottom:10px;">Thank you &mdash; noted.</div>
+              <button class="daily-ghost" style="font-size:13px;" onclick="showLpAuth()">Care to say more? &rarr;</button>
+            </div>
+          </div>
           <div class="lp-close-return">Come back tomorrow for another question.</div>
           <div class="lp-close-cta">Want to begin a conversation of your own?</div>
           <button class="lp-close-btn" onclick="showLpAuth()">Create a free account</button>
@@ -546,7 +558,7 @@
 
       <!-- Feedback on today's question — appears after the exchange concludes -->
       <div id="dailyFeedback" style="display:none; flex-direction:column; align-items:center; width:100%; max-width:420px; margin-bottom:22px; padding-bottom:22px; border-bottom:1px solid var(--surface-edge);">
-        <div id="dailyFbPrompt" style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:var(--parchment-dim); margin-bottom:12px;">How did today&rsquo;s question sit with you?</div>
+        <div id="dailyFbPrompt" style="font-family:'EB Garamond',serif; font-style:normal; font-size:16px; color:var(--gold-soft); margin-bottom:14px;">How did today&rsquo;s question sit with you?</div>
         <div id="dailyFbButtons" style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:340px;">
           <button class="daily-fb-btn" data-fb="resonated">This gave me something to think about</button>
           <button class="daily-fb-btn" data-fb="missed">This one didn&rsquo;t land for me</button>
@@ -1315,6 +1327,29 @@ function beginLanding() {
   ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendLanding(); } });
 }
 
+// Landing-page feedback reaction (anonymous visitors). Records the reaction
+// and swaps to the thank-you state. "Say more" (in the markup) opens signup.
+function lpReact(reaction) {
+  try {
+    var label = reaction === 'resonated' ? 'Resonated (gave them something to think about)' : 'Missed (did not land)';
+    fetch('/api/support-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Daily-question reaction: ' + label + '\nQuestion: "' + getTodayQuestion() + '"',
+        context: 'Daily question feedback (landing)',
+        fromEmail: ''
+      })
+    }).catch(function(){});
+  } catch (e) {}
+  var btns = document.getElementById('lpFbButtons');
+  var thanks = document.getElementById('lpFbThanks');
+  var prompt = document.getElementById('lpFbPrompt');
+  if (btns) btns.style.display = 'none';
+  if (prompt) prompt.style.display = 'none';
+  if (thanks) thanks.style.display = 'block';
+}
+
 async function sendLanding() {
   if (lpBusy) return;
   const ta = document.getElementById('lpInput');
@@ -1559,15 +1594,13 @@ async function sendDailyAnswer() {
     dailyReplyEl.textContent = reply;
 
     if (!isFinalDailyRound) {
-      // Round 1 done — invite a second exchange before offering continuation.
+      // Round done but not final — invite the next exchange. No feedback yet;
+      // it belongs at the END, once the conversation is actually finished.
       dailyTextarea.value = '';
       dailyTextarea.disabled = false;
       dailySendBtn.disabled = false;
       dailyTextarea.placeholder = 'Say more, or press on\u2026';
       dailyTextarea.focus();
-      // Show the feedback prompt early (after the first exchange), so people who
-      // don't go all three rounds still get the chance to react. It persists.
-      showDailyFeedback();
     } else {
       // Final round — now offer continuation (or account creation).
       dailyContArea.style.display = 'flex';
