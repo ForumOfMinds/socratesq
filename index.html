@@ -6,6 +6,7 @@
 <title>SocratesQ</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="/pdf-font.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared.css">
 <script src="/nav.js" defer></script>
@@ -40,9 +41,9 @@
   .seal { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .seal .q { font-family: 'EB Garamond', serif; font-size: 42px; color: var(--gold); line-height: 1; }
   .auth-logo-wrap { perspective: 900px; margin-bottom: 20px; }
-  .sq-back-home { position: absolute; top: 16px; left: 12px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--parchment-dim); text-decoration: none; z-index: 20; padding: 10px 16px; border-radius: 20px; border: 1px solid rgba(201,162,75,.3); background: rgba(20,24,26,.7); -webkit-tap-highlight-color: rgba(201,162,75,.3); }
+  .sq-back-home { position: fixed; top: 16px; left: 16px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--parchment-dim); text-decoration: none; z-index: 9999; padding: 10px 16px; border-radius: 20px; border: 1px solid rgba(201,162,75,.35); background: rgba(20,24,26,.82); cursor: pointer; -webkit-tap-highlight-color: rgba(201,162,75,.3); }
   .sq-back-home:hover, .sq-back-home:active { color: var(--gold); border-color: var(--gold); }
-  @media (max-width:600px) { .sq-back-home { top: 14px; left: 10px; } }
+  @media (max-width:600px) { .sq-back-home { top: 12px; left: 12px; } }
   .auth-logo { width: 84px; height: auto; display: block; margin: 0 auto; animation: sq-logo-spin-y 14s linear infinite; transform-style: preserve-3d; backface-visibility: visible; }
   @keyframes sq-logo-spin-y { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
   @media (prefers-reduced-motion: reduce) { .auth-logo { animation: none; } }
@@ -1080,8 +1081,16 @@ async function saveAsPDF() {
   const doc = new jsPDF({ unit: 'pt', format: 'letter' });
 
   // Register the Unicode font so Cyrillic (and any non-Latin text) renders.
-  await loadPdfFont();
+  const fontLoaded = await loadPdfFont();
   const bodyFont = (window.sqRegisterPdfFont && window.sqRegisterPdfFont(doc)) || 'helvetica';
+  // Diagnostic: if the Unicode font didn't take, log why (visible in console).
+  if (bodyFont !== 'DejaVuSans') {
+    console.error('SocratesQ PDF: Unicode font not applied.',
+      'fontLoaded=', fontLoaded,
+      'registerFn=', typeof window.sqRegisterPdfFont,
+      'b64present=', !!window.SQ_PDF_FONT_B64,
+      'error=', window.SQ_PDF_FONT_ERROR || '(none)');
+  }
 
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
@@ -1556,8 +1565,11 @@ async function sendDailyAnswer() {
       dailySendBtn.disabled = false;
       dailyTextarea.placeholder = 'Say more, or press on\u2026';
       dailyTextarea.focus();
+      // Show the feedback prompt early (after the first exchange), so people who
+      // don't go all three rounds still get the chance to react. It persists.
+      showDailyFeedback();
     } else {
-      // Round 2 done — now offer continuation (or account creation).
+      // Final round — now offer continuation (or account creation).
       dailyContArea.style.display = 'flex';
       dailyContBtn.textContent = member ? 'Take this into a full dialogue \u2192' : 'Create an account to continue';
       var contNote = document.getElementById('dailyContNote');
@@ -1568,7 +1580,7 @@ async function sendDailyAnswer() {
         contNote.style.display = member ? 'block' : 'none';
       }
       localStorage.setItem(todayKey(), 'answered');
-      // Show the feedback prompt now that the exchange has concluded.
+      // Ensure feedback is showing (no-op if it already is).
       showDailyFeedback();
     }
   } catch (e) {
@@ -1583,11 +1595,13 @@ async function sendDailyAnswer() {
 
 function showDailyFeedback() {
   var fb = document.getElementById('dailyFeedback');
+  if (!fb) return;
+  // Already visible (e.g. shown after round 1 and we're now at a later round) —
+  // leave it as is, so a reaction the user already gave isn't reset.
+  if (fb.style.display === 'flex') return;
   var btns = document.getElementById('dailyFbButtons');
   var thanks = document.getElementById('dailyFbThanks');
   var prompt = document.getElementById('dailyFbPrompt');
-  if (!fb) return;
-  // reset to the un-answered state each time
   if (btns) btns.style.display = 'flex';
   if (thanks) thanks.style.display = 'none';
   if (prompt) prompt.style.display = 'block';
