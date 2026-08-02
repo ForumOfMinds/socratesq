@@ -145,8 +145,18 @@
     // Note: this slot (historically "Enter the Forum") now shows the Privacy Promise —
     // a more relevant link for a first-time visitor. The Forum remains in the footer.
     var forumLink = '<a class="sq-nav-link' + (isActive("privacy.html") ? " is-active" : "") + '" href="privacy.html">Privacy Promise</a>';
-    var signOutLink = signedIn
-      ? '<a class="sq-nav-link sq-signout-link" href="#" onclick="window.sqNavSignOut&&window.sqNavSignOut();return false;">Sign out</a>'
+
+    // Auth buttons sit together near the CTA as consistent pills:
+    //  - signed out: "Sign in" pill (returning users) beside the "Create an account" CTA
+    //  - signed in:  "Account" nav link + "Sign out" pill (same shape as Sign in / CTA)
+    var signInBtn = signedIn
+      ? ''
+      : '<a class="sq-nav-btn sq-signin-btn" href="' + SIGNIN_LINK.href + '">Sign in</a>';
+    var accountLink = signedIn
+      ? '<a class="sq-nav-link sq-auth-link' + (isActive(ACCOUNT_LINK.href) ? " is-active" : "") + '" href="' + ACCOUNT_LINK.href + '">Account</a>'
+      : '';
+    var signOutBtn = signedIn
+      ? '<a class="sq-nav-btn sq-signout-link" href="#" onclick="window.sqNavSignOut&&window.sqNavSignOut();return false;">Sign out</a>'
       : '';
 
     return '' +
@@ -158,13 +168,13 @@
         '</a>' +
         '<nav class="sq-nav-links" aria-label="Main">' +
           linkList("sq-nav-link") +
-          '<a class="sq-nav-link sq-auth-link' + (isActive(auth.href) ? " is-active" : "") +
-            '" href="' + auth.href + '">' + esc(auth.label) + "</a>" +
+          accountLink +
           forumLink +
-          signOutLink +
         '</nav>' +
         '<span class="sq-nav-count" id="sqNavCount" aria-live="polite"></span>' +
+        signInBtn +
         '<a class="sq-cta" href="' + cta.href + '">' + esc(cta.label) + "</a>" +
+        signOutBtn +
         '<button class="sq-burger" aria-label="Open menu" aria-expanded="false" aria-controls="sq-overlay">' +
           '<span></span><span></span><span></span>' +
         '</button>' +
@@ -222,29 +232,52 @@
   // cause it to flash and disappear on the second render.
   function applyAuthState(root, signedIn) {
     var cta  = signedIn ? CTA_SIGNED_IN : CTA_SIGNED_OUT;
-    var auth = signedIn ? ACCOUNT_LINK : SIGNIN_LINK;
 
+    var navInner = root.querySelector(".sq-nav-inner");
     var navLinks = root.querySelector(".sq-nav-links");
-    if (navLinks) {
-      // Update the auth link (Sign in ↔ Account) by its stable class.
-      var authLink = navLinks.querySelector(".sq-auth-link");
-      if (authLink) { authLink.setAttribute("href", auth.href); authLink.textContent = auth.label; authLink.classList.toggle("is-active", isActive(auth.href)); }
-      // Add a Sign out link when signed in (if not already present); remove when signed out.
-      var signOut = navLinks.querySelector(".sq-signout-link");
-      if (signedIn && !signOut) {
-        var a = document.createElement("a");
-        a.className = "sq-nav-link sq-signout-link";
-        a.href = "#";
-        a.textContent = "Sign out";
-        a.onclick = function () { if (window.sqNavSignOut) window.sqNavSignOut(); return false; };
-        navLinks.appendChild(a);  // after the Forum link, at the end
-      } else if (!signedIn && signOut) {
-        signOut.remove();
+    var ctaEl = root.querySelector(".sq-nav .sq-cta");
+
+    if (navLinks && navInner && ctaEl) {
+      // Account nav link (destination) — present only when signed in.
+      var accountLink = navLinks.querySelector(".sq-auth-link");
+      if (signedIn && !accountLink) {
+        accountLink = document.createElement("a");
+        accountLink.className = "sq-nav-link sq-auth-link";
+        accountLink.href = ACCOUNT_LINK.href;
+        accountLink.textContent = "Account";
+        // place it just before the Privacy Promise link if present, else append
+        var priv = navLinks.querySelector('a[href="privacy.html"]');
+        navLinks.insertBefore(accountLink, priv || null);
+      } else if (!signedIn && accountLink) {
+        accountLink.remove();
+      }
+      // Sign in pill (returning users) — before the CTA, only when signed out.
+      var signInBtn = navInner.querySelector(".sq-signin-btn");
+      if (!signedIn && !signInBtn) {
+        signInBtn = document.createElement("a");
+        signInBtn.className = "sq-nav-btn sq-signin-btn";
+        signInBtn.href = SIGNIN_LINK.href;
+        signInBtn.textContent = "Sign in";
+        navInner.insertBefore(signInBtn, ctaEl);
+      } else if (signedIn && signInBtn) {
+        signInBtn.remove();
+      }
+      // Sign out pill — after the CTA, only when signed in.
+      var signOutBtn = navInner.querySelector(".sq-signout-link");
+      if (signedIn && !signOutBtn) {
+        signOutBtn = document.createElement("a");
+        signOutBtn.className = "sq-nav-btn sq-signout-link";
+        signOutBtn.href = "#";
+        signOutBtn.textContent = "Sign out";
+        signOutBtn.onclick = function () { if (window.sqNavSignOut) window.sqNavSignOut(); return false; };
+        if (ctaEl.nextSibling) navInner.insertBefore(signOutBtn, ctaEl.nextSibling);
+        else navInner.appendChild(signOutBtn);
+      } else if (!signedIn && signOutBtn) {
+        signOutBtn.remove();
       }
     }
     // Desktop CTA — hidden once a signed-in member has done today's question.
     var hideCta = signedIn && dailyDoneToday();
-    var ctaEl = root.querySelector(".sq-nav .sq-cta");
     if (ctaEl) {
       ctaEl.setAttribute("href", cta.href); ctaEl.textContent = cta.label;
       ctaEl.style.display = hideCta ? "none" : "";
