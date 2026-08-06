@@ -436,7 +436,7 @@
           <div class="lp-tier-badge">&#10022; Most chosen</div>
           <div class="lp-tier-name">Membership</div>
           <div class="lp-tier-price">$12.99 / month</div>
-          <ul class="lp-tier-items"><li>30 conversations / month</li><li>Forum of Minds access</li></ul>
+          <ul class="lp-tier-items"><li>20 conversations / month</li><li>Forum of Minds access</li></ul>
           <button class="lp-tier-btn" onclick="location.href='/?buy=subscription'">Become a member</button>
         </div>
       </div>
@@ -631,7 +631,7 @@
       <div id="limitMsg" style="font-family:'EB Garamond',serif;font-size:19px;color:var(--parchment);margin-bottom:8px;">You have used all 3 conversations this month.</div>
       <div style="font-size:13px;color:var(--parchment-dim);margin-bottom:16px;">Choose how to continue:</div>
       <div style="display:flex;flex-direction:column;gap:10px;max-width:290px;margin:0 auto;">
-        <button onclick="startCheckout('subscription')" style="background:var(--gold);color:#20180a;border:none;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;padding:12px 20px;border-radius:12px;cursor:pointer;">Subscribe — $12.99 / month &middot; 30 conversations</button>
+        <button onclick="startCheckout('subscription')" style="background:var(--gold);color:#20180a;border:none;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;padding:12px 20px;border-radius:12px;cursor:pointer;">Subscribe — $12.99 / month &middot; 20 conversations</button>
         <button onclick="startCheckout('credits')" style="background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Inter',sans-serif;font-weight:600;font-size:13px;padding:10px 20px;border-radius:12px;cursor:pointer;">Buy 7 conversations — $4.99</button>
       </div>
     </div>
@@ -838,7 +838,7 @@ function enterMember(session) {
     const bannerMsg = document.getElementById('paymentBannerMsg');
     if (bannerEl && bannerMsg) {
       bannerMsg.textContent = type === 'subscription'
-        ? 'Welcome to SocratesQ Membership — 30 conversations a month, starting now.'
+        ? 'Welcome to SocratesQ Membership — 20 conversations a month.'
         : '7 conversation credits added to your account.';
       bannerEl.style.display = 'block';
       setTimeout(() => { bannerEl.style.display = 'none'; }, 6000);
@@ -1863,8 +1863,9 @@ function renderAccountStatus(d) {
       <div class="acct-section">
         <div class="acct-label">Plan</div>
         <div class="acct-plan" style="color:var(--gold);">✦ SocratesQ Member</div>
-        <div class="acct-detail">${remaining < 0 ? 0 : remaining} of 30 conversations left this month</div>
-        ${renews ? `<div class="acct-renew">Renews ${renews}</div>` : ''}
+        <div class="acct-detail">${remaining < 0 ? 0 : remaining} of 20 conversations left this month</div>
+        <div class="acct-detail" style="font-size:13px;color:var(--dim);">Refreshes on the 1st of each month.</div>
+        ${renews ? `<div class="acct-renew">Subscription renews ${renews}</div>` : ''}
         <button class="acct-btn-outline" onclick="manageSubscription()">Manage subscription &rarr;</button>
         ${credits > 0 ? `<div class="acct-detail" style="margin-top:10px;">${credits} conversation credit${credits===1?'':'s'} also in your account</div>` : ''}
         <button class="acct-btn-outline" onclick="closeAccount();startCheckout('credits')">Buy 7 more conversations &mdash; $4.99</button>
@@ -1881,7 +1882,7 @@ function renderAccountStatus(d) {
         <div class="acct-plan">${credits} credit${credits===1?'':'s'} remaining</div>
         <div class="acct-detail">Credits never expire &mdash; use them any time.</div>
         <button class="acct-btn-outline" onclick="closeAccount();startCheckout('credits')">Buy 7 more &mdash; $4.99</button>
-        <button class="acct-btn-gold" onclick="closeAccount();startCheckout('subscription')">Subscribe &mdash; $12.99/month &middot; 30 conversations</button>
+        <button class="acct-btn-gold" onclick="closeAccount();startCheckout('subscription')">Subscribe &mdash; $12.99/month &middot; 20 conversations</button>
       </div>`;
   } else {
     planHtml = `
@@ -1889,7 +1890,7 @@ function renderAccountStatus(d) {
         <div class="acct-label">Plan</div>
         <div class="acct-plan">Free</div>
         <div class="acct-detail">${remaining < 0 ? 0 : remaining} of 3 conversations left this month</div>
-        <button class="acct-btn-gold" onclick="closeAccount();startCheckout('subscription')">Subscribe &mdash; $12.99/month &middot; 30 conversations</button>
+        <button class="acct-btn-gold" onclick="closeAccount();startCheckout('subscription')">Subscribe &mdash; $12.99/month &middot; 20 conversations</button>
         <button class="acct-btn-outline" onclick="closeAccount();startCheckout('credits')">Buy 7 conversations &mdash; $4.99</button>
       </div>`;
   }
@@ -1901,7 +1902,7 @@ function renderAccountStatus(d) {
       <div class="acct-label">What&rsquo;s included</div>
       <div class="acct-what">
         ${plan === 'paid' ? '' : '<div class="acct-what-row"><span>Free</span><span>3 dialogues / month</span></div>'}
-        <div class="acct-what-row"><span>Member</span><span>30 dialogues / month</span></div>
+        <div class="acct-what-row"><span>Member</span><span>20 dialogues / month</span></div>
         <div class="acct-what-row"><span>Credits</span><span>${credits > 0 ? credits + ' remaining, never expire' : '7 dialogues, never expire'}</span></div>
         <div class="acct-what-row"><span>Daily question</span><span>always free</span></div>
         <div class="acct-what-row"><span>PDF keepsake</span><span>always free</span></div>
@@ -1967,7 +1968,7 @@ function showRemaining(n, plan, credits) {
   let txt = '';
   if (member && n !== null && n !== undefined) {
     if (plan === 'paid') {
-      txt = n + ' of 30 this month';
+      txt = n + ' of 20 this month';
     } else if (typeof credits === 'number' && credits > 0) {
       txt = n + ' credit' + (n === 1 ? '' : 's') + ' left';
     } else {
@@ -2072,7 +2073,7 @@ async function send() {
         const lim = limitData.limit || 3;
         const pl  = limitData.plan  || 'free';
         limitMsgEl.textContent = pl === 'paid'
-          ? 'You have used all 30 conversations this month.'
+          ? 'You have used all 20 conversations this month.'
           : (lim === 3 ? 'You have used all 3 free conversations this month.' : `You have used all ${lim} conversations this month.`);
       }
       limitEl.style.display = 'block';
