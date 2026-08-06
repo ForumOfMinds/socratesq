@@ -1196,7 +1196,7 @@ function showLanding() {
   // Clear a stale auth anchor (#signin/#account) so handleLandingHash below
   // doesn't immediately bounce us back to the sign-in screen.
   const h = (location.hash || '').toLowerCase();
-  if (h === '#signin' || h === '#account') {
+  if (h === '#signin' || h === '#signup' || h === '#account') {
     if (history.replaceState) history.replaceState(null, '', location.pathname + location.search);
     else location.hash = '';
   }
@@ -1204,10 +1204,11 @@ function showLanding() {
   handleLandingHash();
 }
 
-// Handle #today / #signin / #account anchors that nav.js links to
+// Handle #today / #signin / #signup / #account anchors that nav.js links to
 function handleLandingHash() {
   const h = (location.hash || '').toLowerCase();
   if (h === '#signin') { showLpAuth('signin'); }
+  else if (h === '#signup') { showLpAuth('signup'); }
   else if (h === '#today') {
     const hero = document.getElementById('lpHero');
     if (hero) hero.scrollIntoView({ behavior: 'smooth' });
@@ -1217,6 +1218,7 @@ window.addEventListener('hashchange', function () {
   const h = (location.hash || '').toLowerCase();
   if (h === '#account') { if (member) openAccount(); else showLpAuth('signin'); }
   else if (h === '#signin' && !member) { showLpAuth('signin'); }
+  else if (h === '#signup' && !member) { showLpAuth('signup'); }
   else if (h === '#today' && member) { showDaily(); }
 });
 

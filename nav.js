@@ -28,7 +28,7 @@
   // and "Sign in" is already a nav link — so the CTA drives the primary conversion,
   // creating an account. (Returning users use the Sign in link; new users use this.)
   // Signed IN: they land on the full dialogue, so the daily question lives here as their CTA.
-  var CTA_SIGNED_OUT = { href: "/#signin",         label: "Create an account" };
+  var CTA_SIGNED_OUT = { href: "/#signup",         label: "Create an account" };
   var CTA_SIGNED_IN  = { href: "/#today",          label: "Answer today\u2019s question" };
 
   // Whether the member has already done today's daily question — mirrors the
