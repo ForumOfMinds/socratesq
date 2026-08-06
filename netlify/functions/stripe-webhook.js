@@ -75,17 +75,17 @@ function subscriptionEmailHtml(renewalDate) {
     </div>
     <h2 style="font-family:Georgia,serif;font-size:22px;font-weight:normal;color:#ece5d4;margin:0 0 16px;">Your membership is active.</h2>
     <p style="font-size:17px;color:#b9b3a3;line-height:1.65;margin:0 0 20px;">
-      You now have <strong style="color:#ece5d4;">30 conversations with Socrates</strong> every month &mdash; enough to bring your real questions, return to a thread, and think something through properly.
+      You now have <strong style="color:#ece5d4;">20 conversations with Socrates</strong> each month &mdash; enough to bring your real questions, return to a thread, and think something through properly.
     </p>
     <div style="background:#1d2326;border:1px solid #2a3236;border-radius:10px;padding:20px 22px;margin:0 0 24px;">
       <p style="font-size:15px;color:#b9b3a3;margin:0 0 10px;font-family:Georgia,serif;"><strong style="color:#c9a24b;">What&rsquo;s included:</strong></p>
       <ul style="font-size:15px;color:#b9b3a3;line-height:1.8;margin:0;padding-left:18px;">
-        <li>30 dialogues per month, resetting on your renewal date</li>
+        <li>20 dialogues each month, refreshing on the 1st</li>
         <li>The daily question &mdash; one question from Socrates each morning</li>
         <li>Save any dialogue as a PDF keepsake</li>
         <li>Access to the Forum of Minds as it grows</li>
       </ul>
-      ${renewalDate ? `<p style="font-size:13px;color:#676d68;margin:14px 0 0;font-family:Georgia,sans-serif;">Next renewal: ${renewalDate}</p>` : ''}
+      ${renewalDate ? `<p style="font-size:13px;color:#676d68;margin:14px 0 0;font-family:Georgia,sans-serif;">Your conversations refresh on the 1st of each month. Your subscription renews on ${renewalDate}.</p>` : `<p style="font-size:13px;color:#676d68;margin:14px 0 0;font-family:Georgia,sans-serif;">Your conversations refresh on the 1st of each month.</p>`}
     </div>
     <div style="text-align:center;margin:28px 0;">
       <a href="https://socratesq.app" style="background:#c9a24b;color:#20180a;font-family:Georgia,serif;font-size:16px;font-weight:bold;padding:13px 32px;border-radius:8px;text-decoration:none;display:inline-block;">Return to SocratesQ &rarr;</a>
