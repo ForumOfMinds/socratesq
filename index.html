@@ -1193,6 +1193,13 @@ function showLanding() {
   if (dailyEl) dailyEl.style.display = 'none';
   const hdr = document.getElementById('sq-header'); if (hdr) hdr.style.display = '';
   const ftr = document.getElementById('sq-footer'); if (ftr) ftr.style.display = '';
+  // Clear a stale auth anchor (#signin/#account) so handleLandingHash below
+  // doesn't immediately bounce us back to the sign-in screen.
+  const h = (location.hash || '').toLowerCase();
+  if (h === '#signin' || h === '#account') {
+    if (history.replaceState) history.replaceState(null, '', location.pathname + location.search);
+    else location.hash = '';
+  }
   initLandingQuestion();
   handleLandingHash();
 }
@@ -1200,7 +1207,7 @@ function showLanding() {
 // Handle #today / #signin / #account anchors that nav.js links to
 function handleLandingHash() {
   const h = (location.hash || '').toLowerCase();
-  if (h === '#signin') { showLpAuth(); }
+  if (h === '#signin') { showLpAuth('signin'); }
   else if (h === '#today') {
     const hero = document.getElementById('lpHero');
     if (hero) hero.scrollIntoView({ behavior: 'smooth' });
@@ -1208,14 +1215,15 @@ function handleLandingHash() {
 }
 window.addEventListener('hashchange', function () {
   const h = (location.hash || '').toLowerCase();
-  if (h === '#account') { if (member) openAccount(); else showLpAuth(); }
-  else if (h === '#signin' && !member) { showLpAuth(); }
+  if (h === '#account') { if (member) openAccount(); else showLpAuth('signin'); }
+  else if (h === '#signin' && !member) { showLpAuth('signin'); }
   else if (h === '#today' && member) { showDaily(); }
 });
 
-function showLpAuth() {
+function showLpAuth(mode) {
   if (landingEl) landingEl.style.display = 'none';
-  enterAuth(true);
+  // Default to signup (the common path), but honor an explicit 'signin' request.
+  enterAuth(mode !== 'signin');
 }
 
 
